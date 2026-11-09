@@ -1,0 +1,512 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[utf8]{inputenc}
+  \usepackage[T5]{fontenc}
+  \usepackage[vietnamese]{babel}
+  \usepackage{lmodern}
+\else
+  % phương án dự phòng khi biên dịch bằng XeLaTeX/LuaLaTeX
+  \usepackage{fontspec}
+  \setmainfont{Latin Modern Roman}\setsansfont{Latin Modern Sans}\setmonofont{Latin Modern Mono}
+  \renewcommand{\contentsname}{Mục lục}\renewcommand{\figurename}{Hình}\renewcommand{\tablename}{Bảng}
+\fi
+\usepackage[margin=2.2cm]{geometry}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{tikz}
+\usetikzlibrary{calc,shapes.geometric,arrows.meta,positioning}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage[table]{xcolor}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage[hidelinks]{hyperref}
+
+\definecolor{bkblue}{RGB}{3,43,145}
+\definecolor{codebg}{RGB}{246,248,250}
+\newcommand{\todo}[1]{\textcolor{red}{\textbf{[#1]}}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+\lstset{
+  basicstyle=\ttfamily\footnotesize, backgroundcolor=\color{codebg},
+  frame=single, rulecolor=\color{black!20},
+  breaklines=true, showstringspaces=false, columns=fullflexible
+}
+
+\titleformat{\section}{\Large\bfseries\color{bkblue}}{\thesection.}{0.6em}{}
+\titleformat{\subsection}{\large\bfseries}{\thesubsection.}{0.6em}{}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Kiểm tra phần mềm -- Nhóm HEHE2027}
+\rhead{Bài tập lớn 2: Black-box testing}
+\cfoot{\thepage}
+\setlength{\headheight}{15pt}
+
+\renewcommand{\arraystretch}{1.2}
+\sloppy
+\setlength{\emergencystretch}{3em}
+
+% Macro khung cho các feature do thành viên khác hoàn thiện
+\newcommand{\featureskeleton}[3]{%
+  \subsection{Feature #1: #2}
+  \textbf{Mô tả sơ bộ:} #3 \\
+  \todo{Thành viên phụ trách bổ sung đầy đủ theo đúng cấu trúc của Feature 001: mô tả và hướng dẫn sử dụng; use case + activity diagram;
+  bảng biến đầu vào; ECP; BVA; decision table; use-case testing; danh sách test case \texttt{TC-#1-YYY}. Phải áp dụng đủ cả bốn kỹ thuật và xét mọi biến đầu vào.}
+}
+
+\begin{document}
+
+% ================= COVER =================
+\begin{titlepage}
+\begin{tikzpicture}[overlay,remember picture]
+\draw [line width=2.25pt]
+    ($ (current page.north west) + (2.0cm,-1.5cm) $)
+    rectangle
+    ($ (current page.south east) + (-1.5cm,2cm) $);
+\draw [line width=0.5pt]
+    ($ (current page.north west) + (2.2cm,-1.7cm) $)
+    rectangle
+    ($ (current page.south east) + (-1.7cm,2.2cm) $);
+\end{tikzpicture}
+\begin{center}
+\textbf{ĐẠI HỌC QUỐC GIA THÀNH PHỐ HỒ CHÍ MINH} \\
+\textbf{TRƯỜNG ĐẠI HỌC BÁCH KHOA}\\
+\textbf{KHOA KHOA HỌC VÀ KỸ THUẬT MÁY TÍNH}
+
+\vspace{1cm}
+\includegraphics[width=0.32\textwidth]{img/logo/logo.png}
+\vspace{1cm}
+
+\begin{tabular}{c}
+    \textbf{\Large KIỂM TRA PHẦN MỀM (SOFTWARE TESTING)}\\[0.4cm]
+    \textbf{\large BÀI TẬP LỚN 2: BLACK-BOX TESTING}\\[0.2cm]
+    \large Kiểm thử hệ thống quản lý học tập \textit{Moodle LMS}\\[0.4cm]
+    \textbf{Học kỳ 1, năm học 2026--2027 -- Lớp L01 -- Nhóm HEHE2027}\\
+    \hline
+\end{tabular}
+
+\vspace{1cm}
+\begin{tabular}{p{3cm} p{6cm} l}
+    \textbf{GVHD:} & Trần Thị Ngọc Trâm & \\[0.2cm]
+    \textbf{Sinh viên:} & Nguyễn Đức Phương & 2312749 \\
+                        & Lê Sĩ Nhật Quang & 2312791 \\
+                        & Huỳnh Đức Tài & 2212971 \\
+                        & Đào Xuân Sơn & 2312954 \\
+                        & Sơn Văn Phát & 2212535 \\
+\end{tabular}
+
+\vfill
+\fontsize{14pt}{0pt}\selectfont TP. HỒ CHÍ MINH, THÁNG 11/2026
+\end{center}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+% ================= 1 =================
+\section{Giới thiệu}
+Nhóm áp dụng các kỹ thuật kiểm thử hộp đen để thiết kế test case cho \textbf{Moodle LMS} (bản Docker theo
+hướng dẫn của đề bài), gồm: phân tích giá trị biên (\textit{Boundary Value Analysis -- BVA}),
+phân lớp tương đương (\textit{Equivalence Class Partitioning -- ECP}), bảng quyết định
+(\textit{Decision Table}, phần cộng điểm) và kiểm thử theo use case (\textit{Use-case testing}).
+Các test case được ghi trong file \texttt{.xlsx} theo mẫu của đề bài và được tự động hóa bằng \textit{Katalon Recorder}.
+
+Mỗi thành viên chọn một feature riêng, không trùng nhau và không thuộc nhóm bị cấm (đăng nhập, đăng xuất, đổi mật khẩu
+user mặc định). Mã test case có dạng \texttt{TC-XXX-YYY} với XXX là số thứ tự feature và YYY là số thứ tự test case.
+
+\textbf{Tài liệu nộp kèm:} (1) báo cáo này (\texttt{.pdf}); (2) file \texttt{HEHE2027\_L01\_Proj2\_TestCases.xlsx};
+(3) file nén \texttt{.zip} chứa các tệp \texttt{.krecorder}.
+
+\subsection*{Quy định bổ sung của đề cần tuân thủ}
+\begin{enumerate}[noitemsep]
+  \item Mọi kỹ thuật phải được áp dụng cho \textbf{từng} feature. Nếu một kỹ thuật không áp dụng được về mặt logic
+        (ví dụ bảng quyết định cho máy tính BMI, vì không có tổ hợp đầu vào nào cho kết quả khác nhau) thì không chọn feature đó.
+  \item Mỗi sinh viên phải thể hiện hiểu biết về \textbf{tất cả} kỹ thuật bắt buộc, nên feature phải được chọn cẩn thận
+        ngay từ đầu.
+  \item \textbf{Phải chạy test suite Katalon Recorder} (ít nhất trên một trình duyệt, ví dụ Chrome) \textbf{trước khi tải về};
+        log chạy được tải kèm test suite.
+  \item File \texttt{.xlsx} dành cho \textbf{kiểm thử thủ công}: người kiểm thử làm theo cột \textit{Step name} và
+        \textit{Step description} rồi đối chiếu với \textit{Expected Result}; đây không phải script Katalon.
+        Cột \textit{Precondition} nêu rõ điều kiện trước khi test (ví dụ: đã đăng nhập bằng user nào, ngôn ngữ trình duyệt là English).
+  \item \textbf{Không đổi mật khẩu của các user mặc định} trong Moodle demo.
+\end{enumerate}
+
+% ================= 2 =================
+\section{Phân công công việc}
+
+{\small
+\begin{longtable}{|c|L{3.2cm}|L{3.8cm}|L{4.8cm}|c|}
+\hline
+\rowcolor{gray!15}
+\textbf{STT} & \textbf{Thành viên} & \textbf{Feature phụ trách} & \textbf{Công việc} & \textbf{Đóng góp} \\ \hline
+\endhead
+1 & Nguyễn Đức Phương \newline 2312749 & 001 -- Add a new user &
+  Phân tích, thiết kế test case, viết script Katalon cho feature của mình; & 20\% \\ \hline
+2 & Lê Sĩ Nhật Quang \newline 2312791 & 002 -- Add a new course & Như trên & 20\% \\ \hline
+3 & Huỳnh Đức Tài \newline 2212971 & 003 -- Add a quiz & Như trên & 20\% \\ \hline
+4 & Đào Xuân Sơn \newline 2312954 & 004 -- Add an assignment & Như trên & 20\% \\ \hline
+5 & Sơn Văn Phát \newline 2212535 & 005 -- Enrol users & Như trên & 20\% \\ \hline
+\end{longtable}
+}
+
+% ================= 3 =================
+\section{Đặc tả yêu cầu: các feature được chọn}
+Đối tượng kiểm thử: \textbf{Moodle LMS}, thao tác bằng tài khoản quản trị viên. Các feature được chọn đều có nhiều
+trường nhập liệu có ràng buộc (để áp dụng ECP, BVA), có các điều kiện kết hợp (decision table) và có luồng nghiệp vụ
+có nhánh (use-case testing).
+
+\textbf{Tiêu chí chọn feature:} feature phải (1) có nhiều biến đầu vào có ràng buộc (BVA, ECP);
+(2) có tổ hợp điều kiện cho ra kết quả khác nhau (bảng quyết định); (3) có luồng nghiệp vụ có nhánh (use-case testing);
+(4) không thuộc nhóm bị cấm và không làm đổi mật khẩu user mặc định.
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|c|L{3.8cm}|L{6.8cm}|L{2.4cm}|}
+\hline
+\rowcolor{gray!15}\textbf{No.} & \textbf{Feature} & \textbf{Mô tả ngắn} & \textbf{Tester} \\ \hline
+001 & --- & Quản trị viên tạo tài khoản người dùng mới. & Phương \\ \hline
+002 & --- & --- & Quang \\ \hline
+003 & --- & --- & Tài \\ \hline
+004 & --- & --- & Sơn \\ \hline
+005 & --- & --- & Phát \\ \hline
+\end{tabular}
+\caption{Danh sách feature}
+\end{table}
+
+\begin{table}[H]
+\centering\small
+\begin{tabular}{|c|L{3.2cm}|L{8.6cm}|}
+\hline
+\rowcolor{gray!15}\textbf{No.} & \textbf{Feature} & \textbf{Tổ hợp điều kiện dự kiến cho decision table} \\ \hline
+001 & Add a new user & Generate password, password hợp lệ, username/email không trùng, Force password change, Suspended. \\ \hline
+002 & --- & --- \\ \hline
+003 & --- & --- \\ \hline
+004 & --- & --- \\ \hline
+005 & --- & --- \\ \hline
+\end{tabular}
+\caption{Kiểm tra mỗi feature có áp dụng được bảng quyết định}
+\end{table}
+
+% ================= 4 =================
+\section{Môi trường kiểm thử}
+\begin{itemize}[noitemsep]
+  \item Moodle chạy bằng Docker theo đề bài; địa chỉ truy cập \texttt{http://127.0.0.1:9501}, tài khoản quản trị
+        có sẵn \texttt{admin}/\texttt{admin} (sửa nếu máy nhóm dùng cổng khác).
+  \item Trình duyệt Chrome (hoặc Firefox) có cài \textit{Katalon Recorder}.
+  \item Cấu hình demo (\texttt{assets/config.php}) đặt \texttt{passwordpolicy = 0}: Moodle không bắt mật khẩu tối thiểu 8 ký tự hay
+        chữ hoa/số/ký tự đặc biệt; mật khẩu chỉ bị giới hạn tối đa 128 ký tự. Demo cũng đặt \texttt{noemailever = 1} (không gửi email thật).
+  \item Đăng nhập chỉ được dùng như \textit{bước chuẩn bị} của test, không phải đối tượng kiểm thử.
+  \item Ngôn ngữ giao diện Moodle và trình duyệt là English (tên menu và thông báo lỗi trong test case theo tiếng Anh).
+  \item \textbf{Không thay đổi mật khẩu của các user mặc định} trong Moodle demo.
+\end{itemize}
+
+% ================= 5 =================
+\section{Feature 001: Add a new user}
+
+\subsection{Mô tả và hướng dẫn sử dụng}
+Quản trị viên tạo tài khoản mới tại \textbf{Site administration $>$ Users $>$ Accounts $>$ Add a new user}
+(URL: \texttt{<BASE\_URL>/user/editadvanced.php?id=-1}).
+
+\textbf{Các bước sử dụng:}
+\begin{enumerate}[noitemsep]
+  \item Đăng nhập bằng tài khoản admin.
+  \item Mở trang Add a new user.
+  \item Nhập các trường bắt buộc (username, password hoặc chọn \textit{Generate password and notify user},
+        first name, last name, email) và các trường tùy chọn (city, country, \dots).
+  \item Bấm \textbf{Create user} (hoặc \textbf{Cancel} để hủy).
+  \item Hệ thống kiểm tra dữ liệu; nếu hợp lệ thì tạo user và chuyển về \textit{Browse list of users}, nếu không thì
+        hiển thị lỗi tại trường tương ứng và giữ nguyên form.
+\end{enumerate}
+
+\subsection{Use case và activity diagram}
+\textbf{Use case:}
+\begin{table}[H]
+\centering\small
+\begin{tabular}{|L{3.6cm}|L{11.4cm}|}
+\hline
+Tên & UC-001: Tạo người dùng mới \\ \hline
+Tác nhân & Quản trị viên (Admin) \\ \hline
+Tiền điều kiện & Admin đã đăng nhập; có quyền tạo người dùng. \\ \hline
+Hậu điều kiện (thành công) & Tài khoản mới được lưu và hiển thị trong Browse list of users. \\ \hline
+Luồng chính & Mở form $\rightarrow$ nhập dữ liệu hợp lệ $\rightarrow$ Create user $\rightarrow$ hệ thống tạo user và chuyển về danh sách. \\ \hline
+Luồng thay thế & A1: thiếu hoặc sai dữ liệu $\rightarrow$ báo lỗi, nhập lại. A2: username hoặc email trùng $\rightarrow$ báo lỗi, đổi dữ liệu.
+A3: chọn Generate password thay cho nhập password. A4: bấm Cancel, không tạo user. \\ \hline
+\end{tabular}
+\caption{Đặc tả use case UC-001}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[>=Stealth, node distance=0.9cm and 1.4cm,
+  act/.style={rectangle, rounded corners=4pt, draw, minimum width=3.6cm, minimum height=0.8cm, align=center, font=\small, fill=blue!5},
+  dec/.style={diamond, aspect=2.2, draw, align=center, font=\scriptsize, inner sep=1pt, fill=yellow!15},
+  st/.style={circle, fill=black, minimum size=0.35cm},
+  en/.style={circle, draw, double, minimum size=0.35cm}]
+\node[st] (s) {};
+\node[act, below=0.6cm of s] (a1) {Mở trang Add a new user};
+\node[act, below=0.6cm of a1] (a2) {Nhập dữ liệu vào form};
+\node[dec, below=0.7cm of a2] (d0) {Bấm\\Cancel?};
+\node[act, below=0.8cm of d0] (a3) {Bấm Create user};
+\node[dec, below=0.7cm of a3] (d1) {Dữ liệu\\hợp lệ?};
+\node[dec, below=0.8cm of d1] (d2) {Username/email\\không trùng?};
+\node[act, below=0.8cm of d2] (a4) {Tạo user, chuyển về\\Browse list of users};
+\node[en, below=0.6cm of a4] (e) {};
+\node[act, right=2.6cm of d0] (c1) {Quay lại danh sách,\\không tạo user};
+\node[act, right=2.6cm of d1] (er1) {Hiển thị lỗi\\tại trường};
+\node[act, right=2.6cm of d2] (er2) {Hiển thị lỗi\\trùng dữ liệu};
+\draw[->] (s)--(a1); \draw[->] (a1)--(a2); \draw[->] (a2)--(d0);
+\draw[->] (d0)--node[right,font=\scriptsize]{Không}(a3);
+\draw[->] (d0)--node[above,font=\scriptsize]{Có}(c1);
+\draw[->] (a3)--(d1);
+\draw[->] (d1)--node[right,font=\scriptsize]{Có}(d2);
+\draw[->] (d1)--node[above,font=\scriptsize]{Không}(er1);
+\draw[->] (d2)--node[right,font=\scriptsize]{Có}(a4);
+\draw[->] (d2)--node[above,font=\scriptsize]{Không}(er2);
+\draw[->] (a4)--(e);
+\draw[->] (er1.east)--++(1.0,0)|-(a2.east);
+\draw[->] (er2.east)--++(1.6,0)|-(a2.east);
+\draw[->] (c1.east)--++(2.4,0)|-(e.east);
+\end{tikzpicture}
+\caption{Activity diagram của UC-001 (các nhánh báo lỗi quay lại bước nhập dữ liệu; nhánh Cancel kết thúc)}
+\end{figure}
+
+
+\subsection{Các biến đầu vào}
+\begin{table}[H]
+\centering\small
+\begin{tabular}{|L{2.6cm}|L{3.0cm}|L{4.2cm}|L{4.2cm}|}
+\hline
+\rowcolor{gray!15}\textbf{Biến} & \textbf{Bắt buộc?} & \textbf{Ràng buộc} & \textbf{Ghi chú} \\ \hline
+Username & Có & 1--100 ký tự; chữ thường, số, \texttt{\_ - . @}; không trùng & Không phân biệt hoa/thường: chữ hoa bị từ chối \\ \hline
+New password & Có (trừ khi chọn Generate password) & 1--128 ký tự; demo tắt password policy nên không yêu cầu độ phức tạp & Theo cấu hình \texttt{passwordpolicy = 0} của demo \\ \hline
+First name & Có & 1--100 ký tự & \\ \hline
+Last name & Có & 1--100 ký tự & \\ \hline
+Email address & Có & Đúng định dạng, tối đa 100 ký tự, không trùng & \\ \hline
+City/town & Không & 0--120 ký tự & \\ \hline
+Country, Timezone, Description,\dots & Không & Chọn từ danh sách / văn bản tự do & Không có giá trị không hợp lệ qua giao diện; mỗi trường được điền trong TC-001-001 \\ \hline
+Generate password and notify user & Không (checkbox) & Chọn/không chọn & Dùng trong decision table \\ \hline
+Force password change & Không (checkbox) & Chọn/không chọn & Dùng trong decision table \\ \hline
+Suspended account & Không (checkbox) & Chọn/không chọn & Dùng trong decision table \\ \hline
+\end{tabular}
+\caption{Các biến đầu vào của Feature 001}
+\end{table}
+
+\subsection{Kỹ thuật 1: Phân lớp tương đương (ECP)}
+\textbf{Cách áp dụng:} với mỗi biến, chia miền giá trị thành lớp hợp lệ (V) và các lớp không hợp lệ (I).
+Một test case ``tất cả hợp lệ'' (TC-001-001) phủ mọi lớp hợp lệ; mỗi lớp không hợp lệ được kiểm thử trong một test case riêng,
+các trường khác giữ giá trị hợp lệ để cô lập nguyên nhân lỗi.
+
+\begin{table}[H]
+\centering\footnotesize
+\begin{tabular}{|l|L{5.0cm}|L{7.4cm}|}
+\hline
+\rowcolor{gray!15}\textbf{Biến} & \textbf{Lớp hợp lệ} & \textbf{Lớp không hợp lệ (test case)} \\ \hline
+Username & V1: 1--100 ký tự, chữ thường/số/ký tự cho phép, chưa tồn tại &
+ I1: rỗng (002); I2: $>$100 ký tự (003); I3: có chữ hoa (004); I4: có khoảng trắng/ký tự cấm (005); I5: đã tồn tại (006) \\ \hline
+Password & V2: 1--128 ký tự (demo không có password policy) & I6: rỗng, không chọn Generate password (007); I7: $>$128 ký tự (008) \\ \hline
+First name & V3: 1--100 ký tự & I8: rỗng (009); I9: $>$100 (010) \\ \hline
+Last name & V4: 1--100 ký tự & I10: rỗng (011); I11: $>$100 (012) \\ \hline
+Email & V5: định dạng đúng, $\leq$100 ký tự, chưa tồn tại & I12: rỗng (013); I13: sai định dạng (014); I14: đã tồn tại (015); I15: $>$100 (016) \\ \hline
+City & V6: 0--120 ký tự & I16: $>$120 (017) \\ \hline
+\end{tabular}
+\caption{Lớp tương đương và test case tương ứng (ID rút gọn: 002 nghĩa là TC-001-002)}
+\end{table}
+
+\subsection{Kỹ thuật 2: Phân tích giá trị biên (BVA)}
+\textbf{Cách áp dụng:} với mỗi biến có miền độ dài liên tục, chọn các giá trị tại và quanh biên: min$-1$, min, min$+1$,
+max$-1$, max, max$+1$. Các giá trị \emph{không hợp lệ} (min$-1$, max$+1$) trùng với test case ECP nên được tham chiếu lại,
+không tạo thêm; các giá trị hợp lệ tạo test case mới (018--040). Password không có độ dài tối thiểu do demo tắt password policy,
+nên min là 1 ký tự (rỗng bị báo ``Required'').
+
+\begin{table}[H]
+\centering\footnotesize
+\begin{tabular}{|l|c|c|c|c|c|c|}
+\hline
+\rowcolor{gray!15}\textbf{Biến (độ dài)} & \textbf{min$-1$} & \textbf{min} & \textbf{min$+1$} & \textbf{max$-1$} & \textbf{max} & \textbf{max$+1$} \\ \hline
+Username (1--100) & 0 (002) & 1 (018) & 2 (019) & 99 (020) & 100 (021) & 101 (003) \\ \hline
+Password (1--128) & 0 (007) & 1 (022) & 2 (023) & 127 (024) & 128 (025) & 129 (008) \\ \hline
+First name (1--100) & 0 (009) & 1 (026) & 2 (027) & 99 (028) & 100 (029) & 101 (010) \\ \hline
+Last name (1--100) & 0 (011) & 1 (030) & 2 (031) & 99 (032) & 100 (033) & 101 (012) \\ \hline
+Email (tổng độ dài) & rỗng (013) & a@b.co (034) & -- & 99 (035) & 100 (036) & 101 (016) \\ \hline
+City (0--120) & -- & 0 (037) & 1 (038) & 119 (039) & 120 (040) & 121 (017) \\ \hline
+\end{tabular}
+\caption{Giá trị biên và test case (số trong ngoặc là TC-001-YYY)}
+\end{table}
+
+\subsection{Kỹ thuật 3: Bảng quyết định (Decision table)}
+\textbf{Điều kiện:} C1 -- chọn Generate password; C2 -- đã nhập password (chỉ xét khi C1 = N; demo không có password policy);
+C3 -- username và email hợp lệ, không trùng; C4 -- chọn Force password change; C5 -- chọn Suspended.
+\textbf{Hành động:} A1 -- tạo user; A2 -- hiển thị lỗi; A3 -- đặt cờ force password change; A4 -- đặt trạng thái suspended.
+Quy tắc R2 lấy từ mã nguồn: Moodle không cho chọn đồng thời Generate password và Suspended.
+
+\begin{table}[H]
+\centering\footnotesize
+\begin{tabular}{|l|c|c|c|c|c|c|c|c|}
+\hline
+\rowcolor{gray!15}\textbf{Luật} & R1 & R2 & R3 & R4 & R5 & R6 & R7 & R8 \\ \hline
+C1 Generate password & Y & Y & N & N & N & N & N & Y \\ \hline
+C2 Đã nhập password & -- & -- & Y & Y & Y & N & Y & -- \\ \hline
+C3 Username/email OK & Y & Y & Y & Y & Y & Y & N & N \\ \hline
+C4 Force password change & N & -- & N & Y & N & -- & -- & -- \\ \hline
+C5 Suspended & N & Y & N & N & Y & -- & -- & -- \\ \hline
+A1 Tạo user & X & & X & X & X & & & \\ \hline
+A2 Báo lỗi & & X & & & & X & X & X \\ \hline
+A3 Force change & & & & X & & & & \\ \hline
+A4 Suspended & & & & & X & & & \\ \hline
+\textbf{Test case} & 041 & 042 & 001 & 043 & 044 & 007 & 006 & 045 \\ \hline
+\end{tabular}
+\caption{Decision table của Feature 001 (R3, R6, R7 tái sử dụng test case ECP)}
+\end{table}
+\textit{Ghi chú:} email thông báo mật khẩu (R1) không kiểm tra được vì demo đặt \texttt{noemailever = 1}; test chỉ kiểm tra
+user được tạo. Tổ hợp Generate password cùng Force password change chưa được khảo sát nên không đưa vào bảng.
+
+\subsection{Kỹ thuật 4: Use-case testing}
+Từ activity diagram, các đường đi (scenario) được liệt kê như sau:
+
+\begin{table}[H]
+\centering\footnotesize
+\begin{tabular}{|c|L{7.4cm}|L{3.2cm}|c|}
+\hline
+\rowcolor{gray!15}\textbf{Path} & \textbf{Đường đi trong diagram} & \textbf{Loại} & \textbf{Test case} \\ \hline
+P1 & Mở form $\rightarrow$ nhập hợp lệ $\rightarrow$ Create user $\rightarrow$ tạo thành công & Luồng chính & 046 \\ \hline
+P2 & Gửi form thiếu dữ liệu $\rightarrow$ báo lỗi $\rightarrow$ nhập lại $\rightarrow$ thành công & Luồng thay thế A1 & 047 \\ \hline
+P3 & Gửi dữ liệu trùng $\rightarrow$ báo lỗi $\rightarrow$ đổi dữ liệu $\rightarrow$ thành công & Luồng thay thế A2 & 048 \\ \hline
+P4 & Nhập dữ liệu $\rightarrow$ Cancel $\rightarrow$ không tạo user & Luồng thay thế A4 & 049 \\ \hline
+P5 & Chọn Generate password $\rightarrow$ Create user $\rightarrow$ thành công & Luồng thay thế A3 & 050 \\ \hline
+\end{tabular}
+\caption{Scenario và test case của use-case testing}
+\end{table}
+
+\subsection{Danh sách test case của Feature 001}
+Tổng cộng \textbf{50 test case}: ECP 001--017, BVA 018--040, Decision table 041--045, Use-case 046--050.
+Các test case ghi ``ECP/BVA'' vừa là lớp không hợp lệ vừa là giá trị biên.
+Kết quả mong đợi chung: với test case hợp lệ -- chuyển về Browse list of users, hiển thị ``Changes saved'' và user mới có trong danh sách;
+với test case không hợp lệ -- form báo lỗi tại trường tương ứng (thông báo lấy từ mã nguồn Moodle) và user không được tạo.
+Với các test case vượt giới hạn độ dài, thao tác kiểm tra là ô nhập chỉ nhận tối đa đúng số ký tự cho phép
+(TC-001-008, 010, 012, 016, 017); riêng TC-001-003 (username 101 ký tự).
+
+\input{tc_list.tex}
+
+\subsection{Test case mẫu (đầy đủ bước và kết quả mong đợi)}
+Sáu test case dưới đây minh họa cách ghi trong file \texttt{.xlsx}; các test case còn lại viết theo cùng khuôn.
+Dữ liệu dùng tiền tố \texttt{tc001\_} để dễ dọn dẹp.
+
+\input{tc_detail.tex}
+
+% ================= 6 =================
+\section{Feature 002: ---}
+\section{Feature 003: ---}
+\section{Feature 004: ---}
+\section{Feature 005: ---}
+% ================= 7 =================
+\section{Triển khai test case bằng Katalon Recorder}
+
+\subsection{Cấu trúc test suite}
+Bộ test của Feature 001 nằm trong một file \texttt{F001\_Add\_New\_User.krecorder} (định dạng XHTML của Katalon Recorder)
+gồm 51 test case:
+\begin{itemize}[noitemsep]
+  \item \textbf{TC-000-Setup-Login} (chạy đầu tiên, chỉ chạy một lần): đăng nhập admin bằng tài khoản có sẵn, không đổi mật khẩu.
+  \item \textbf{TC-001-001 $\dots$ TC-001-050}: mỗi test case của mục 5.8 là một test case Katalon, tên trùng ID.
+        Mỗi test case tự lưu \texttt{BASE\_URL} và biến \texttt{RUN} (\texttt{Date.now().toString(36)}) rồi ghép \texttt{\$\{RUN\}} vào
+        username và email, nên chạy lại nhiều lần không bị trùng dữ liệu.
+\end{itemize}
+Mỗi test case có ít nhất một lệnh \texttt{verify...} (\texttt{verifyLocation}, \texttt{verifyTextPresent},
+\texttt{verifyElementPresent}, \texttt{verifyAttribute}, \texttt{verifyChecked}, \dots). Các test case chỉ kiểm tra giới hạn
+độ dài (TC-001-008, 010, 012, 016, 017) không gửi form mà đọc thuộc tính \texttt{maxlength} của ô nhập bằng
+\texttt{verifyAttribute}. Locator dùng \texttt{id=} của Moodle (\texttt{id\_username}, \texttt{id\_newpassword},
+\texttt{id\_submitbutton}, \texttt{id\_error\_username}, \dots).
+
+\subsection{Script Setup (đăng nhập, chỉ chạy một lần đầu suite)}
+\begin{lstlisting}
+store                 | http://127.0.0.1:9501 | BASE_URL
+open                  | ${BASE_URL}/login/index.php
+type                  | id=username | admin
+type                  | id=password | admin
+clickAndWait          | id=loginbtn
+verifyElementPresent  | id=user-menu-toggle
+\end{lstlisting}
+
+\subsection{TC-001-001 (dữ liệu hợp lệ)}
+\begin{lstlisting}
+store              | http://127.0.0.1:9501 | BASE_URL
+storeEval          | Date.now().toString(36) | RUN
+open               | ${BASE_URL}/user/editadvanced.php?id=-1
+type               | id=id_username | tc001_valid${RUN}
+click              | xpath=//div[@data-passwordunmaskid='id_newpassword']//a[@data-passwordunmask='edit']
+type               | id=id_newpassword | Test@1234
+type               | id=id_firstname | Nguyen
+type               | id=id_lastname | Van A
+type               | id=id_email | tc001_valid${RUN}@example.com
+type               | id=id_city | Ho Chi Minh
+clickAndWait       | id=id_submitbutton
+verifyLocation     | glob:*/admin/user.php*
+verifyTextPresent  | Changes saved
+verifyTextPresent  | tc001_valid${RUN}@example.com
+\end{lstlisting}
+
+\subsection{TC-002-001}
+\subsection{TC-003-001}
+\subsection{TC-004-001}
+\subsection{TC-005-001}
+
+
+
+
+\subsection{Dọn dữ liệu sau khi chạy}
+Các user do test tạo có username/email chứa \texttt{tc001\_}. Để dọn: vào Browse list of users, lọc theo email chứa
+\texttt{tc001\_}, chọn tất cả rồi dùng \textit{Bulk user actions $>$ Delete}; \textbf{không chạm vào user mặc định} của demo.
+Ba test case dùng giá trị cố định (TC-001-018, TC-001-019, TC-001-034) phải được dọn trước khi chạy lại.
+
+
+\subsection{Chạy test suite, tải file và log}
+\begin{enumerate}[noitemsep]
+  \item Import \texttt{F001\_Add\_New\_User.krecorder} vào Katalon Recorder, chạy toàn bộ suite (Setup trước) trên
+        \textbf{ít nhất một trình duyệt} (ví dụ Chrome) \textbf{trước khi tải về}; sửa các test case lỗi do locator hoặc dữ liệu.
+  \item Tải test suite ở định dạng \texttt{.krecorder} (Export/Save). \textbf{Log chạy được tải kèm test suite}, vì vậy phải chạy xong rồi mới tải.
+  \item \textbf{Chạy lại trên một máy khác} để chắc chắn test suite chạy ổn định, rồi mới nộp.
+  \item Mỗi test case có ít nhất một lệnh \texttt{verify...}.
+\end{enumerate}
+\textbf{Phân biệt hai loại mô tả:} file \texttt{.xlsx} là kịch bản kiểm thử \emph{thủ công} (từng bước bằng lời, có kết quả mong đợi),
+còn các bảng lệnh ở trên chỉ là script Katalon tương ứng để tự động hóa.
+
+% ================= 8 =================
+
+% ================= 9 =================
+\section{AI Usage Declaration}
+
+\subsection{[Nguyễn Đức Phương]}
+\textbf{Công cụ:} Claude (Anthropic), model Claude Sonnet 5.5, dùng qua ứng dụng Claude (bản desktop).
+
+\noindent\textbf{Prompt đã sử dụng} (nguyên văn):
+\begin{enumerate}[noitemsep]
+  \item ``hãy phân tích đề bài này chi tiết cho tôi''
+  \item ``nhóm tôi có 5 người, hãy viết báo cáo cho tôi và cho ví dụ 1 vài test case và cách thực hiện''
+\end{enumerate}
+
+\noindent\textbf{Kết quả, nhận xét và đề xuất của AI:}
+\begin{itemize}[noitemsep]
+  \item Phân tích đề bài, thang điểm và các ràng buộc.
+  \item Soạn khung báo cáo, phân tích ECP, BVA, decision table, use-case cho Feature 001, 50 test case (6 test case chi tiết),
+        script Katalon mẫu và file \texttt{.xlsx} mẫu.
+  \item Các giới hạn độ dài, locator và thông báo lỗi do AI đề xuất cần được nhóm đối chiếu với hệ thống Moodle thật trước khi dùng.
+\end{itemize}
+
+\subsection{[Thành viên 2]}
+\todo{Điền công cụ AI và prompt, hoặc câu xác nhận không dùng AI.}
+\subsection{[Thành viên 3]}
+\todo{Điền công cụ AI và prompt, hoặc câu xác nhận không dùng AI.}
+\subsection{[Thành viên 4]}
+\todo{Điền công cụ AI và prompt, hoặc câu xác nhận không dùng AI.}
+\subsection{[Thành viên 5]}
+\todo{Điền công cụ AI và prompt, hoặc câu xác nhận không dùng AI.}
+
+\end{document}
