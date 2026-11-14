@@ -1,0 +1,120 @@
+\bigskip\noindent\textbf{TC-001-001 -- Tạo user với dữ liệu hợp lệ}\\
+\noindent\textit{Precondition:} Moodle demo (Moodle 5.1, Docker) đang chạy tại http:/\allowbreak{}/\allowbreak{}127.0.0.1:9501; ngôn ngữ giao diện Moodle và trình duyệt là English; đã đăng nhập bằng tài khoản admin (admin/\allowbreak{}admin, mật khẩu không bị thay đổi); chính sách mật khẩu của demo đang tắt (passwordpolicy = 0). Chưa tồn tại user có username/\allowbreak{}email dùng trong test.
+\smallskip
+
+{\footnotesize
+\begin{longtable}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+\hline
+\rowcolor{gray!15}\textbf{\#} & \textbf{Bước} & \textbf{Mô tả} & \textbf{Kết quả mong đợi} \\ \hline
+\endhead
+1 & Mở trang Add a new user & Vào Site administration \textgreater{} Users \textgreater{} Accounts \textgreater{} Add a new user (hoặc mở \textless{}BASE\_\allowbreak{}URL\textgreater{}/\allowbreak{}user/\allowbreak{}editadvanced.php?id=-1). & Form Add a new user hiển thị với các ô Username, New password, First name, Surname, Email address. \\ \hline
+2 & Nhập Username & Nhập tc001\_\allowbreak{}valid vào ô Username. & Ô Username hiển thị đúng giá trị đã nhập. \\ \hline
+3 & Nhập New password & Nhập Test@1234 vào ô New password. & Ô New password hiển thị đúng giá trị đã nhập. \\ \hline
+4 & Nhập First name & Nhập Nguyen vào ô First name. & Ô First name hiển thị đúng giá trị đã nhập. \\ \hline
+5 & Nhập Surname & Nhập Van A vào ô Surname. & Ô Surname hiển thị đúng giá trị đã nhập. \\ \hline
+6 & Nhập Email address & Nhập tc001\_\allowbreak{}valid@example.com vào ô Email address. & Ô Email address hiển thị đúng giá trị đã nhập. \\ \hline
+7 & Nhập City/\allowbreak{}town & Nhập Ho Chi Minh vào ô City/\allowbreak{}town. & Ô City/\allowbreak{}town hiển thị đúng giá trị đã nhập. \\ \hline
+8 & Bấm Create user & Bấm nút Create user. & -- \\ \hline
+9 & Kiểm tra kết quả & Quan sát trang sau khi gửi. & Chuyển tới trang Browse list of users (/\allowbreak{}admin/\allowbreak{}user.php), hiển thị thông báo "Changes saved" và user mới (email tc001\_\allowbreak{}valid@example.com) có trong danh sách. \\ \hline
+\end{longtable}
+}
+
+\bigskip\noindent\textbf{TC-001-004 -- Username chứa chữ hoa}\\
+\noindent\textit{Precondition:} Moodle demo (Moodle 5.1, Docker) đang chạy tại http:/\allowbreak{}/\allowbreak{}127.0.0.1:9501; ngôn ngữ giao diện Moodle và trình duyệt là English; đã đăng nhập bằng tài khoản admin (admin/\allowbreak{}admin, mật khẩu không bị thay đổi); chính sách mật khẩu của demo đang tắt (passwordpolicy = 0). Chưa tồn tại user có username/\allowbreak{}email dùng trong test.
+\smallskip
+
+{\footnotesize
+\begin{longtable}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+\hline
+\rowcolor{gray!15}\textbf{\#} & \textbf{Bước} & \textbf{Mô tả} & \textbf{Kết quả mong đợi} \\ \hline
+\endhead
+1 & Mở trang Add a new user & Vào Site administration \textgreater{} Users \textgreater{} Accounts \textgreater{} Add a new user (hoặc mở \textless{}BASE\_\allowbreak{}URL\textgreater{}/\allowbreak{}user/\allowbreak{}editadvanced.php?id=-1). & Form Add a new user hiển thị với các ô Username, New password, First name, Surname, Email address. \\ \hline
+2 & Nhập Username & Nhập TC001Upper vào ô Username. & Ô Username hiển thị đúng giá trị đã nhập. \\ \hline
+3 & Nhập New password & Nhập Test@1234 vào ô New password. & Ô New password hiển thị đúng giá trị đã nhập. \\ \hline
+4 & Nhập First name & Nhập Nguyen vào ô First name. & Ô First name hiển thị đúng giá trị đã nhập. \\ \hline
+5 & Nhập Surname & Nhập Van A vào ô Surname. & Ô Surname hiển thị đúng giá trị đã nhập. \\ \hline
+6 & Nhập Email address & Nhập tc001\_\allowbreak{}un\_\allowbreak{}upper@example.com vào ô Email address. & Ô Email address hiển thị đúng giá trị đã nhập. \\ \hline
+7 & Bấm Create user & Bấm nút Create user. & -- \\ \hline
+8 & Kiểm tra lỗi & Quan sát form sau khi gửi. & Không tạo user; vẫn ở trang Add a new user và hiển thị lỗi "The username must be in lower case" dưới ô Username. \\ \hline
+\end{longtable}
+}
+
+\bigskip\noindent\textbf{TC-001-008 -- Password 129 ký tự}\\
+\noindent\textit{Precondition:} Moodle demo (Moodle 5.1, Docker) đang chạy tại http:/\allowbreak{}/\allowbreak{}127.0.0.1:9501; ngôn ngữ giao diện Moodle và trình duyệt là English; đã đăng nhập bằng tài khoản admin (admin/\allowbreak{}admin, mật khẩu không bị thay đổi); chính sách mật khẩu của demo đang tắt (passwordpolicy = 0). Chưa tồn tại user có username/\allowbreak{}email dùng trong test.
+\smallskip
+
+{\footnotesize
+\begin{longtable}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+\hline
+\rowcolor{gray!15}\textbf{\#} & \textbf{Bước} & \textbf{Mô tả} & \textbf{Kết quả mong đợi} \\ \hline
+\endhead
+1 & Mở trang Add a new user & Vào Site administration \textgreater{} Users \textgreater{} Accounts \textgreater{} Add a new user (hoặc mở \textless{}BASE\_\allowbreak{}URL\textgreater{}/\allowbreak{}user/\allowbreak{}editadvanced.php?id=-1). & Form Add a new user hiển thị với các ô Username, New password, First name, Surname, Email address. \\ \hline
+2 & Nhập chuỗi vượt giới hạn & Gõ hoặc dán chuỗi 129 ký tự gồm 129 chữ "a" vào ô New password. & Ô New password chỉ nhận tối đa 128 ký tự; ký tự thứ 129 không nhập được. \\ \hline
+3 & Kiểm tra độ dài & Đếm số ký tự đang có trong ô New password. & Ô chứa đúng 128 ký tự (thuộc tính maxlength = 128). \\ \hline
+\end{longtable}
+}
+
+\bigskip\noindent\textbf{TC-001-021 -- Username 100 ký tự}\\
+\noindent\textit{Precondition:} Moodle demo (Moodle 5.1, Docker) đang chạy tại http:/\allowbreak{}/\allowbreak{}127.0.0.1:9501; ngôn ngữ giao diện Moodle và trình duyệt là English; đã đăng nhập bằng tài khoản admin (admin/\allowbreak{}admin, mật khẩu không bị thay đổi); chính sách mật khẩu của demo đang tắt (passwordpolicy = 0). Chưa tồn tại user có username/\allowbreak{}email dùng trong test.
+\smallskip
+
+{\footnotesize
+\begin{longtable}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+\hline
+\rowcolor{gray!15}\textbf{\#} & \textbf{Bước} & \textbf{Mô tả} & \textbf{Kết quả mong đợi} \\ \hline
+\endhead
+1 & Mở trang Add a new user & Vào Site administration \textgreater{} Users \textgreater{} Accounts \textgreater{} Add a new user (hoặc mở \textless{}BASE\_\allowbreak{}URL\textgreater{}/\allowbreak{}user/\allowbreak{}editadvanced.php?id=-1). & Form Add a new user hiển thị với các ô Username, New password, First name, Surname, Email address. \\ \hline
+2 & Nhập Username & Nhập chuỗi 100 ký tự gồm "u" + 99 chữ "a" vào ô Username. & Ô Username chứa giá trị vừa nhập. \\ \hline
+3 & Nhập New password & Nhập Test@1234 vào ô New password. & Ô New password hiển thị đúng giá trị đã nhập. \\ \hline
+4 & Nhập First name & Nhập Nguyen vào ô First name. & Ô First name hiển thị đúng giá trị đã nhập. \\ \hline
+5 & Nhập Surname & Nhập Van A vào ô Surname. & Ô Surname hiển thị đúng giá trị đã nhập. \\ \hline
+6 & Nhập Email address & Nhập tc001\_\allowbreak{}un100@example.com vào ô Email address. & Ô Email address hiển thị đúng giá trị đã nhập. \\ \hline
+7 & Bấm Create user & Bấm nút Create user. & -- \\ \hline
+8 & Kiểm tra kết quả & Quan sát trang sau khi gửi. & Chuyển tới trang Browse list of users (/\allowbreak{}admin/\allowbreak{}user.php), hiển thị thông báo "Changes saved" và user mới (email tc001\_\allowbreak{}un100@example.com) có trong danh sách. \\ \hline
+\end{longtable}
+}
+
+\bigskip\noindent\textbf{TC-001-043 -- R4: Force password change}\\
+\noindent\textit{Precondition:} Moodle demo (Moodle 5.1, Docker) đang chạy tại http:/\allowbreak{}/\allowbreak{}127.0.0.1:9501; ngôn ngữ giao diện Moodle và trình duyệt là English; đã đăng nhập bằng tài khoản admin (admin/\allowbreak{}admin, mật khẩu không bị thay đổi); chính sách mật khẩu của demo đang tắt (passwordpolicy = 0). Chưa tồn tại user có username/\allowbreak{}email dùng trong test.
+\smallskip
+
+{\footnotesize
+\begin{longtable}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+\hline
+\rowcolor{gray!15}\textbf{\#} & \textbf{Bước} & \textbf{Mô tả} & \textbf{Kết quả mong đợi} \\ \hline
+\endhead
+1 & Mở trang Add a new user & Vào Site administration \textgreater{} Users \textgreater{} Accounts \textgreater{} Add a new user (hoặc mở \textless{}BASE\_\allowbreak{}URL\textgreater{}/\allowbreak{}user/\allowbreak{}editadvanced.php?id=-1). & Form Add a new user hiển thị với các ô Username, New password, First name, Surname, Email address. \\ \hline
+2 & Nhập Username & Nhập tc001\_\allowbreak{}dt\_\allowbreak{}r4 vào ô Username. & Ô Username hiển thị đúng giá trị đã nhập. \\ \hline
+3 & Nhập New password & Nhập Test@1234 vào ô New password. & Ô New password hiển thị đúng giá trị đã nhập. \\ \hline
+4 & Nhập First name & Nhập Nguyen vào ô First name. & Ô First name hiển thị đúng giá trị đã nhập. \\ \hline
+5 & Nhập Surname & Nhập ForceR vào ô Surname. & Ô Surname hiển thị đúng giá trị đã nhập. \\ \hline
+6 & Nhập Email address & Nhập tc001\_\allowbreak{}dt\_\allowbreak{}r4@example.com vào ô Email address. & Ô Email address hiển thị đúng giá trị đã nhập. \\ \hline
+7 & Chọn Force password change & Tick ô Force password change. & Ô Force password change được chọn. \\ \hline
+8 & Bấm Create user & Bấm nút Create user. & -- \\ \hline
+9 & Kiểm tra kết quả & Quan sát trang sau khi gửi. & Chuyển tới trang Browse list of users (/\allowbreak{}admin/\allowbreak{}user.php), hiển thị thông báo "Changes saved" và user mới (email tc001\_\allowbreak{}dt\_\allowbreak{}r4@example.com) có trong danh sách. \\ \hline
+10 & Mở trang Edit profile của user & Bấm vào tên user vừa tạo, rồi bấm Edit profile. & Trang chỉnh sửa user hiển thị. \\ \hline
+11 & Kiểm tra cờ & Quan sát ô Force password change. & Ô Force password change đang được chọn. \\ \hline
+\end{longtable}
+}
+
+\bigskip\noindent\textbf{TC-001-047 -- UC-P2: Bỏ trống rồi nhập lại}\\
+\noindent\textit{Precondition:} Moodle demo (Moodle 5.1, Docker) đang chạy tại http:/\allowbreak{}/\allowbreak{}127.0.0.1:9501; ngôn ngữ giao diện Moodle và trình duyệt là English; đã đăng nhập bằng tài khoản admin (admin/\allowbreak{}admin, mật khẩu không bị thay đổi); chính sách mật khẩu của demo đang tắt (passwordpolicy = 0). Chưa tồn tại user có username/\allowbreak{}email dùng trong test.
+\smallskip
+
+{\footnotesize
+\begin{longtable}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+\hline
+\rowcolor{gray!15}\textbf{\#} & \textbf{Bước} & \textbf{Mô tả} & \textbf{Kết quả mong đợi} \\ \hline
+\endhead
+1 & Mở trang Add a new user & Vào Site administration \textgreater{} Users \textgreater{} Accounts \textgreater{} Add a new user (hoặc mở \textless{}BASE\_\allowbreak{}URL\textgreater{}/\allowbreak{}user/\allowbreak{}editadvanced.php?id=-1). & Form Add a new user hiển thị với các ô Username, New password, First name, Surname, Email address. \\ \hline
+2 & Gửi form rỗng & Không nhập gì, bấm Create user. & -- \\ \hline
+3 & Kiểm tra lỗi lần 1 & Quan sát form. & Form không được gửi; hiển thị lỗi "Missing given name", "Missing last name" và "Required" (Email address). \\ \hline
+4 & Nhập Username & Nhập tc001\_\allowbreak{}uc2 vào ô Username. & Ô Username hiển thị đúng giá trị đã nhập. \\ \hline
+5 & Nhập New password & Nhập Test@1234 vào ô New password. & Ô New password hiển thị đúng giá trị đã nhập. \\ \hline
+6 & Nhập First name & Nhập Nguyen vào ô First name. & Ô First name hiển thị đúng giá trị đã nhập. \\ \hline
+7 & Nhập Surname & Nhập Van A vào ô Surname. & Ô Surname hiển thị đúng giá trị đã nhập. \\ \hline
+8 & Nhập Email address & Nhập tc001\_\allowbreak{}uc2@example.com vào ô Email address. & Ô Email address hiển thị đúng giá trị đã nhập. \\ \hline
+9 & Bấm Create user lần 2 & Bấm nút Create user. & -- \\ \hline
+10 & Kiểm tra kết quả & Quan sát trang sau khi gửi. & Chuyển tới trang Browse list of users (/\allowbreak{}admin/\allowbreak{}user.php), hiển thị thông báo "Changes saved" và user mới (email tc001\_\allowbreak{}uc2@example.com) có trong danh sách. \\ \hline
+\end{longtable}
+}
