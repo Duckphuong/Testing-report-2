@@ -153,7 +153,7 @@ user mặc định). Mã test case có dạng \texttt{TC-XXX-YYY} với XXX là 
 2 & Lê Sĩ Nhật Quang \newline 2312791 & 002 -- Add a new course & Như trên & 20\% \\ \hline
 3 & Huỳnh Đức Tài \newline 2212971 & 003 -- Add a quiz & Như trên & 20\% \\ \hline
 4 & Đào Xuân Sơn \newline 2312954 & 004 -- Add new category & Như trên & 20\% \\ \hline
-5 & Sơn Văn Phát \newline 2212535 & 005 -- Enrol users & Như trên & 20\% \\ \hline
+5 & Sơn Văn Phát \newline 2212535 & 005 -- Add a Choice & Phân tích chức năng, thiết kế 24 ca kiểm thử, ghi kịch bản Katalon và viết báo cáo F005. & 20\% \\ \hline
 \end{longtable}
 }
 
@@ -177,7 +177,7 @@ có nhánh (use-case testing).
 002 & Add a new course & Quản trị viên tạo khóa học mới (full name, short name, category, visibility, start/end date, ID number). & Quang \\ \hline
 003 & --- & --- & Tài \\ \hline
 004 & Add new category & Quản trị viên tạo danh mục khóa học mới. & Sơn \\ \hline
-005 & --- & --- & Phát \\ \hline
+005 & Add a Choice & Tạo hoạt động Choice và cấu hình phương án, thời gian, kết quả. & Phát \\ \hline
 \end{tabular}
 \caption{Danh sách feature}
 \end{table}
@@ -191,7 +191,7 @@ có nhánh (use-case testing).
 002 & Add a new course & Full name/short name hợp lệ, short name không trùng, đã chọn category, bật end date, end date $>$ start date. \\ \hline
 003 & --- & --- \\ \hline
 004 & Add new category & Parent category đã chọn, Name hợp lệ, Category ID number (rỗng/duy nhất/trùng), Parent là Top hay danh mục khác. \\ \hline
-005 & --- & --- \\ \hline
+005 & Add a Choice & Trường bắt buộc, giới hạn phản hồi, thời gian và công bố kết quả. \\ \hline
 \end{tabular}
 \caption{Kiểm tra mỗi feature có áp dụng được bảng quyết định}
 \end{table}
@@ -584,7 +584,7 @@ Năm test case dưới đây minh họa cách ghi trong file \texttt{.xlsx}; cá
 Dữ liệu dùng tiền tố \texttt{tc004\_} để dễ dọn dẹp; tên và ID number là giá trị cố định, đúng như trong script Katalon.
 
 \input{f004_detail.tex}
-\section{Feature 005: ---}
+\input{feature005.tex}
 % ================= 7 =================
 \section{Triển khai test case bằng Katalon Recorder}
 
@@ -768,10 +768,66 @@ verifyElementPresent | link=tc004_p5b
 \texttt{tc004\_p6} (TC-004-026); (2) xóa \texttt{tc004\_root} cùng toàn bộ danh mục con (\textit{Delete $>$ Delete all}), gồm cả danh mục tên rỗng do
 TC-004-003 tạo; (3) tạo lại \texttt{tc004\_root} và \texttt{tc004\_base} (ID number \texttt{tc004\_dup}). Các ID number cố định cần được giải phóng:
 \texttt{tc004\_id001}, \texttt{q}, \texttt{qq}, hai ID dài 99 và 100 ký tự, \texttt{tc004\_idchild}, \texttt{tc004\_p1id}, \texttt{tc004\_p3id}.
-\subsection{TC-005-001}
+\subsection{Feature 005: Add a Choice}
+Bộ kiểm thử nằm trong file \texttt{F005\_Add\_a\_Choice.krecorder}, gồm \textbf{24 ca TC-005-001 đến TC-005-024}. Tên suite hiển thị khi mở file là \texttt{F005\_Enrol\_Users}. Các thao tác trên Moodle được ghi bằng chức năng \textit{Record} của Katalon Recorder.
 
+\begin{itemize}[noitemsep]
+  \item \textbf{Điều kiện trước khi chạy:} Moodle demo chạy tại \texttt{http://127.0.0.1:9501}, tài khoản quản trị đã đăng nhập, khóa học F005 có mục \textit{General} và \textit{Edit mode} đang tắt.
+  \item \textbf{Chuẩn bị dữ liệu:} dùng tên Choice và phương án trong từng ca. Trước khi chạy lại, dọn các hoạt động do lượt trước tạo để tránh nhầm với hoạt động vừa lưu.
+  \item \textbf{Kiểm tra kết quả:} bản ghi có lệnh \texttt{verifyText} ở 21 ca. Các giá trị trong bảng dưới đây lấy từ file Katalon và dùng để đối chiếu với kết quả mong đợi trong bảng test case.
+\end{itemize}
 
+\begin{table}[H]
+\centering\footnotesize
+\begin{tabular}{|L{2.3cm}|L{4.8cm}|L{7.1cm}|}
+\hline
+\rowcolor{gray!15}\textbf{Nhóm test case} & \textbf{Vị trí kiểm tra} & \textbf{Giá trị kiểm tra trong bản ghi} \\ \hline
+001, 003--006 & Tiêu đề trang Choice & Tên hoạt động được nhập trong bản ghi. Ca 006 đang dùng tên có tiền tố \texttt{F005-CHOICE-005}. \\ \hline
+002 & \texttt{id=id\_error\_name} & You must supply a value here. \\ \hline
+007 & \texttt{id=id\_error\_option\_0}, tiêu đề trang Choice & You need to provide at least one possible answer. Sau khi nhập Option 1 và lưu lại, kiểm tiêu đề \texttt{F005-ENROL-LAB}. \\ \hline
+008, 009, 011--015, 019 & Nhãn phương án trên trang Choice & Nhãn phương án theo từng ca. Ca 015 kiểm \textit{Sáng (Full)}. \\ \hline
+010 & Vùng mô tả & Chọn khung giờ học \\ \hline
+018, 021 & Thông báo thời gian & Thời điểm mở ở ca 018 và nhãn \textit{Opens:} ở ca 021. \\ \hline
+020 & \texttt{id=id\_error\_timeclose} & You have specified a close date before the open date. \\ \hline
+022, 023 & Menu \textit{More}, liên kết \textit{Show chart data} & More, Show chart data. Hai bước này chưa kiểm trực tiếp cấu hình cần xác nhận trong Excel. \\ \hline
+016, 017, 024 & Chưa có lệnh kiểm & Cần kiểm giá trị giới hạn sau khi lưu ở ca 016, 017 và sự vắng mặt của Choice sau khi hủy ở ca 024. \\ \hline
+\end{tabular}
+\caption{Đối chiếu lệnh kiểm trong bộ Katalon của Feature 005}
+\end{table}
 
+\textbf{TC-005-001 (tạo Choice hợp lệ, trích các lệnh chính).}
+Sau khi mở form, kịch bản nhập hai phương án SÁNG và CHIỀU, lưu rồi kiểm tiêu đề.
+\begin{lstlisting}
+type       | id=id_name       | F005-CHOICE-001
+type       | id=id_option_0  | SANG
+type       | id=id_option_1  | CHIEU
+click      | id=id_submitbutton
+open       | http://127.0.0.1:9501/mod/choice/view.php?id=18&forceview=1
+verifyText | id=yui_3_18_1_1_1794657493759_196 | F005-CHOICE-001
+\end{lstlisting}
+Hai phương án được viết không dấu trong đoạn trích. Bản ghi dùng SÁNG và CHIỀU. Để xác nhận hoạt động vừa tạo, cần kiểm tiêu đề trên trang do \textit{Save and display} mở và dùng locator của tiêu đề thay cho ID sinh theo lượt tải trang.
+
+\textbf{TC-005-007 (thiếu phương án đầu tiên).}
+Kịch bản gửi form khi đã nhập Option 2 và để trống Option 1. Moodle hiển thị lỗi tại Option 1. Sau bước kiểm lỗi, kịch bản nhập Option 1, lưu lại và kiểm tiêu đề.
+\begin{lstlisting}
+click      | id=id_submitbutton
+verifyText | id=id_error_option_0 | You need to provide at least one possible answer.
+type       | id=id_option_0      | sang
+click      | id=id_submitbutton
+\end{lstlisting}
+Giá trị \texttt{sang} trong đoạn trích tương ứng với \textit{sáng} trong file gốc.
+
+\textbf{TC-005-020 (giờ đóng trước giờ mở).}
+Sau khi đặt giờ mở 09:30 và giờ đóng 09:29 cùng ngày, kịch bản lưu để kiểm thông báo lỗi, đổi giờ đóng thành 09:31 rồi lưu lại.
+\begin{lstlisting}
+select     | id=id_timeclose_minute | label=29
+click      | id=id_submitbutton
+verifyText | id=id_error_timeclose | You have specified a close date before the open date.
+select     | id=id_timeclose_minute | label=31
+click      | id=id_submitbutton
+\end{lstlisting}
+
+\textbf{Dọn dữ liệu:} sau khi chạy, mở khóa học F005, bật \textit{Edit mode} và xóa các hoạt động Choice do bộ kiểm thử tạo trong mục \textit{General}. Đối chiếu tên trong từng ca trước khi xóa, kể cả tên một hoặc hai ký tự. Tắt \textit{Edit mode} sau khi dọn.
 
 \subsection{Dọn dữ liệu sau khi chạy}
 Các user do test tạo có username/email chứa \texttt{tc001\_}. Để dọn: vào Browse list of users, lọc theo email chứa
@@ -779,10 +835,12 @@ Các user do test tạo có username/email chứa \texttt{tc001\_}. Để dọn:
 Ba test case dùng giá trị cố định (TC-001-018, TC-001-019, TC-001-034) phải được dọn trước khi chạy lại.
 
 
+
 \subsection{Chạy test suite, tải file và log}
 \begin{enumerate}[noitemsep]
   \item Import \texttt{F001\_Add\_New\_User.krecorder} vào Katalon Recorder, chạy toàn bộ suite (Setup trước) trên
         \textbf{ít nhất một trình duyệt} (ví dụ Chrome) \textbf{trước khi tải về}; sửa các test case lỗi do locator hoặc dữ liệu.
+  \item Với Feature 005, mở \texttt{F005\_Add\_a\_Choice.krecorder}, đăng nhập admin theo tiền điều kiện của mục 10.7 rồi chạy \textit{Play Test Suite}. Đối chiếu log với từng ca trong bảng test case.
   \item Tải test suite ở định dạng \texttt{.krecorder} (Export/Save). \textbf{Log chạy được tải kèm test suite}, vì vậy phải chạy xong rồi mới tải.
   \item \textbf{Chạy lại trên một máy khác} để chắc chắn test suite chạy ổn định, rồi mới nộp.
   \item Mỗi test case có ít nhất một lệnh \texttt{verify...}.
@@ -847,7 +905,21 @@ còn các bảng lệnh ở trên chỉ là script Katalon tương ứng để t
   \item Gợi ý thiết kế test case cho Feature 004 theo bốn kỹ thuật (ECP, BVA, decision table, use-case testing); ban đầu cho feature Add an assignment, sau đó cho Add new category.
   \item Soạn và định dạng LaTeX phần Feature 004 trong báo cáo này, đối chiếu với file \texttt{F004\_Add\_new\_catogory.krecorder} của nhóm.
 \end{itemize}
-\subsection{Thành viên 5}
-\todo{Điền công cụ AI và prompt, hoặc câu xác nhận không dùng AI.}
+
+\subsection{[Sơn Văn Phát]}
+\textbf{Công cụ:} ChatGPT (OpenAI), mô hình GPT, sử dụng qua Codex.
+
+\noindent\textbf{Prompt đã sử dụng} (diễn đạt lại):
+\begin{enumerate}[noitemsep]
+  \item Hỗ trợ tôi thiết kế các ca kiểm thử cho chức năng Add a Choice trên Moodle. Trình bày theo mẫu Excel của nhóm, ghi rõ tiền điều kiện, các bước thực hiện và kết quả mong đợi.
+  \item Dựa trên bảng test case đã cập nhật, viết phần Feature 005 theo bố cục của Feature 002. Trình bày luồng sử dụng, cách áp dụng từng kỹ thuật kiểm thử và các ca mẫu.
+\end{enumerate}
+
+\noindent\textbf{Kết quả, nhận xét và đề xuất của AI:}
+\begin{itemize}[noitemsep]
+  \item Đề xuất dữ liệu cho 24 ca kiểm thử của Feature 005, gồm các trường hợp tạo Choice thành công, kiểm tra giá trị biên, sửa dữ liệu sau khi form báo lỗi và hủy tạo.
+  \item Hỗ trợ viết đặc tả use case, vẽ sơ đồ hoạt động và trình bày kết quả phân tích ECP, BVA, bảng quyết định và use-case testing trong báo cáo.
+  \item Thành viên đã ghi thao tác tạo Choice trên Moodle demo và dùng Katalon Recorder để kiểm tra tiêu đề hoạt động. AI góp ý điều chỉnh bước kiểm tra để kiểm đúng trang Moodle mở sau khi lưu.
+\end{itemize}
 
 \end{document}

@@ -1,0 +1,132 @@
+\bigskip\noindent\textbf{TC-005-001 -- Tạo Choice cơ bản}\\
+\noindent\textit{Precondition:} Moodle demo \url{http://127.0.0.1:9501/}, giao diện English. Đã đăng nhập admin. Khóa F005-ENROL-LAB có mục General và bật hoạt động Choice. Chưa có Choice dùng dữ liệu tên của ca này. Edit mode ở trạng thái Off trước khi chạy.
+\smallskip
+
+{\footnotesize
+\begin{longtable}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+\hline
+\rowcolor{gray!15}\textbf{\#} & \textbf{Bước} & \textbf{Mô tả} & \textbf{Kết quả mong đợi} \\ \hline
+\endhead
+1 & Mở khóa học & Vào Home  $\rightarrow$  F005-ENROL-LAB. & Trang khóa học hiển thị. \\ \hline
+2 & Bật Edit mode & Bật Edit mode. & Hiện nút thêm hoạt động trong khóa. \\ \hline
+3 & Mở form Choice & Trong General, bấm Add an activity or resource, chọn Choice rồi bấm Add. & Form tạo Choice hiển thị. \\ \hline
+4 & Nhập Choice name & Nhập F005-CHOICE-001 vào Choice name. & Choice name có 15 ký tự. \\ \hline
+5 & Nhập Option 1 & Nhập Sáng vào Option 1. & Option 1 hiện Sáng. \\ \hline
+6 & Nhập Option 2 & Nhập Chiều vào Option 2. & Option 2 hiện Chiều. \\ \hline
+7 & Bấm lưu & Bấm Save and display. & Trang Choice mở với tên F005-CHOICE-001. \\ \hline
+8 & Tắt Edit mode & Bấm Home, mở lại khóa F005 rồi tắt Edit mode. & Edit mode hiển thị Off. \\ \hline
+\end{longtable}
+}
+
+\bigskip\noindent\textbf{TC-005-002 -- Thiếu tên Choice}\\
+\noindent\textit{Precondition:} Moodle demo \url{http://127.0.0.1:9501/}, giao diện English. Đã đăng nhập admin. Khóa F005-ENROL-LAB có mục General và bật hoạt động Choice. Chưa có Choice dùng dữ liệu tên của ca này. Edit mode ở trạng thái Off trước khi chạy.
+\smallskip
+
+{\footnotesize
+\begin{longtable}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+\hline
+\rowcolor{gray!15}\textbf{\#} & \textbf{Bước} & \textbf{Mô tả} & \textbf{Kết quả mong đợi} \\ \hline
+\endhead
+1 & Mở khóa học & Vào Home  $\rightarrow$  F005-ENROL-LAB. & Trang khóa học hiển thị. \\ \hline
+2 & Bật Edit mode & Bật Edit mode. & Hiện nút thêm hoạt động trong khóa. \\ \hline
+3 & Mở form Choice & Trong General, bấm Add an activity or resource, chọn Choice rồi bấm Add. & Form tạo Choice hiển thị. \\ \hline
+4 & Để trống Choice name & Để trống Choice name. & Choice name trống. \\ \hline
+5 & Nhập Option 1 & Nhập Sáng vào Option 1. & Option 1 hiện Sáng. \\ \hline
+6 & Nhập Option 2 & Nhập Chiều vào Option 2. & Option 2 hiện Chiều. \\ \hline
+7 & Bấm lưu & Bấm Save and display. & Form vẫn mở. Choice name báo lỗi bắt buộc. \\ \hline
+8 & Nhập lại Choice name & Nhập F005-CHOICE-002 vào Choice name. & Choice name hiện F005-CHOICE-002. \\ \hline
+9 & Bấm lưu lại & Bấm Save and display. & Trang Choice hiển thị F005-CHOICE-002. \\ \hline
+10 & Tắt Edit mode & Bấm Home, mở lại khóa F005 rồi tắt Edit mode. & Edit mode hiển thị Off. \\ \hline
+\end{longtable}
+}
+
+\bigskip\noindent\textbf{TC-005-007 -- Thiếu Option 1}\\
+\noindent\textit{Precondition:} Moodle demo \url{http://127.0.0.1:9501/}, giao diện English. Đã đăng nhập admin. Khóa F005-ENROL-LAB có mục General và bật hoạt động Choice. Chưa có Choice dùng dữ liệu tên của ca này. Edit mode ở trạng thái Off trước khi chạy.
+\smallskip
+
+{\footnotesize
+\begin{longtable}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+\hline
+\rowcolor{gray!15}\textbf{\#} & \textbf{Bước} & \textbf{Mô tả} & \textbf{Kết quả mong đợi} \\ \hline
+\endhead
+1 & Mở khóa học & Vào Home  $\rightarrow$  F005-ENROL-LAB. & Trang khóa học hiển thị. \\ \hline
+2 & Bật Edit mode & Bật Edit mode. & Hiện nút thêm hoạt động trong khóa. \\ \hline
+3 & Mở form Choice & Trong General, bấm Add an activity or resource, chọn Choice rồi bấm Add. & Form tạo Choice hiển thị. \\ \hline
+4 & Nhập Choice name & Nhập F005-CHOICE-008 vào Choice name. & Choice name có 15 ký tự. \\ \hline
+5 & Để trống Option 1 & Để trống Option 1. & Option 1 trống. \\ \hline
+6 & Nhập Option 2 & Nhập Chiều vào Option 2. & Option 2 hiện Chiều. \\ \hline
+7 & Bấm lưu & Bấm Save and display. & Form vẫn mở. Option 1 báo phải nhập ít nhất một phương án. \\ \hline
+8 & Nhập lại Option 1 & Nhập Sáng vào Option 1. & Option 1 hiện Sáng. \\ \hline
+9 & Bấm lưu lại & Bấm Save and display. & Trang Choice hiển thị F005-CHOICE-008. \\ \hline
+10 & Tắt Edit mode & Bấm Home, mở lại khóa F005 rồi tắt Edit mode. & Edit mode hiển thị Off. \\ \hline
+\end{longtable}
+}
+
+\bigskip\noindent\textbf{TC-005-017 -- Đặt Limit 1 bằng 2 và hiện chỗ còn}\\
+\noindent\textit{Precondition:} Moodle demo \url{http://127.0.0.1:9501/}, giao diện English. Đã đăng nhập admin. Khóa F005-ENROL-LAB có mục General và bật hoạt động Choice. Chưa có Choice dùng dữ liệu tên của ca này. Edit mode ở trạng thái Off trước khi chạy.
+\smallskip
+
+{\footnotesize
+\begin{longtable}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+\hline
+\rowcolor{gray!15}\textbf{\#} & \textbf{Bước} & \textbf{Mô tả} & \textbf{Kết quả mong đợi} \\ \hline
+\endhead
+1 & Mở khóa học & Vào Home  $\rightarrow$  F005 & Trang khóa học hiển thị. \\ \hline
+2 & Bật Edit mode & Bật Edit mode. & Hiện nút thêm hoạt động trong khóa. \\ \hline
+3 & Mở form Choice & Trong General, bấm Add an activity or resource, chọn Choice rồi bấm Add. & Form tạo Choice hiển thị. \\ \hline
+4 & Nhập Choice name & Nhập F005-CHOICE-017 vào Choice name. & Choice name có 15 ký tự. \\ \hline
+5 & Nhập Option 1 & Nhập Sáng vào Option 1. & Option 1 hiện Sáng. \\ \hline
+6 & Nhập Option 2 & Nhập Chiều vào Option 2. & Option 2 hiện Chiều. \\ \hline
+7 & Bật giới hạn & Chọn Yes ở Limit the number of responses allowed. & Hiện các ô Limit. \\ \hline
+8 & Nhập Limit 1 & Nhập 2 vào Limit 1 và 2 vào Limit 2. & Limit 1 hiện 2. \\ \hline
+9 & Hiện chỗ còn & Chọn Yes ở Show available spaces. & Hiện Yes. \\ \hline
+10 & Bấm lưu & Bấm Save and display. & Trang Choice mở với tên F005-CHOICE-017. \\ \hline
+11 & Kiểm cấu hình đã lưu & Bấm Settings của Choice. Đối chiếu trường đã chỉnh. & Limit 1 lưu 2, Limit 2 lưu 2. Show available spaces lưu Yes. \\ \hline
+12 & Tắt Edit mode & Bấm Home, mở lại khóa F005 rồi tắt Edit mode. & Edit mode hiển thị Off. \\ \hline
+\end{longtable}
+}
+
+\bigskip\noindent\textbf{TC-005-020 -- Giờ đóng trước giờ mở 1 phút}\\
+\noindent\textit{Precondition:} Moodle demo \url{http://127.0.0.1:9501/}, giao diện English. Đã đăng nhập admin. Khóa F005-ENROL-LAB có mục General và bật hoạt động Choice. Chưa có Choice dùng dữ liệu tên của ca này. Edit mode ở trạng thái Off trước khi chạy.
+\smallskip
+
+{\footnotesize
+\begin{longtable}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+\hline
+\rowcolor{gray!15}\textbf{\#} & \textbf{Bước} & \textbf{Mô tả} & \textbf{Kết quả mong đợi} \\ \hline
+\endhead
+1 & Mở khóa học & Vào Home  $\rightarrow$  F005 & Trang khóa học hiển thị. \\ \hline
+2 & Bật Edit mode & Bật Edit mode. & Hiện nút thêm hoạt động trong khóa. \\ \hline
+3 & Mở form Choice & Trong General, bấm Add an activity or resource, chọn Choice rồi bấm Add. & Form tạo Choice hiển thị. \\ \hline
+4 & Nhập Choice name & Nhập F005-CHOICE-020 vào Choice name. & Choice name có 15 ký tự. \\ \hline
+5 & Nhập Option 1 & Nhập Sáng vào Option 1. & Option 1 hiện Sáng. \\ \hline
+6 & Nhập Option 2 & Nhập Chiều vào Option 2. & Option 2 hiện Chiều. \\ \hline
+7 & Đặt giờ mở & Tích Enable tại Allow responses from. Chọn 01/12/2027 09:30. & Giờ mở hiện 01/12/2027 09:30. \\ \hline
+8 & Đặt giờ đóng & Tích Enable tại Allow responses until. Chọn 01/12/2027 09:29. & Giờ đóng hiện 01/12/2027 09:29. \\ \hline
+9 & Bấm lưu & Bấm Save and display. & Form vẫn mở. Giờ đóng báo lỗi vì trước giờ mở. \\ \hline
+10 & Sửa giờ đóng & Trong Availability, đổi Allow responses until thành 01/12/2027 09:31. & Giờ đóng hiển thị 01/12/2027 09:31. \\ \hline
+11 & Bấm lưu lại & Bấm Save and display. & Trang Choice hiển thị F005-CHOICE-020. \\ \hline
+12 & Tắt Edit mode & Bấm Home, mở lại khóa F005 rồi tắt Edit mode. & Edit mode hiển thị Off. \\ \hline
+\end{longtable}
+}
+
+\bigskip\noindent\textbf{TC-005-024 -- Hủy tạo Choice}\\
+\noindent\textit{Precondition:} Moodle demo \url{http://127.0.0.1:9501/}, giao diện English. Đã đăng nhập admin. Khóa F005-ENROL-LAB có mục General và bật hoạt động Choice. Chưa có Choice dùng dữ liệu tên của ca này. Edit mode ở trạng thái Off trước khi chạy.
+\smallskip
+
+{\footnotesize
+\begin{longtable}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+\hline
+\rowcolor{gray!15}\textbf{\#} & \textbf{Bước} & \textbf{Mô tả} & \textbf{Kết quả mong đợi} \\ \hline
+\endhead
+1 & Mở khóa học & Vào Home  $\rightarrow$  F005 & Trang khóa học hiển thị. \\ \hline
+2 & Bật Edit mode & Bật Edit mode. & Hiện nút thêm hoạt động trong khóa. \\ \hline
+3 & Mở form Choice & Trong General, bấm Add an activity or resource, chọn Choice rồi bấm Add. & Form tạo Choice hiển thị. \\ \hline
+4 & Nhập Choice name & Nhập F005-CHOICE-024 vào Choice name. & Choice name có 15 ký tự. \\ \hline
+5 & Nhập Option 1 & Nhập Sáng vào Option 1. & Option 1 hiện Sáng. \\ \hline
+6 & Nhập Option 2 & Nhập Chiều vào Option 2. & Option 2 hiện Chiều. \\ \hline
+7 & Bấm Cancel & Bấm Cancel ở cuối form. & Quay về trang khóa học. \\ \hline
+8 & Kiểm danh sách & Vào Home  $\rightarrow$  F005 & Không có hoạt động F005-CHOICE-024. \\ \hline
+9 & Tắt Edit mode & Bấm Home, mở lại khóa F005 rồi tắt Edit mode. & Edit mode hiển thị Off. \\ \hline
+\end{longtable}
+}
