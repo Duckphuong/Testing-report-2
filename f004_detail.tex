@@ -1,0 +1,93 @@
+\bigskip\noindent\textbf{TC-004-001 -- Tạo danh mục với dữ liệu hợp lệ}\\
+\noindent\textit{Precondition:} Moodle demo (Docker) đang chạy tại http:/\allowbreak{}/\allowbreak{}127.0.0.1:9501; giao diện Moodle và trình duyệt là English; trình duyệt đã đăng nhập bằng admin (admin/\allowbreak{}admin, mật khẩu không bị thay đổi); đã tạo thủ công danh mục cấp Top tên tc004\_\allowbreak\{\}root, bên trong có danh mục con tc004\_\allowbreak\{\}base với Category ID number là tc004\_\allowbreak\{\}dup; chưa có danh mục nào khác dùng tên hoặc ID number của test này (xem mục dọn dữ liệu).
+\smallskip
+
+{\footnotesize
+\begin{longtable}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+\hline
+\rowcolor{gray!15}\textbf{\#} & \textbf{Bước} & \textbf{Mô tả} & \textbf{Kết quả mong đợi} \\ \hline
+\endhead
+1 & Mở form Add new category & Mở \textless{}BASE\_\allowbreak\{\}URL\textgreater{}/\allowbreak{}course/\allowbreak{}editcategory.php?parent=0. & Form Add new category hiển thị. \\ \hline
+2 & Chọn Parent category & Trong ô Parent category chọn Top. & Ô Parent category hiển thị Top. \\ \hline
+3 & Nhập Category name & Nhập tc004\_\allowbreak\{\}valid vào ô Category name. & Ô hiển thị đúng giá trị đã nhập. \\ \hline
+4 & Nhập Category ID number & Nhập tc004\_\allowbreak\{\}id001 vào ô Category ID number. & Ô hiển thị đúng giá trị đã nhập. \\ \hline
+5 & Bấm Create category & Bấm nút Create category. & -- \\ \hline
+6 & Kiểm tra kết quả & Quan sát trang sau khi gửi. & Chuyển tới trang Manage course categories and courses; danh mục tc004\_\allowbreak\{\}valid xuất hiện trong cây danh mục. \\ \hline
+\end{longtable}
+}
+
+\bigskip\noindent\textbf{TC-004-003 -- Category name chỉ có khoảng trắng}\\
+\noindent\textit{Precondition:} Moodle demo (Docker) đang chạy tại http:/\allowbreak{}/\allowbreak{}127.0.0.1:9501; giao diện Moodle và trình duyệt là English; trình duyệt đã đăng nhập bằng admin (admin/\allowbreak{}admin, mật khẩu không bị thay đổi); đã tạo thủ công danh mục cấp Top tên tc004\_\allowbreak\{\}root, bên trong có danh mục con tc004\_\allowbreak\{\}base với Category ID number là tc004\_\allowbreak\{\}dup; chưa có danh mục nào khác dùng tên hoặc ID number của test này (xem mục dọn dữ liệu).
+\smallskip
+
+{\footnotesize
+\begin{longtable}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+\hline
+\rowcolor{gray!15}\textbf{\#} & \textbf{Bước} & \textbf{Mô tả} & \textbf{Kết quả mong đợi} \\ \hline
+\endhead
+1 & Mở form Add new category & Mở \textless{}BASE\_\allowbreak\{\}URL\textgreater{}/\allowbreak{}course/\allowbreak{}editcategory.php?parent=0. & Form Add new category hiển thị. \\ \hline
+2 & Chọn Parent category & Trong ô Parent category chọn tc004\_\allowbreak\{\}root. & Ô Parent category hiển thị tc004\_\allowbreak\{\}root. \\ \hline
+3 & Nhập Category name & Nhập 3 dấu cách vào ô Category name. & Ô Category name chứa 3 dấu cách. \\ \hline
+4 & Bấm Create category & Bấm nút Create category. & -- \\ \hline
+5 & Kiểm tra kết quả & Quan sát trang sau khi gửi. & Không hiện lỗi Required; chuyển tới trang Manage course categories and courses. \\ \hline
+6 & Mở tc004\_\allowbreak\{\}root & Bấm link tc004\_\allowbreak\{\}root trong cây danh mục. & Trang hiển thị nội dung danh mục tc004\_\allowbreak\{\}root. \\ \hline
+7 & Kiểm tra danh mục con & Quan sát danh sách danh mục con. & Danh mục tc004\_\allowbreak\{\}base hiển thị trong tc004\_\allowbreak\{\}root. \\ \hline
+\end{longtable}
+}
+
+\bigskip\noindent\textbf{TC-004-004 -- Category name 256 ký tự (max+1)}\\
+\noindent\textit{Precondition:} Moodle demo (Docker) đang chạy tại http:/\allowbreak{}/\allowbreak{}127.0.0.1:9501; giao diện Moodle và trình duyệt là English; trình duyệt đã đăng nhập bằng admin (admin/\allowbreak{}admin, mật khẩu không bị thay đổi); đã tạo thủ công danh mục cấp Top tên tc004\_\allowbreak\{\}root, bên trong có danh mục con tc004\_\allowbreak\{\}base với Category ID number là tc004\_\allowbreak\{\}dup; chưa có danh mục nào khác dùng tên hoặc ID number của test này (xem mục dọn dữ liệu).
+\smallskip
+
+{\footnotesize
+\begin{longtable}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+\hline
+\rowcolor{gray!15}\textbf{\#} & \textbf{Bước} & \textbf{Mô tả} & \textbf{Kết quả mong đợi} \\ \hline
+\endhead
+1 & Mở form Add new category & Mở \textless{}BASE\_\allowbreak\{\}URL\textgreater{}/\allowbreak{}course/\allowbreak{}editcategory.php?parent=0. & Form Add new category hiển thị. \\ \hline
+2 & Chọn Parent category & Trong ô Parent category chọn tc004\_\allowbreak\{\}root. & Ô Parent category hiển thị tc004\_\allowbreak\{\}root. \\ \hline
+3 & Nhập Category name & Nhập chuỗi 256 ký tự (bắt đầu bằng tc004\_\allowbreak\{\}n256\_\allowbreak\{\}, phần còn lại là chữ a) vào ô Category name. & Ô Category name nhận đủ 256 ký tự (ô không chặn nhập). \\ \hline
+4 & Bấm Create category & Bấm nút Create category. & -- \\ \hline
+5 & Kiểm tra lỗi & Quan sát trang sau khi gửi. & Không tạo danh mục; Moodle hiển thị trang Error với dòng ``Category name too long''. \\ \hline
+\end{longtable}
+}
+
+\bigskip\noindent\textbf{TC-004-006 -- Category ID number đã tồn tại}\\
+\noindent\textit{Precondition:} Moodle demo (Docker) đang chạy tại http:/\allowbreak{}/\allowbreak{}127.0.0.1:9501; giao diện Moodle và trình duyệt là English; trình duyệt đã đăng nhập bằng admin (admin/\allowbreak{}admin, mật khẩu không bị thay đổi); đã tạo thủ công danh mục cấp Top tên tc004\_\allowbreak\{\}root, bên trong có danh mục con tc004\_\allowbreak\{\}base với Category ID number là tc004\_\allowbreak\{\}dup; chưa có danh mục nào khác dùng tên hoặc ID number của test này (xem mục dọn dữ liệu).
+\smallskip
+
+{\footnotesize
+\begin{longtable}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+\hline
+\rowcolor{gray!15}\textbf{\#} & \textbf{Bước} & \textbf{Mô tả} & \textbf{Kết quả mong đợi} \\ \hline
+\endhead
+1 & Mở form Add new category & Mở \textless{}BASE\_\allowbreak\{\}URL\textgreater{}/\allowbreak{}course/\allowbreak{}editcategory.php?parent=0. & Form Add new category hiển thị. \\ \hline
+2 & Chọn Parent category & Trong ô Parent category chọn tc004\_\allowbreak\{\}root. & Ô Parent category hiển thị tc004\_\allowbreak\{\}root. \\ \hline
+3 & Nhập Category name & Nhập tc004\_\allowbreak\{\}dupid vào ô Category name. & Ô hiển thị đúng giá trị đã nhập. \\ \hline
+4 & Nhập Category ID number & Nhập tc004\_\allowbreak\{\}dup (trùng ID của danh mục tc004\_\allowbreak\{\}base). & Ô hiển thị đúng giá trị đã nhập. \\ \hline
+5 & Bấm Create category & Bấm nút Create category. & -- \\ \hline
+6 & Kiểm tra lỗi & Quan sát form sau khi gửi. & Không tạo danh mục; vẫn ở trang Add new category; hiện lỗi ``ID number is already used for another category''. \\ \hline
+\end{longtable}
+}
+
+\bigskip\noindent\textbf{TC-004-025 -- UC-P5: Tạo danh mục con của danh mục con}\\
+\noindent\textit{Precondition:} Moodle demo (Docker) đang chạy tại http:/\allowbreak{}/\allowbreak{}127.0.0.1:9501; giao diện Moodle và trình duyệt là English; trình duyệt đã đăng nhập bằng admin (admin/\allowbreak{}admin, mật khẩu không bị thay đổi); đã tạo thủ công danh mục cấp Top tên tc004\_\allowbreak\{\}root, bên trong có danh mục con tc004\_\allowbreak\{\}base với Category ID number là tc004\_\allowbreak\{\}dup; chưa có danh mục nào khác dùng tên hoặc ID number của test này (xem mục dọn dữ liệu).
+\smallskip
+
+{\footnotesize
+\begin{longtable}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+\hline
+\rowcolor{gray!15}\textbf{\#} & \textbf{Bước} & \textbf{Mô tả} & \textbf{Kết quả mong đợi} \\ \hline
+\endhead
+1 & Mở form Add new category & Mở \textless{}BASE\_\allowbreak\{\}URL\textgreater{}/\allowbreak{}course/\allowbreak{}editcategory.php?parent=0. & Form Add new category hiển thị. \\ \hline
+2 & Chọn Parent category & Trong ô Parent category chọn tc004\_\allowbreak\{\}root. & Ô Parent category hiển thị tc004\_\allowbreak\{\}root. \\ \hline
+3 & Nhập Category name & Nhập tc004\_\allowbreak\{\}p5a vào ô Category name. & Ô hiển thị đúng giá trị đã nhập. \\ \hline
+4 & Bấm Create category & Bấm nút Create category. & -- \\ \hline
+5 & Kiểm tra danh mục cấp 1 & Quan sát trang sau khi gửi. & Chuyển tới trang Manage course categories and courses; tc004\_\allowbreak\{\}p5a được tạo dưới tc004\_\allowbreak\{\}root. \\ \hline
+6 & Mở form tạo danh mục con & Bấm link Create new category; trong ô Parent category chọn tc004\_\allowbreak\{\}p5a. & Form hiển thị; ô Parent category hiển thị tc004\_\allowbreak\{\}p5a. \\ \hline
+7 & Nhập Category name & Nhập tc004\_\allowbreak\{\}p5b vào ô Category name. & Ô hiển thị đúng giá trị đã nhập. \\ \hline
+8 & Bấm Create category & Bấm nút Create category. & -- \\ \hline
+9 & Kiểm tra danh mục cấp 2 & Bấm tc004\_\allowbreak\{\}p5a trong cây danh mục. & Danh mục tc004\_\allowbreak\{\}p5b nằm dưới tc004\_\allowbreak\{\}p5a. \\ \hline
+\end{longtable}
+}
+
