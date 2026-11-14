@@ -1,0 +1,138 @@
+\section{Feature 005: Add a Choice}
+\label{sec:feature005}
+
+\subsection{Mô tả và hướng dẫn sử dụng}
+Quản trị viên tạo hoạt động Choice từ trang khóa học F005 (URL: \texttt{\textless{}BASE\_URL\textgreater{}/course/view.php?id=2}) qua \textbf{Edit mode $>$ General $>$ Add an activity or resource $>$ Choice $>$ Add}. Form gồm các trường \textit{Choice name}, \textit{Description}, \textit{Display mode for the options} và các nhóm \textit{Options}, \textit{Availability}, \textit{Results}. \textit{Choice name} và \textit{Option 1} là hai trường bắt buộc. Các nhóm thiết lập chung của hoạt động như \textit{Common module settings}, \textit{Restrict access} và \textit{Activity completion} được giữ ở giá trị mặc định trong bộ kiểm thử.
+
+\textbf{Các bước sử dụng:}
+\begin{enumerate}[noitemsep]
+  \item Đăng nhập bằng tài khoản quản trị.
+  \item Truy cập khóa học và bật \textit{Edit mode}. Trong mục \textit{General}, bấm \textit{Add an activity or resource}, chọn \textit{Choice} rồi bấm \textit{Add}.
+  \item Nhập hai trường bắt buộc là \textit{Choice name} và \textit{Option 1}. Điền các phương án bổ sung, mô tả, giới hạn phản hồi, thời gian và chế độ công bố kết quả theo yêu cầu. Giữ mặc định các thiết lập chung của hoạt động.
+  \item Bấm \textbf{Save and display} để lưu và mở trang Choice, hoặc \textbf{Save and return to course} để lưu và quay về trang khóa học. Bấm \textbf{Cancel} để hủy tạo.
+  \item Khi lưu, Moodle kiểm tra dữ liệu. Nếu dữ liệu hợp lệ, hoạt động được tạo và Moodle mở trang tương ứng với nút đã chọn. Nếu thiếu dữ liệu bắt buộc hoặc giờ đóng sớm hơn giờ mở, form vẫn mở và hiển thị lỗi tại trường tương ứng để quản trị viên sửa rồi lưu lại.
+\end{enumerate}
+Trong bộ test F005, người kiểm thử tắt \textit{Edit mode} sau khi kiểm tra kết quả để chuẩn bị cho ca tiếp theo.
+
+\subsection{Use case và activity diagram}
+\begin{table}[H]
+\centering\small
+\begin{tabular}{|L{3.6cm}|L{11.4cm}|}
+\hline
+Tên & UC-005: Tạo hoạt động Choice \\ \hline
+Tác nhân & Quản trị viên (Admin) \\ \hline
+Tiền điều kiện & Quản trị viên đã đăng nhập. Khóa thử nghiệm có mục General và cho phép thêm hoạt động Choice. Edit mode đang tắt. \\ \hline
+Hậu điều kiện & Choice được lưu trong khóa học. Cuối ca, Edit mode được tắt. \\ \hline
+Luồng chính & Mở form, nhập tên và hai phương án, chọn Save and display rồi kiểm tiêu đề Choice. \\ \hline
+Luồng thay thế & A1: lưu và về khóa học. A2: thêm ô phương án. A3: hủy tạo. \\ \hline
+Luồng ngoại lệ & E1: thiếu tên. E2: thiếu Option 1. E3: giờ đóng trước giờ mở. Moodle báo lỗi tại trường để admin sửa và lưu lại. \\ \hline
+\end{tabular}
+\caption{Đặc tả use case UC-005}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[>=Stealth,
+act/.style={draw,rounded corners,align=center,inner sep=5pt,fill=blue!5},
+dec/.style={diamond,draw,aspect=2,align=center,inner sep=1pt,fill=yellow!15}]
+\node[act] (open) {Mở form Choice};
+\node[act,below=of open] (fill) {Nhập dữ liệu};
+\node[dec,below=of fill] (cancel) {Hủy?};
+\node[act,right=2cm of cancel] (back) {Về khóa học};
+\node[dec,below=of cancel] (valid) {Lưu hợp lệ?};
+\node[act,left=1.7cm of valid] (error) {Hiện lỗi tại trường};
+\node[act,below=of valid] (saved) {Hiện Choice hoặc trang khóa học};
+\node[act,below=of saved] (end) {Kiểm kết quả và tắt Edit mode};
+\draw[->] (open)--(fill);
+\draw[->] (fill)--(cancel);
+\draw[->] (cancel)--node[above]{Có}(back);
+\draw[->] (cancel)--node[right]{Không}(valid);
+\draw[->] (valid)--node[above]{Không}(error);
+\draw[->] (error)|-(fill);
+\draw[->] (valid)--node[right]{Có}(saved);
+\draw[->] (saved)--(end);
+\draw[->] (back)|-(end);
+\end{tikzpicture}
+\caption{Luồng tạo, sửa lỗi và hủy hoạt động Choice}
+\end{figure}
+
+\subsection{Các biến đầu vào}
+\begin{table}[H]
+\centering\small
+\begin{tabular}{|L{3.2cm}|L{2.1cm}|L{4.4cm}|L{4.3cm}|}
+\hline
+\rowcolor{gray!15}\textbf{Biến} & \textbf{Kiểu} & \textbf{Dữ liệu} & \textbf{Ràng buộc} \\ \hline
+Choice name & Chuỗi & Tên hoạt động & Bắt buộc, tối đa 1.333 ký tự \\ \hline
+Description và hiển thị & Văn bản, cờ & Mô tả, hiển thị trên khóa, bố cục & Phụ thuộc cấu hình Moodle \\ \hline
+Options & Chuỗi, cờ & Phương án, đổi lựa chọn, chọn nhiều & Option 1 bắt buộc \\ \hline
+Limit & Số, cờ & Bật giới hạn, số lượt, hiện chỗ còn & Limit chỉ hiện khi bật giới hạn \\ \hline
+Availability & Ngày giờ, cờ & Giờ mở, giờ đóng, xem trước & Khi bật cả hai, giờ đóng không trước giờ mở \\ \hline
+Results & Danh sách, cờ & Công bố, quyền riêng tư, chưa trả lời, tài khoản không hoạt động & Quyền riêng tư phụ thuộc chế độ công bố \\ \hline
+\end{tabular}
+\caption{Các biến đầu vào của Feature 005}
+\end{table}
+
+\subsection{Kỹ thuật 1: Phân lớp tương đương (ECP)}
+Nhóm phân lớp dữ liệu theo yêu cầu nhập liệu và sự phụ thuộc giữa các tùy chọn trên form. Mỗi ca đại diện kiểm tra thông báo tại trường hoặc giá trị còn hiển thị sau khi lưu. Các mã rút gọn trong bảng là ba chữ số cuối của mã ca kiểm thử.
+
+\begin{longtable}{|L{4.8cm}|L{9.5cm}|}
+\hline
+\textbf{Đầu vào} & \textbf{Phân lớp và ca đại diện}\\ \hline
+Choice name & Tên thường hợp lệ (001), tên rỗng (002), độ dài ở biên (003--006).\\ \hline
+Nội dung và số ô phương án & Option 1 trống (007), chỉ có một phương án (008), hai phương án (001), thêm ô để nhập phương án thứ sáu (009).\\ \hline
+Description và công tắc hiển thị & Để mặc định (001), nhập mô tả và bật hiển thị (010).\\ \hline
+Display mode, Allow update, Allow multiple & So sánh thiết lập mặc định ở 001 với hiển thị dọc ở 011, cho đổi câu trả lời ở 012 và chọn nhiều ở 013.\\ \hline
+Limit responses, Limit và Show available spaces & Tắt giới hạn (014), bật giới hạn và nhập 0, 1, 2 (015--017). Ca 017 bật hiển thị số chỗ còn.\\ \hline
+Giờ mở, giờ đóng và Show preview & Tắt cả hai (001), chỉ bật giờ mở và xem trước (018), chỉ bật giờ đóng (019), bật cả hai với quan hệ thời gian khác nhau (020--021).\\ \hline
+Publish results, Privacy of results, Show unanswered & Công bố theo mặc định (001), bật cột chưa trả lời (022), luôn công bố ẩn danh (023). Các biến thể công bố, quyền riêng tư và Include inactive ngoài các ca này chưa có ca riêng.\\ \hline
+Thao tác cuối & Lưu và mở Choice (001), lưu và trở về khóa (010), hủy (024).\\ \hline
+\end{longtable}
+
+\subsection{Kỹ thuật 2: Phân tích giá trị biên (BVA)}
+\begin{itemize}[noitemsep]
+\item Tên Choice: 0, 1, 2 ký tự (002--004), 1.332 và 1.333 ký tự (005--006). Giá trị 1.334 ký tự nằm ngoài bộ 24 ca hiện tại.
+\item Số phương án hợp lệ: ca 007 kiểm Option 1 bắt buộc dù đã nhập Option 2, ca 008 kiểm một phương án và ca 001 kiểm hai phương án. Ca 009 kiểm việc bổ sung ô sau năm ô ban đầu.
+\item Giới hạn phản hồi: kiểm 0, 1 và 2 ở ca 015--017. Kết quả của các ca này là giá trị đã lưu trên form Settings.
+\item Khoảng cách giờ đóng so với giờ mở: ca 020 thử $-1$ phút, kiểm lỗi rồi sửa thành $+1$ phút và lưu lại. Ca 021 thử đúng 0 phút và kiểm cấu hình được lưu.
+\end{itemize}
+
+\subsection{Kỹ thuật 3: Bảng quyết định (Decision table)}
+\begin{longtable}{|L{5.7cm}|L{6.9cm}|L{1.7cm}|}
+\hline
+\textbf{Điều kiện} & \textbf{Kết quả mong đợi} & \textbf{Ca}\\ \hline
+Tên trống hoặc Option 1 trống & Báo lỗi ở trường tương ứng. Sửa dữ liệu rồi lưu được. & 002, 007\\ \hline
+Giới hạn tắt & Các ô Limit ẩn. & 014\\ \hline
+Giới hạn bật, nhập 0/1/2 & Ô Limit hiển thị và lưu giá trị. Khi bật Show available spaces, lưu thiết lập Yes. & 015--017\\ \hline
+Chỉ bật giờ mở hoặc chỉ bật giờ đóng & Lưu mốc đã bật. Ca 018 lưu thêm Show preview. & 018--019\\ \hline
+Bật cả hai, đóng trước giờ mở & Báo lỗi ở giờ đóng. Sửa thành giờ sau lúc mở rồi lưu được. & 020\\ \hline
+Bật cả hai, đóng bằng giờ mở & Lưu hai mốc bằng nhau. & 021\\ \hline
+Luôn công bố và chọn ẩn danh & Lưu hai thiết lập công bố và quyền riêng tư. & 023\\ \hline
+\end{longtable}
+
+\subsection{Kỹ thuật 4: Use-case testing}
+\begin{table}[H]
+\centering\small
+\begin{tabular}{|c|L{7.0cm}|L{3.8cm}|c|}
+\hline
+\rowcolor{gray!15}\textbf{Luồng} & \textbf{Kịch bản} & \textbf{Kết quả mong đợi} & \textbf{Ca} \\ \hline
+P1 & Lưu và hiển thị Choice & Mở trang Choice & 001 \\ \hline
+A1 & Lưu và quay về khóa học & Hiện Choice và mô tả & 010 \\ \hline
+A2 & Thêm ô phương án rồi lưu & Lưu phương án bổ sung & 009 \\ \hline
+A3 & Hủy tạo Choice & Không tạo hoạt động & 024 \\ \hline
+E1 & Thiếu tên, nhập lại rồi lưu & Báo lỗi rồi lưu được & 002 \\ \hline
+E2 & Thiếu Option 1, nhập lại rồi lưu & Báo lỗi rồi lưu được & 007 \\ \hline
+E3 & Giờ đóng trước giờ mở, sửa rồi lưu & Báo lỗi rồi lưu được & 020 \\ \hline
+\end{tabular}
+\caption{Scenario và test case use-case testing của Feature 005}
+\end{table}
+
+\subsection{Kết quả thực thi và phát hiện}\label{sec:f005-result}
+Ở ca TC-005-001, Moodle hiển thị hoạt động \texttt{F005-CHOICE-001} cùng hai phương án đã nhập. Katalon kiểm tra được tiêu đề, nhưng kịch bản ghi ban đầu có một bước mở trực tiếp trang Choice. Vì vậy, lượt chạy này chưa xác nhận được thao tác \textit{Save and display} tự chuyển đến hoạt động vừa tạo. Kết quả thực thi của cả bộ 24 ca chưa được tổng hợp.
+
+\subsection{Danh sách test case của Feature 005}
+Bảng dưới đây tổng hợp 24 ca kiểm thử của Feature 005. Các bước thao tác và kết quả mong đợi được ghi trong bảng test case của nhóm.
+\input{tc_list_005.tex}
+
+\subsection{Test case mẫu của Feature 005}
+Các ca mẫu trình bày luồng tạo thành công, cách xử lý khi thiếu dữ liệu bắt buộc, thiết lập giới hạn phản hồi, sửa giờ đóng và hủy tạo hoạt động.
+\input{tc_detail_005.tex}
