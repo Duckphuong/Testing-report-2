@@ -1,0 +1,228 @@
+% ================= Feature 002 (Lê Sĩ Nhật Quang) =================
+\section{Feature 002: Add a new course}
+
+\subsection{Mô tả và hướng dẫn sử dụng}
+Quản trị viên tạo khóa học mới tại \textbf{Site administration $>$ Courses $>$ Add a new course}
+(URL: \texttt{<BASE\_URL>/course/edit.php?category=0}), hoặc từ \textbf{Manage courses and categories $>$ Create new course}.
+Form gồm các trường Course full name, Course short name, Course category, Course visibility, Course start date,
+Course end date (có checkbox \textit{Enable}) và Course ID number; ngoài ra còn các nhóm thiết lập mở rộng
+(Description, Course format, Appearance,\dots) giữ giá trị mặc định.
+
+\textbf{Các bước sử dụng:}
+\begin{enumerate}[noitemsep]
+  \item Đăng nhập bằng tài khoản admin.
+  \item Mở trang Add a new course.
+  \item Nhập Course full name, Course short name; chọn Course category bằng ô tìm kiếm (autocomplete).
+  \item Chọn Course visibility (Show/Hide), đặt Course start date; bật/tắt và đặt Course end date; nhập Course ID number (tùy chọn).
+  \item Bấm \textbf{Save and display} (mở trang khóa học), \textbf{Save and return} (về trang quản lý) hoặc \textbf{Cancel}.
+  \item Nếu dữ liệu không hợp lệ, form hiển thị lỗi tại trường tương ứng và không tạo khóa học.
+\end{enumerate}
+
+\subsection{Use case và activity diagram}
+\begin{table}[H]
+\centering\small
+\begin{tabular}{|L{3.6cm}|L{11.4cm}|}
+\hline
+Tên & UC-002: Tạo khóa học mới \\ \hline
+Tác nhân & Quản trị viên (Admin) \\ \hline
+Tiền điều kiện & Admin đã đăng nhập; tồn tại ít nhất một category (``Category 1''). \\ \hline
+Hậu điều kiện (thành công) & Khóa học mới được lưu trong category đã chọn và hiển thị trong trang quản lý khóa học. \\ \hline
+Luồng chính & Mở form $\rightarrow$ nhập dữ liệu hợp lệ $\rightarrow$ Save and display $\rightarrow$ hệ thống tạo khóa học và mở trang khóa học. \\ \hline
+Luồng thay thế & A1: bấm Save and return $\rightarrow$ tạo khóa học, quay về trang quản lý. A2: bấm Cancel $\rightarrow$ không tạo khóa học. \\ \hline
+Luồng ngoại lệ & E1: thiếu trường bắt buộc (full name, short name, category). E2: short name đã tồn tại. E3: ID number đã tồn tại.
+E4: end date không lớn hơn start date. E5: vượt độ dài tối đa. Mọi ngoại lệ: báo lỗi, giữ form để sửa và gửi lại. \\ \hline
+\end{tabular}
+\caption{Đặc tả use case UC-002}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[>=Stealth,
+  act/.style={rectangle, rounded corners=4pt, draw, minimum width=3.6cm, minimum height=0.8cm, align=center, font=\small, fill=blue!5},
+  dec/.style={diamond, aspect=2.2, draw, align=center, font=\scriptsize, inner sep=1pt, fill=yellow!15},
+  st/.style={circle, fill=black, minimum size=0.35cm},
+  en/.style={circle, draw, double, minimum size=0.35cm}]
+\node[st] (s) {};
+\node[act, below=0.5cm of s] (a1) {Mở trang Add a new course};
+\node[act, below=0.5cm of a1] (a2) {Nhập/sửa dữ liệu form};
+\node[dec, below=0.6cm of a2] (d0) {Bấm\\Cancel?};
+\node[act, below=0.7cm of d0] (a3) {Bấm Save and display\\hoặc Save and return};
+\node[dec, below=0.6cm of a3] (d1) {Đủ trường\\bắt buộc, đúng\\độ dài?};
+\node[dec, below=0.7cm of d1] (d2) {Short name/\\ID number\\không trùng?};
+\node[dec, below=0.7cm of d2] (d3) {End date tắt\\hoặc $>$ start?};
+\node[dec, below=0.7cm of d3] (d4) {Save and\\display?};
+\node[act, below left=0.7cm and -0.6cm of d4] (a4) {Mở trang khóa học};
+\node[act, below right=0.7cm and -0.6cm of d4] (a5) {Về trang quản lý};
+\node[en, below=2.2cm of d4] (e) {};
+\node[act, right=2.3cm of d0] (c1) {Về trang quản lý,\\không tạo course};
+\node[act, right=2.3cm of d1] (er1) {Lỗi Missing/\\Maximum of\dots};
+\node[act, right=2.3cm of d2] (er2) {Lỗi ``already used''};
+\node[act, right=2.3cm of d3] (er3) {Lỗi end date};
+\draw[->] (s)--(a1); \draw[->] (a1)--(a2); \draw[->] (a2)--(d0);
+\draw[->] (d0)--node[right,font=\scriptsize]{Không}(a3);
+\draw[->] (d0)--node[above,font=\scriptsize]{Có}(c1);
+\draw[->] (a3)--(d1);
+\draw[->] (d1)--node[right,font=\scriptsize]{Có}(d2);
+\draw[->] (d1)--node[above,font=\scriptsize]{Không}(er1);
+\draw[->] (d2)--node[right,font=\scriptsize]{Có}(d3);
+\draw[->] (d2)--node[above,font=\scriptsize]{Không}(er2);
+\draw[->] (d3)--node[right,font=\scriptsize]{Có}(d4);
+\draw[->] (d3)--node[above,font=\scriptsize]{Không}(er3);
+\draw[->] (d4)-|node[above,font=\scriptsize,pos=0.25]{Có}(a4);
+\draw[->] (d4)-|node[above,font=\scriptsize,pos=0.25]{Không}(a5);
+\draw[->] (a4)|-(e); \draw[->] (a5)|-(e);
+\coordinate (R) at ($(er1.east)+(0.5,0)$);
+\coordinate (RC) at ($(R)+(0.7,0)$);
+\draw (er1.east)--(er1.east -| R); \draw (er2.east)--(er2.east -| R); \draw (er3.east)--(er3.east -| R);
+\draw[->] (er3.east -| R)--(a2.east -| R)--(a2.east);
+\node[font=\scriptsize, fill=white, inner sep=1pt] at ($(a2.east -| R)!0.5!(a2.east)$) {sửa lỗi};
+\draw[->] (c1.east)--(c1.east -| RC)|-(e.east);
+\end{tikzpicture}
+\caption{Activity diagram của UC-002 (các nhánh lỗi quay lại bước nhập dữ liệu; Cancel kết thúc không tạo khóa học)}
+\end{figure}
+
+\subsection{Các biến đầu vào}
+\begin{table}[H]
+\centering\small
+\begin{tabular}{|L{2.8cm}|L{1.8cm}|L{5.0cm}|L{4.4cm}|}
+\hline
+\rowcolor{gray!15}\textbf{Biến} & \textbf{Bắt buộc?} & \textbf{Ràng buộc} & \textbf{Thông báo lỗi} \\ \hline
+Course full name & Có & 1--254 ký tự; chuỗi chỉ có khoảng trắng coi như rỗng & Missing full name / Maximum of 254 characters \\ \hline
+Course short name & Có & 1--100 ký tự; không trùng khóa học khác & Missing short name / Maximum of 100 characters / Short name is already used for another course (\dots) \\ \hline
+Course category & Có & Chọn một category tồn tại & You must supply a value here. \\ \hline
+Course visibility & Có (mặc định Show) & Show / Hide & Không có giá trị sai qua giao diện \\ \hline
+Course start date & Có & Ngày giờ chọn từ dropdown (năm 1900--2050) & Không có giá trị sai qua giao diện \\ \hline
+Course end date & Không (checkbox Enable) & Nếu Enable: phải $>$ start date & The course end date must be after the start date. \\ \hline
+Course ID number & Không & 0--100 ký tự; nếu có thì không trùng & ID number is already used for another course (\dots) \\ \hline
+\end{tabular}
+\caption{Các biến đầu vào của Feature 002}
+\end{table}
+\textit{Ghi chú:} giới hạn độ dài trong bảng là giới hạn \emph{thiết kế} (đặc tả ban đầu: thuộc tính \texttt{maxlength} và quy tắc
+kiểm tra phía trình duyệt của form). Khi chạy thực tế bằng Katalon Recorder (lệnh \texttt{type} gán giá trị trực tiếp cho ô nhập),
+Moodle demo \textbf{chấp nhận} full name chỉ có khoảng trắng, full name 255 ký tự, short name 101 ký tự và ID number 101 ký tự;
+xem mục~\ref{sec:f002-result}.
+
+\subsection{Kỹ thuật 1: Phân lớp tương đương (ECP)}
+\textbf{Cách áp dụng:} chia miền giá trị mỗi biến thành lớp hợp lệ (V) và không hợp lệ (I). Hai test case ``tất cả hợp lệ''
+(TC-002-001, 002) phủ hết các lớp V (mỗi lựa chọn Show/Hide, end date bật/tắt, ID có/không); mỗi lớp I có một test case riêng,
+các trường khác giữ hợp lệ.
+
+\begin{table}[H]
+\centering\footnotesize
+\begin{tabular}{|l|L{5.0cm}|L{7.4cm}|}
+\hline
+\rowcolor{gray!15}\textbf{Biến} & \textbf{Lớp hợp lệ (TC)} & \textbf{Lớp không hợp lệ (TC)} \\ \hline
+Full name & V1: 1--254 ký tự (001, 002) & I1: rỗng (003); I2: chỉ khoảng trắng (004); I3: 255 ký tự (005) \\ \hline
+Short name & V2: 1--100 ký tự, chưa tồn tại (001, 002) & I4: rỗng (006); I5: 101 ký tự (007); I6: trùng EXIST01 (008) \\ \hline
+Category & V3: chọn Category 1 (001, 002) & I7: No selection (009) \\ \hline
+Visibility & V4: Show (001); V5: Hide (002) & -- \\ \hline
+End date & V6: tắt Enable (002); V7: bật, end $>$ start (001) & I8: end = start (010); I9: end $<$ start (011) \\ \hline
+ID number & V8: rỗng (002); V9: 1--100 ký tự, chưa tồn tại (001) & I10: 101 ký tự (012); I11: trùng ID-EXIST (013) \\ \hline
+\end{tabular}
+\caption{Lớp tương đương của Feature 002 (ID rút gọn: 003 nghĩa là TC-002-003)}
+\end{table}
+\textit{Sau khi chạy:} các lớp I2, I3, I5, I10 được thiết kế là \emph{không hợp lệ} nhưng hệ thống thực tế chấp nhận
+(khóa học vẫn được tạo). Trong file \texttt{.xlsx}, mô tả của TC-002-004, 005, 007, 012 được cập nhật thành ``lớp hợp lệ''
+và kết quả mong đợi được sửa theo hành vi thực tế; sự khác biệt này được ghi nhận là phát hiện kiểm thử.
+
+\subsection{Kỹ thuật 2: Phân tích giá trị biên (BVA)}
+\textbf{Cách áp dụng:} chọn min$-1$, min, min$+1$, max$-1$, max, max$+1$ cho mỗi biến có miền liên tục. Với ngày, ``độ dài''
+là khoảng cách end -- start với bước nhỏ nhất là 1 phút (đơn vị nhỏ nhất của dropdown). Giá trị không hợp lệ trùng ECP được tham chiếu lại.
+
+\begin{table}[H]
+\centering\footnotesize
+\begin{tabular}{|l|c|c|c|c|c|c|}
+\hline
+\rowcolor{gray!15}\textbf{Biến} & \textbf{min$-1$} & \textbf{min} & \textbf{min$+1$} & \textbf{max$-1$} & \textbf{max} & \textbf{max$+1$} \\ \hline
+Full name (1--254) & 0 (003) & 1 (014) & 2 (015) & 253 (016) & 254 (017) & 255 (005) \\ \hline
+Short name (1--100) & 0 (006) & 1 (018) & 2 (019) & 99 (020) & 100 (021) & 101 (007) \\ \hline
+ID number (0--100) & -- & 0 (002) & 1 (022) \;/ 2 (023) & 99 (024) & 100 (025) & 101 (012) \\ \hline
+End $-$ start & $-1$ phút (026) & 0 (010)$^{*}$ & $+1$ phút (027) & \multicolumn{3}{c|}{không có cận trên (năm tối đa 2050)} \\ \hline
+\end{tabular}
+\caption{Giá trị biên của Feature 002 ($^{*}$end = start là giá trị \emph{không hợp lệ}: biên hợp lệ nhỏ nhất là +1 phút;
+max$+1$ của full name, short name, ID number thực tế được chấp nhận, xem mục~\ref{sec:f002-result})}
+\end{table}
+
+\subsection{Kỹ thuật 3: Bảng quyết định (Decision table)}
+\textbf{Điều kiện:} C1 -- full name hợp lệ; C2 -- short name hợp lệ và không trùng; C3 -- đã chọn category;
+C4 -- bật end date; C5 -- end date $>$ start date.
+\textbf{Hành động:} A1 -- tạo khóa học; A2 -- lỗi full name; A3 -- lỗi short name; A4 -- lỗi category; A5 -- lỗi end date.
+Các lỗi bắt buộc (A2--A4) được kiểm tra phía trình duyệt nên hiển thị đồng thời; lỗi trùng và lỗi ngày được kiểm tra phía server.
+
+\begin{table}[H]
+\centering\footnotesize
+\begin{tabular}{|l|c|c|c|c|c|c|c|}
+\hline
+\rowcolor{gray!15}\textbf{Luật} & R1 & R2 & R3 & R4 & R5 & R6 & R7 \\ \hline
+C1 Full name hợp lệ & Y & Y & Y & N & Y & Y & Y \\ \hline
+C2 Short name hợp lệ & Y & Y & Y & N & N (trùng) & N (rỗng) & Y \\ \hline
+C3 Có category & Y & Y & Y & N & Y & Y & N \\ \hline
+C4 Bật end date & N & Y & Y & -- & Y & -- & -- \\ \hline
+C5 End $>$ start & -- & Y & N & -- & N & -- & -- \\ \hline
+A1 Tạo khóa học & X & X & & & & & \\ \hline
+A2 Lỗi full name & & & & X & & & \\ \hline
+A3 Lỗi short name & & & & X & X & X & \\ \hline
+A4 Lỗi category & & & & X & & & X \\ \hline
+A5 Lỗi end date & & & X & & X & & \\ \hline
+\textbf{Test case} & 028 & 029 & 030 & 031 & 032 & 006 & 009 \\ \hline
+\end{tabular}
+\caption{Decision table của Feature 002 (R6, R7 tái sử dụng test case ECP)}
+\end{table}
+
+\subsection{Kỹ thuật 4: Use-case testing}
+\begin{table}[H]
+\centering\footnotesize
+\begin{tabular}{|c|L{7.4cm}|L{3.2cm}|c|}
+\hline
+\rowcolor{gray!15}\textbf{Path} & \textbf{Đường đi trong activity diagram} & \textbf{Loại} & \textbf{Test case} \\ \hline
+P1 & Mở form $\rightarrow$ nhập hợp lệ $\rightarrow$ Save and display $\rightarrow$ trang khóa học & Luồng chính & 033 \\ \hline
+P2 & Mở form $\rightarrow$ nhập hợp lệ $\rightarrow$ Save and return $\rightarrow$ trang quản lý & Luồng thay thế A1 & 034 \\ \hline
+P3 & Nhập dữ liệu $\rightarrow$ Cancel $\rightarrow$ không tạo khóa học & Luồng thay thế A2 & 035 \\ \hline
+P4 & Gửi form rỗng $\rightarrow$ lỗi bắt buộc $\rightarrow$ nhập lại $\rightarrow$ thành công & Ngoại lệ E1 & 036 \\ \hline
+P5 & Short name trùng $\rightarrow$ lỗi ``already used'' $\rightarrow$ đổi $\rightarrow$ thành công & Ngoại lệ E2 & 037 \\ \hline
+P6 & End date $<$ start $\rightarrow$ lỗi end date $\rightarrow$ sửa $\rightarrow$ thành công & Ngoại lệ E4 & 038 \\ \hline
+\end{tabular}
+\caption{Scenario và test case use-case testing của Feature 002 (E3 đã phủ bởi TC-002-013; E5 được kiểm tra bởi TC-002-005, 007, 012 nhưng thực tế hệ thống không báo lỗi, xem mục~\ref{sec:f002-result})}
+\end{table}
+
+\subsection{Kết quả thực thi và phát hiện}\label{sec:f002-result}
+Toàn bộ 38 test case đã được ghi và chạy bằng Katalon Recorder trên Moodle demo (file \texttt{F002-Add a new course.krecorder}).
+Kết quả mong đợi trong file \texttt{.xlsx} được cập nhật theo hành vi thực tế quan sát được. Các test case có kết quả khác đặc tả ban đầu:
+
+\begin{table}[H]
+\centering\footnotesize
+\begin{tabular}{|l|L{3.3cm}|L{4.3cm}|L{4.6cm}|}
+\hline
+\rowcolor{gray!15}\textbf{Test case} & \textbf{Đầu vào} & \textbf{Kết quả dự kiến ban đầu} & \textbf{Kết quả thực tế} \\ \hline
+TC-002-004 & Full name = 3 khoảng trắng & Lỗi ``Missing full name'' & Khóa học được tạo với full name là khoảng trắng \\ \hline
+TC-002-005 & Full name 255 ký tự & Lỗi ``Maximum of 254 characters'' hoặc bị cắt còn 254 & Khóa học được tạo với full name \texttt{Faaa\dots} \\ \hline
+TC-002-007 & Short name 101 ký tự & Lỗi ``Maximum of 100 characters'' & Khóa học được tạo \\ \hline
+TC-002-012 & ID number 101 ký tự & Lỗi ``Maximum of 100 characters'' hoặc bị cắt còn 100 & Khóa học được tạo \\ \hline
+\end{tabular}
+\caption{Khác biệt giữa đặc tả ban đầu và hành vi thực tế của Feature 002}
+\end{table}
+
+\textbf{Nhận xét:}
+\begin{itemize}[noitemsep]
+  \item Giới hạn độ dài của form chỉ được áp dụng ở phía trình duyệt (\texttt{maxlength}, kiểm tra JavaScript). Lệnh \texttt{type}
+        của Katalon gán giá trị trực tiếp nên vượt qua được, và phía server không chặn vì cột dữ liệu trong CSDL dài hơn
+        giới hạn hiển thị trên form.
+  \item Full name chỉ có khoảng trắng vẫn được lưu: khóa học có tên ``trống'' gây khó nhận diện trong danh sách. Đây là điểm
+        nên báo cáo như một lỗi tiềm ẩn (mức độ thấp).
+  \item Các test case còn lại cho kết quả đúng như mong đợi: các lỗi bắt buộc (Missing full name, Missing short name, You must supply a value here.),
+        lỗi trùng short name/ID number và lỗi end date đều xuất hiện đúng trường.
+\end{itemize}
+
+\subsection{Danh sách test case của Feature 002}
+Tổng cộng \textbf{38 test case}: ECP 001--013, BVA 014--027, Decision table 028--032, Use-case 033--038.
+Kết quả mong đợi chung: test case hợp lệ -- khóa học được tạo và hiển thị trong \textit{My courses} với đúng full name;
+test case không hợp lệ -- vẫn ở form Add a new course, hiển thị lỗi tại trường tương ứng và không có khóa học mới.
+Riêng TC-002-004, 005, 007, 012 có kết quả mong đợi theo hành vi thực tế (mục~\ref{sec:f002-result}).
+Dữ liệu dùng tiền tố \texttt{TC002} để dễ dọn dẹp.
+
+\input{tc_list_002.tex}
+
+\subsection{Test case mẫu của Feature 002}
+Sáu test case dưới đây được trích nguyên từ file \texttt{.xlsx} (sheet \textit{Add a new course}); các test case còn lại cùng khuôn.
+
+\input{tc_detail_002.tex}

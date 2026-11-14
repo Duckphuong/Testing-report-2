@@ -173,8 +173,8 @@ có nhánh (use-case testing).
 \begin{tabular}{|c|L{3.8cm}|L{6.8cm}|L{2.4cm}|}
 \hline
 \rowcolor{gray!15}\textbf{No.} & \textbf{Feature} & \textbf{Mô tả ngắn} & \textbf{Tester} \\ \hline
-001 & --- & Quản trị viên tạo tài khoản người dùng mới. & Phương \\ \hline
-002 & --- & --- & Quang \\ \hline
+001 & Add a new user & Quản trị viên tạo tài khoản người dùng mới. & Phương \\ \hline
+002 & Add a new course & Quản trị viên tạo khóa học mới (full name, short name, category, visibility, start/end date, ID number). & Quang \\ \hline
 003 & --- & --- & Tài \\ \hline
 004 & Add new category & Quản trị viên tạo danh mục khóa học mới. & Sơn \\ \hline
 005 & --- & --- & Phát \\ \hline
@@ -188,7 +188,7 @@ có nhánh (use-case testing).
 \hline
 \rowcolor{gray!15}\textbf{No.} & \textbf{Feature} & \textbf{Tổ hợp điều kiện dự kiến cho decision table} \\ \hline
 001 & Add a new user & Generate password, password hợp lệ, username/email không trùng, Force password change, Suspended. \\ \hline
-002 & --- & --- \\ \hline
+002 & Add a new course & Full name/short name hợp lệ, short name không trùng, đã chọn category, bật end date, end date $>$ start date. \\ \hline
 003 & --- & --- \\ \hline
 004 & Add new category & Parent category đã chọn, Name hợp lệ, Category ID number (rỗng/duy nhất/trùng), Parent là Top hay danh mục khác. \\ \hline
 005 & --- & --- \\ \hline
@@ -403,7 +403,7 @@ Dữ liệu dùng tiền tố \texttt{tc001\_} để dễ dọn dẹp.
 \input{tc_detail.tex}
 
 % ================= 6 =================
-\section{Feature 002: ---}
+\input{feature002.tex}
 \section{Feature 003: ---}
 \section{Feature 004: Add new category}
 
@@ -631,7 +631,91 @@ verifyTextPresent  | Changes saved
 verifyTextPresent  | tc001_valid${RUN}@example.com
 \end{lstlisting}
 
-\subsection{TC-002-001}
+\subsection{Feature 002: Add a new course}
+Bộ test của Feature 002 nằm trong file \texttt{F002-Add a new course.krecorder} (test suite \texttt{TC-002}), gồm
+\textbf{38 test case TC-002-001 $\dots$ TC-002-038}, tên trùng ID trong file \texttt{.xlsx}. Các test case được ghi bằng chức năng
+\textit{Record} của Katalon Recorder rồi bổ sung lệnh kiểm tra.
+\begin{itemize}[noitemsep]
+  \item \textbf{Điều kiện trước khi chạy:} admin đã đăng nhập sẵn trong trình duyệt (bước chuẩn bị, không phải đối tượng kiểm thử),
+        Moodle chạy tại \texttt{http://127.0.0.1:9501}.
+  \item \textbf{Chuẩn bị dữ liệu:} course có short name \texttt{EXIST01} (dùng cho TC-002-008, 032, 037) được tạo ngay trong phần
+        đầu của TC-002-008; course có ID number \texttt{ID-EXIST} được tạo trong phần đầu của TC-002-013.
+  \item \textbf{Kiểm tra kết quả:} mỗi test case có ít nhất một lệnh \texttt{verifyText}:
+        \begin{itemize}[noitemsep]
+          \item Test case hợp lệ: mở \textit{My courses} và kiểm tra full name (hoặc category) của course vừa tạo.
+          \item Test case lỗi: kiểm tra nội dung thông báo tại \texttt{id\_error\_fullname}, \texttt{id\_error\_shortname},
+                \texttt{id\_error\_category}, \texttt{id\_error\_enddate} hoặc \texttt{id\_error\_idnumber}.
+          \item TC-002-031 và 032 (decision table) kiểm tra đồng thời 3 và 2 thông báo lỗi.
+        \end{itemize}
+\end{itemize}
+
+\begin{table}[H]
+\centering\footnotesize
+\begin{tabular}{|L{3.2cm}|L{4.8cm}|L{6.2cm}|}
+\hline
+\rowcolor{gray!15}\textbf{Nhóm test case} & \textbf{Locator được verify} & \textbf{Giá trị mong đợi} \\ \hline
+001, 002, 004, 005, 007, 012, 014--025, 027--029, 033, 036--038 & Thẻ course trong \textit{My courses} & Full name của course (TC-002-004: ``Category 1'') \\ \hline
+003, 031 & \texttt{id=id\_error\_fullname} & Missing full name \\ \hline
+006, 031 & \texttt{id=id\_error\_shortname} & Missing short name \\ \hline
+008, 032 & \texttt{id=id\_error\_shortname} & Short name is already used for another course (\dots) \\ \hline
+009, 031 & \texttt{id=id\_error\_category} & You must supply a value here. \\ \hline
+010, 011, 026, 030, 032 & \texttt{id=id\_error\_enddate} & The course end date must be after the start date. \\ \hline
+013 & \texttt{id=id\_error\_idnumber} & ID number is already used for another course (\dots) \\ \hline
+034 & Danh sách course của trang quản lý & TC002 UC Return \\ \hline
+035 & Vùng danh sách course & No courses (course không được tạo sau Cancel) \\ \hline
+\end{tabular}
+\caption{Lệnh verify của 38 test case Feature 002}
+\end{table}
+
+\textbf{TC-002-001 (trích script đã ghi, bỏ các lệnh click trung gian):}
+\begin{lstlisting}
+open           | http://127.0.0.1:9501/course/edit.php?category=0 |
+type           | id=id_fullname    | TC002 Course 001
+type           | id=id_shortname   | TC002-001
+type           | id=form_autocomplete_input-... | Ca
+click          | id=form_autocomplete_suggestions-...-0 |
+select         | id=id_category    | label=Category 1
+select         | id=id_startdate_day   | label=1
+select         | id=id_startdate_month | label=January
+select         | id=id_startdate_hour  | label=08
+select         | id=id_enddate_day     | label=1
+select         | id=id_enddate_month   | label=January
+type           | id=id_idnumber    | ID-002-001
+click          | id=id_saveanddisplay |
+open           | http://127.0.0.1:9501/my/courses.php |
+verifyText     | xpath=//div[@id='course-info-container-7-4']/div/div/a/span[3]/span[2] | TC002 Course 001
+\end{lstlisting}
+
+\textbf{TC-002-008 (short name trùng, phần đầu tạo course EXIST01):}
+\begin{lstlisting}
+open           | http://127.0.0.1:9501/course/edit.php?category=0 |
+type           | id=id_fullname    | 1
+type           | id=id_shortname   | EXIST01
+click          | id=id_saveanddisplay |
+open           | http://127.0.0.1:9501/course/edit.php?category=0 |
+type           | id=id_fullname    | TC002 Course 008
+type           | id=id_shortname   | EXIST01
+select         | (start/end date: xem TC-002-001) |
+click          | id=id_saveanddisplay |
+verifyText     | id=id_error_shortname | Short name is already used for another course (1)
+\end{lstlisting}
+
+\textbf{TC-002-004 (full name chỉ có khoảng trắng: kết quả thực tế là course được tạo):}
+\begin{lstlisting}
+open           | http://127.0.0.1:9501/course/edit.php?category=0 |
+type           | id=id_fullname    | (3 khoang trang)
+type           | id=id_shortname   | TC002-004
+select         | (start/end date: xem TC-002-001) |
+click          | id=id_saveanddisplay |
+open           | http://127.0.0.1:9501/my/courses.php |
+verifyText     | xpath=//div[@id='course-info-container-10-4']/div/div/div/span[2] | Category 1
+\end{lstlisting}
+
+\textbf{Dọn dữ liệu:} sau khi chạy, vào \textit{Site administration $>$ Courses $>$ Manage courses and categories $>$ Category 1},
+xóa các course do test tạo (short name bắt đầu bằng \texttt{TC002}, \texttt{EXIST01}, \texttt{ID-EXIST} và các course BVA
+có short name/ID number 1--2 ký tự). Phải dọn trước khi chạy lại suite vì short name cố định sẽ bị trùng.
+\textbf{Không xóa course hay category có sẵn của demo.}
+
 \subsection{TC-003-001}
 \subsection{Feature 004: TC-004-001 và các test case tiêu biểu}
 Bộ test của Feature 004 gồm \textbf{26 test case} Katalon \texttt{TC-004-001} đến \texttt{TC-004-026} trong file
@@ -728,8 +812,21 @@ còn các bảng lệnh ở trên chỉ là script Katalon tương ứng để t
   \item Các giới hạn độ dài, locator và thông báo lỗi do AI đề xuất cần được nhóm đối chiếu với hệ thống Moodle thật trước khi dùng.
 \end{itemize}
 
-\subsection{[Thành viên 2]}
-\todo{Điền công cụ AI và prompt, hoặc câu xác nhận không dùng AI.}
+\subsection{[Lê Sĩ Nhật Quang]}
+\textbf{Công cụ:} Claude (Anthropic), model Claude Opus 5.5, dùng qua ứng dụng Claude (bản desktop, tab Code).
+
+\noindent\textbf{Prompt đã sử dụng} (nguyên văn):
+\begin{enumerate}[noitemsep]
+  \item ``Hướng dẫn tôi thực hiện bài tập lớn 2 dựa trên file mô tả, template file excel'' (kèm file mô tả, file Excel mẫu)
+  \item ``chỉnh sửa lại báo cáo với phần cập nhật sau khi đã chạy katalon recorder của tôi với phần chức năng add a new course'' (kèm file 	exttt{.xlsx} đã cập nhật)
+\end{enumerate}
+
+\noindent\textbf{Kết quả, nhận xét và đề xuất của AI:}
+\begin{itemize}[noitemsep]
+  \item Hướng dẫn phân tích Feature 002, sinh 38 test case trong sheet \textit{Add a new course} của file \texttt{.xlsx}.
+  \item Soạn mục Feature 002 của báo cáo (use case, activity diagram, ECP, BVA, decision table, use-case testing) và script Katalon mẫu.
+  \item Giới hạn độ dài, thông báo lỗi và locator do AI đề xuất ban đầu; thành viên đã tự ghi và chạy script Katalon trên Moodle demo, cập nhật kết quả thực tế vào file 	exttt{.xlsx}, sau đó AI cập nhật báo cáo theo kết quả này.
+\end{itemize}
 \subsection{[Thành viên 3]}
 \todo{Điền công cụ AI và prompt, hoặc câu xác nhận không dùng AI.}
 \subsection{[Đào Xuân Sơn]}

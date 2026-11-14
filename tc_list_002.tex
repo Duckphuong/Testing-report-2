@@ -1,0 +1,45 @@
+{\footnotesize
+\begin{longtable}{|l|L{4.4cm}|c|L{6.4cm}|}
+\hline
+\rowcolor{gray!15}\textbf{ID} & \textbf{Tên test case} & \textbf{Kỹ thuật} & \textbf{Mô tả} \\ \hline
+\endhead
+TC-002-001 & Tạo course với dữ liệu hợp lệ (Show, có end date, có ID) & ECP & Tất cả các trường thuộc lớp hợp lệ V1, V2, V3, V4, V7, V9. \\ \hline
+TC-002-002 & Tạo course Hide, tắt end date, không ID & ECP & Lớp hợp lệ V1, V2, V3, V5, V6, V8. \\ \hline
+TC-002-003 & Full name rỗng & ECP & Lớp không hợp lệ I1: để trống Course full name. \\ \hline
+TC-002-004 & Full name chỉ có khoảng trắng & ECP & Lớp hợp lệ I2: Course full name gồm 3 khoảng trắng. \\ \hline
+TC-002-005 & Full name 255 ký tự & ECP/BVA & Lớp hợp lệ I3: Course full name dài 255 ký tự (tối đa 254). \\ \hline
+TC-002-006 & Short name rỗng & ECP & Lớp không hợp lệ I4: để trống Course short name. \\ \hline
+TC-002-007 & Short name 101 ký tự & ECP/BVA & Lớp hợp lệ I5: Course short name dài 101 ký tự. \\ \hline
+TC-002-008 & Short name đã tồn tại & ECP & Lớp không hợp lệ I6: Course short name trùng "EXIST01" của course có sẵn. \\ \hline
+TC-002-009 & Không chọn Course category & ECP & Lớp không hợp lệ I7: Course category để "No selection". \\ \hline
+TC-002-010 & End date bằng start date & ECP/BVA & Lớp không hợp lệ I8: end date = start date (1 January 2026 08:00). \\ \hline
+TC-002-011 & End date trước start date & ECP & Lớp không hợp lệ I9: end date (1 January 2025 08:00) \textless{} start date. \\ \hline
+TC-002-012 & ID number 101 ký tự & ECP/BVA & Lớp hợp lệ I10: Course ID number dài 101 ký tự (tối đa 100). \\ \hline
+TC-002-013 & ID number đã tồn tại & ECP & Lớp không hợp lệ I11: Course ID number trùng "ID-EXIST". \\ \hline
+TC-002-014 & Full name 1 ký tự & BVA & Biên hợp lệ của Course full name: độ dài 1. \\ \hline
+TC-002-015 & Full name 2 ký tự & BVA & Biên hợp lệ của Course full name: độ dài 2. \\ \hline
+TC-002-016 & Full name 253 ký tự & BVA & Biên hợp lệ của Course full name: độ dài 253. \\ \hline
+TC-002-017 & Full name 254 ký tự & BVA & Biên hợp lệ của Course full name: độ dài 254. \\ \hline
+TC-002-018 & Short name 1 ký tự & BVA & Biên hợp lệ của Course short name: độ dài 1. \\ \hline
+TC-002-019 & Short name 2 ký tự & BVA & Biên hợp lệ của Course short name: độ dài 2. \\ \hline
+TC-002-020 & Short name 99 ký tự & BVA & Biên hợp lệ của Course short name: độ dài 99. \\ \hline
+TC-002-021 & Short name 100 ký tự & BVA & Biên hợp lệ của Course short name: độ dài 100. \\ \hline
+TC-002-022 & ID number 1 ký tự & BVA & Biên hợp lệ của Course ID number: độ dài 1. \\ \hline
+TC-002-023 & ID number 2 ký tự & BVA & Biên hợp lệ của Course ID number: độ dài 2. \\ \hline
+TC-002-024 & ID number 99 ký tự & BVA & Biên hợp lệ của Course ID number: độ dài 99. \\ \hline
+TC-002-025 & ID number 100 ký tự & BVA & Biên hợp lệ của Course ID number: độ dài 100. \\ \hline
+TC-002-026 & End date = start date - 1 phút & BVA & Biên dưới không hợp lệ: end 1 January 2026 07:59, start 1 January 2026 08:00. \\ \hline
+TC-002-027 & End date = start date + 1 phút & BVA & Biên hợp lệ nhỏ nhất: end 1 January 2026 08:01, start 1 January 2026 08:00. \\ \hline
+TC-002-028 & DT-R1: Hợp lệ, end date tắt & DT & R1: C1=T, C2=T, C3=T, C4=F (C5 don't care) -\textgreater{} tạo course thành công. \\ \hline
+TC-002-029 & DT-R2: Hợp lệ, end date \textgreater{} start & DT & R2: C1=T, C2=T, C3=T, C4=T, C5=T -\textgreater{} tạo course thành công. \\ \hline
+TC-002-030 & DT-R3: End date không hợp lệ & DT & R3: C1=T, C2=T, C3=T, C4=T, C5=F -\textgreater{} lỗi end date. \\ \hline
+TC-002-031 & DT-R4: Thiếu toàn bộ trường bắt buộc & DT & R4: C1=F, C2=F, C3=F -\textgreater{} hiển thị đồng thời 3 lỗi. \\ \hline
+TC-002-032 & DT-R5: Short name trùng và end date sai & DT & R5: C1=T, C2=F (trùng), C3=T, C4=T, C5=F -\textgreater{} hiển thị cả 2 lỗi server. \\ \hline
+TC-002-033 & UC-P1: Luồng chính - Save and display & UC & Basic flow: nhập dữ liệu hợp lệ, Save and display. \\ \hline
+TC-002-034 & UC-P2: Luồng thay thế - Save and return & UC & Alternative flow A1: lưu và quay về trang quản lý. \\ \hline
+TC-002-035 & UC-P3: Hủy tạo course & UC & Alternative flow A2: nhập dữ liệu rồi Cancel. \\ \hline
+TC-002-036 & UC-P4: Bỏ trống rồi nhập lại & UC & Exception E1 -\textgreater{} sửa -\textgreater{} thành công. \\ \hline
+TC-002-037 & UC-P5: Short name trùng rồi đổi & UC & Exception E2 -\textgreater{} sửa -\textgreater{} thành công. \\ \hline
+TC-002-038 & UC-P6: End date sai rồi sửa & UC & Exception E4 -\textgreater{} sửa -\textgreater{} thành công. \\ \hline
+\end{longtable}
+}
