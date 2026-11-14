@@ -1,0 +1,33 @@
+{\footnotesize
+\begin{longtable}{|l|L{4.4cm}|c|L{6.4cm}|}
+\hline
+\rowcolor{gray!15}\textbf{ID} & \textbf{Tên test case} & \textbf{Kỹ thuật} & \textbf{Mô tả} \\ \hline
+\endhead
+TC-004-001 & Tạo danh mục với dữ liệu hợp lệ & ECP & Parent Top, Name tc004\_\allowbreak\{\}valid, ID number tc004\_\allowbreak\{\}id001; Description để trống. \\ \hline
+TC-004-002 & Category name rỗng & ECP & Lớp không hợp lệ I2: để trống Category name (Parent tc004\_\allowbreak\{\}root). \\ \hline
+TC-004-003 & Category name chỉ có khoảng trắng & ECP & Lớp V2 đặc biệt: Name chỉ có 3 dấu cách; Moodle không báo Required và chuyển về trang quản lý. \\ \hline
+TC-004-004 & Category name 256 ký tự (max+1) & ECP/BVA & Lớp I3: Name dài 256 ký tự; Moodle hiện trang lỗi ``Category name too long''. \\ \hline
+TC-004-005 & Category ID number 101 ký tự (max+1) & ECP/BVA & Lớp I4: nhập 101 ký tự; ô chỉ nhận tối đa 100 ký tự (maxlength = 100). \\ \hline
+TC-004-006 & Category ID number đã tồn tại & ECP & Lớp I5: ID number tc004\_\allowbreak\{\}dup trùng ID của danh mục tc004\_\allowbreak\{\}base. \\ \hline
+TC-004-007 & Parent category = No selection & ECP & Lớp I1: bỏ chọn Parent category. \\ \hline
+TC-004-008 & Category name 1 ký tự & BVA & Biên hợp lệ của Name: độ dài 1. \\ \hline
+TC-004-009 & Category name 2 ký tự & BVA & Biên hợp lệ của Name: độ dài 2. \\ \hline
+TC-004-010 & Category name 254 ký tự & BVA & Biên hợp lệ của Name: độ dài 254. \\ \hline
+TC-004-011 & Category name 255 ký tự & BVA & Biên hợp lệ của Name: độ dài 255. \\ \hline
+TC-004-012 & Category ID number 0 ký tự (để trống) & BVA & Biên hợp lệ của ID number: độ dài 0; Parent Top. \\ \hline
+TC-004-013 & Category ID number 1 ký tự & BVA & Biên hợp lệ của ID number: độ dài 1. \\ \hline
+TC-004-014 & Category ID number 2 ký tự & BVA & Biên hợp lệ của ID number: độ dài 2. \\ \hline
+TC-004-015 & Category ID number 99 ký tự & BVA & Biên hợp lệ của ID number: độ dài 99. \\ \hline
+TC-004-016 & Category ID number 100 ký tự & BVA & Biên hợp lệ của ID number: độ dài 100. \\ \hline
+TC-004-017 & Description để trống (0 ký tự) & BVA & Biên dưới của Description: không nhập Description, danh mục vẫn tạo được. \\ \hline
+TC-004-018 & R6: Name rỗng và Parent No selection & DT & R6: Name rỗng và Parent chưa chọn; hiện cả hai lỗi. \\ \hline
+TC-004-019 & R7: Hai danh mục trùng tên & DT & R7: tạo hai danh mục cùng tên, cùng parent; cả hai đều tạo được. \\ \hline
+TC-004-020 & R8: Parent là danh mục khác Top & DT & R8: Parent là tc004\_\allowbreak\{\}root; kiểm tra quan hệ cha-con. \\ \hline
+TC-004-021 & UC-P1: Luồng chính tạo danh mục & UC & Từ form, chọn Top, nhập hợp lệ, tạo thành công. \\ \hline
+TC-004-022 & UC-P2: Bỏ trống Name rồi nhập lại & UC & Gửi form rỗng Name, nhận lỗi, nhập Name rồi gửi lại. \\ \hline
+TC-004-023 & UC-P3: ID number trùng rồi đổi & UC & Dùng ID number trùng, nhận lỗi, đổi ID rồi gửi lại. \\ \hline
+TC-004-024 & UC-P4: Hủy tạo danh mục (Cancel) & UC & Nhập Name rồi bấm Cancel; không tạo danh mục. \\ \hline
+TC-004-025 & UC-P5: Tạo danh mục con của danh mục con & UC & Tạo danh mục cấp 1 rồi tạo danh mục con của nó (cấp 2). \\ \hline
+TC-004-026 & UC-P6: Parent No selection, báo lỗi, chọn Top & UC & Bỏ chọn Parent, nhận lỗi, chọn Top rồi gửi lại. \\ \hline
+\end{longtable}
+}

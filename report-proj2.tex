@@ -149,11 +149,11 @@ user mặc định). Mã test case có dạng \texttt{TC-XXX-YYY} với XXX là 
 \textbf{STT} & \textbf{Thành viên} & \textbf{Feature phụ trách} & \textbf{Công việc} & \textbf{Đóng góp} \\ \hline
 \endhead
 1 & Nguyễn Đức Phương \newline 2312749 & 001 -- Add a new user &
-  Phân tích, thiết kế test case, viết script Katalon cho feature của mình; & 100\% \\ \hline
-2 & Lê Sĩ Nhật Quang \newline 2312791 & 002 -- Add a new course & Như trên & 100\% \\ \hline
-3 & Huỳnh Đức Tài \newline 2212971 & 003 -- Add a quiz & Như trên & 100\% \\ \hline
-4 & Đào Xuân Sơn \newline 2312954 & 004 -- Add an assignment & Như trên & 100\% \\ \hline
-5 & Sơn Văn Phát \newline 2212535 & 005 -- Enrol users & Như trên & 100\% \\ \hline
+  Phân tích, thiết kế test case, viết script Katalon cho feature của mình; & 20\% \\ \hline
+2 & Lê Sĩ Nhật Quang \newline 2312791 & 002 -- Add a new course & Như trên & 20\% \\ \hline
+3 & Huỳnh Đức Tài \newline 2212971 & 003 -- Add a quiz & Như trên & 20\% \\ \hline
+4 & Đào Xuân Sơn \newline 2312954 & 004 -- Add new category & Như trên & 20\% \\ \hline
+5 & Sơn Văn Phát \newline 2212535 & 005 -- Enrol users & Như trên & 20\% \\ \hline
 \end{longtable}
 }
 
@@ -176,7 +176,7 @@ có nhánh (use-case testing).
 001 & Add a new user & Quản trị viên tạo tài khoản người dùng mới. & Phương \\ \hline
 002 & Add a new course & Quản trị viên tạo khóa học mới (full name, short name, category, visibility, start/end date, ID number). & Quang \\ \hline
 003 & --- & --- & Tài \\ \hline
-004 & --- & --- & Sơn \\ \hline
+004 & Add new category & Quản trị viên tạo danh mục khóa học mới. & Sơn \\ \hline
 005 & --- & --- & Phát \\ \hline
 \end{tabular}
 \caption{Danh sách feature}
@@ -190,7 +190,7 @@ có nhánh (use-case testing).
 001 & Add a new user & Generate password, password hợp lệ, username/email không trùng, Force password change, Suspended. \\ \hline
 002 & Add a new course & Full name/short name hợp lệ, short name không trùng, đã chọn category, bật end date, end date $>$ start date. \\ \hline
 003 & --- & --- \\ \hline
-004 & --- & --- \\ \hline
+004 & Add new category & Parent category đã chọn, Name hợp lệ, Category ID number (rỗng/duy nhất/trùng), Parent là Top hay danh mục khác. \\ \hline
 005 & --- & --- \\ \hline
 \end{tabular}
 \caption{Kiểm tra mỗi feature có áp dụng được bảng quyết định}
@@ -405,7 +405,185 @@ Dữ liệu dùng tiền tố \texttt{tc001\_} để dễ dọn dẹp.
 % ================= 6 =================
 \input{feature002.tex}
 \section{Feature 003: ---}
-\section{Feature 004: ---}
+\section{Feature 004: Add new category}
+
+\subsection{Mô tả và hướng dẫn sử dụng}
+Quản trị viên tạo danh mục khóa học (\textit{course category}) mới tại \textbf{Site administration $>$ Courses $>$ Manage courses and categories $>$ Create new category}
+(URL: \texttt{<BASE\_URL>/course/editcategory.php?parent=0}). Danh mục có thể nằm ở cấp Top hoặc là danh mục con của một danh mục có sẵn.
+
+\textbf{Các bước sử dụng:}
+\begin{enumerate}[noitemsep]
+  \item Đăng nhập bằng tài khoản admin.
+  \item Mở trang Manage courses and categories, bấm \textbf{Create new category}.
+  \item Chọn \textit{Parent category} (Top hoặc một danh mục), nhập \textit{Category name}; có thể nhập thêm \textit{Category ID number} và \textit{Description}.
+  \item Bấm \textbf{Create category} (hoặc \textbf{Cancel} để hủy).
+  \item Hệ thống kiểm tra dữ liệu; nếu hợp lệ thì tạo danh mục và chuyển về trang Manage courses and categories, nếu không thì hiển thị lỗi và
+        giữ nguyên form (riêng Name quá dài sẽ hiện trang lỗi riêng của Moodle).
+\end{enumerate}
+
+\subsection{Use case và activity diagram}
+\textbf{Use case:}
+\begin{table}[H]
+\centering\small
+\begin{tabular}{|L{3.6cm}|L{11.4cm}|}
+\hline
+Tên & UC-004: Tạo danh mục khóa học mới \\ \hline
+Tác nhân & Quản trị viên (Admin) \\ \hline
+Tiền điều kiện & Admin đã đăng nhập; có quyền quản lý danh mục khóa học. \\ \hline
+Hậu điều kiện (thành công) & Danh mục mới được lưu và hiển thị trong Manage courses and categories, đúng vị trí dưới Parent đã chọn. \\ \hline
+Luồng chính & Mở form $\rightarrow$ chọn Parent, nhập Name $\rightarrow$ Create category $\rightarrow$ hệ thống tạo danh mục và chuyển về trang quản lý. \\ \hline
+Luồng thay thế & A1: thiếu Name hoặc chưa chọn Parent $\rightarrow$ báo lỗi, nhập lại. A2: ID number trùng $\rightarrow$ báo lỗi, đổi ID.
+A3: Name quá 255 ký tự $\rightarrow$ trang lỗi, quay lại form. A4: chọn danh mục làm Parent để tạo danh mục con. A5: bấm Cancel, không tạo danh mục. \\ \hline
+\end{tabular}
+\caption{Đặc tả use case UC-004}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[>=Stealth, node distance=0.9cm and 1.4cm,
+  act/.style={rectangle, rounded corners=4pt, draw, minimum width=3.6cm, minimum height=0.8cm, align=center, font=\small, fill=blue!5},
+  dec/.style={diamond, aspect=2.2, draw, align=center, font=\scriptsize, inner sep=1pt, fill=yellow!15},
+  st/.style={circle, fill=black, minimum size=0.35cm},
+  en/.style={circle, draw, double, minimum size=0.35cm}]
+\node[st] (s) {};
+\node[act, below=0.5cm of s] (a1) {Mở trang Add new category};
+\node[act, below=0.5cm of a1] (a2) {Nhập dữ liệu vào form};
+\node[dec, below=0.6cm of a2] (d0) {Bấm\\Cancel?};
+\node[act, below=0.7cm of d0] (a3) {Bấm Create category};
+\node[dec, below=0.6cm of a3] (d1) {Name, Parent\\hợp lệ?};
+\node[dec, below=0.7cm of d1] (d2) {ID number\\không trùng?};
+\node[dec, below=0.7cm of d2] (d3) {Name\\$\leq$ 255 ký tự?};
+\node[act, below=0.7cm of d3] (a4) {Tạo danh mục, chuyển về\\Manage course categories};
+\node[en, below=0.5cm of a4] (e) {};
+\node[act, right=2.6cm of d0] (c1) {Quay lại trang quản lý,\\không tạo danh mục};
+\node[act, right=2.6cm of d1] (er1) {Hiển thị lỗi\\tại trường};
+\node[act, right=2.6cm of d2] (er2) {Hiển thị lỗi\\ID number trùng};
+\node[act, right=2.6cm of d3] (er3) {Trang lỗi\\Category name too long};
+\draw[->] (s)--(a1); \draw[->] (a1)--(a2); \draw[->] (a2)--(d0);
+\draw[->] (d0)--node[right,font=\scriptsize]{Không}(a3);
+\draw[->] (d0)--node[above,font=\scriptsize]{Có}(c1);
+\draw[->] (a3)--(d1);
+\draw[->] (d1)--node[right,font=\scriptsize]{Có}(d2);
+\draw[->] (d1)--node[above,font=\scriptsize]{Không}(er1);
+\draw[->] (d2)--node[right,font=\scriptsize]{Có}(d3);
+\draw[->] (d2)--node[above,font=\scriptsize]{Không}(er2);
+\draw[->] (d3)--node[right,font=\scriptsize]{Có}(a4);
+\draw[->] (d3)--node[above,font=\scriptsize]{Không}(er3);
+\draw[->] (a4)--(e);
+\draw[->] (er1.east)--++(0.8,0)|-(a2.east);
+\draw[->] (er2.east)--++(1.2,0)|-(a2.east);
+\draw[->] (er3.east)--++(1.6,0)|-(a2.east);
+\draw[->] (c1.east)--++(2.2,0)|-(e.east);
+\end{tikzpicture}
+\caption{Activity diagram của UC-004 (các nhánh báo lỗi quay lại bước nhập dữ liệu; nhánh Cancel kết thúc)}
+\end{figure}
+
+\subsection{Các biến đầu vào}
+\begin{table}[H]
+\centering\small
+\begin{tabular}{|L{2.6cm}|L{2.0cm}|L{5.2cm}|L{5.2cm}|}
+\hline
+\rowcolor{gray!15}\textbf{Biến} & \textbf{Bắt buộc?} & \textbf{Ràng buộc} & \textbf{Ghi chú} \\ \hline
+Parent category & Có & Chọn từ danh sách (Top, các danh mục có sẵn); không chọn (No selection) thì báo lỗi & Lỗi: \textit{You must supply a value here.} \\ \hline
+Category name & Có & 1--255 ký tự; được phép trùng tên; chuỗi chỉ gồm khoảng trắng vẫn được gửi đi (TC-004-003) & Rỗng: \textit{Required}; $>$255 ký tự: trang lỗi \textit{Category name too long} \\ \hline
+Category ID number & Không & 0--100 ký tự; không được trùng với danh mục khác & Ô chặn nhập quá 100 ký tự (\texttt{maxlength = 100}); trùng: \textit{ID number is already used for another category} \\ \hline
+Description & Không & Văn bản tự do (trình soạn thảo TinyMCE), không có giới hạn & Không có giá trị không hợp lệ qua giao diện; Katalon chỉ kiểm thử trường hợp để trống (xem mục Katalon) \\ \hline
+\end{tabular}
+\caption{Các biến đầu vào của Feature 004}
+\end{table}
+
+\subsection{Kỹ thuật 1: Phân lớp tương đương (ECP)}
+\textbf{Cách áp dụng:} với mỗi biến, chia miền giá trị thành lớp hợp lệ (V) và các lớp không hợp lệ (I).
+Test case ``tất cả hợp lệ'' (TC-004-001) phủ các lớp hợp lệ của Parent, Name, ID number và Description; mỗi lớp không hợp lệ được kiểm thử
+trong một test case riêng, các trường khác giữ giá trị hợp lệ để cô lập nguyên nhân lỗi.
+
+\begin{table}[H]
+\centering\footnotesize
+\begin{tabular}{|l|L{5.4cm}|L{7.0cm}|}
+\hline
+\rowcolor{gray!15}\textbf{Biến} & \textbf{Lớp hợp lệ} & \textbf{Lớp không hợp lệ (test case)} \\ \hline
+Parent & V1: chọn Top hoặc một danh mục & I1: No selection (007) \\ \hline
+Name & V2: 1--255 ký tự (kể cả chuỗi chỉ có khoảng trắng, xem 003) & I2: rỗng (002); I3: $>$255 ký tự (004) \\ \hline
+ID number & V3: rỗng; V4: 1--100 ký tự, chưa tồn tại & I4: $>$100 ký tự (005); I5: đã tồn tại (006) \\ \hline
+Description & V5: rỗng (Katalon); có nội dung (chỉ thử thủ công) & Không có \\ \hline
+\end{tabular}
+\caption{Lớp tương đương của Feature 004 (ID rút gọn: 002 nghĩa là TC-004-002)}
+\end{table}
+
+\subsection{Kỹ thuật 2: Phân tích giá trị biên (BVA)}
+\textbf{Cách áp dụng:} với mỗi biến có miền độ dài liên tục, chọn các giá trị tại và quanh biên: min$-1$, min, min$+1$, max$-1$, max, max$+1$.
+Giá trị \emph{không hợp lệ} (min$-1$, max$+1$) trùng với test case ECP nên được tham chiếu lại; các giá trị hợp lệ tạo test case mới (008--017).
+Parent là danh sách rời rạc nên không áp dụng BVA; Description là văn bản tự do không có giới hạn trên nên chỉ chọn biên dưới là 0 ký tự (để trống).
+
+\begin{table}[H]
+\centering\footnotesize
+\begin{tabular}{|l|c|c|c|c|c|c|}
+\hline
+\rowcolor{gray!15}\textbf{Biến (độ dài)} & \textbf{min$-1$} & \textbf{min} & \textbf{min$+1$} & \textbf{max$-1$} & \textbf{max} & \textbf{max$+1$} \\ \hline
+Name (1--255) & 0 (002) & 1 (008) & 2 (009) & 254 (010) & 255 (011) & 256 (004) \\ \hline
+ID number (0--100) & -- & 0 (012) & 1 (013) & 99 (015) & 100 (016) & 101 (005) \\ \hline
+Description (0--$\infty$) & -- & 0 (017) & -- & -- & -- & -- \\ \hline
+\end{tabular}
+\caption{Giá trị biên và test case của Feature 004 (số trong ngoặc là TC-004-YYY; ID number có thêm giá trị 2 ký tự ở TC-004-014)}
+\end{table}
+
+\subsection{Kỹ thuật 3: Bảng quyết định (Decision table)}
+\textbf{Điều kiện:} C1 -- Name hợp lệ (1--255 ký tự); C2 -- Parent đã chọn; C3 -- ID number (E: rỗng, U: có và duy nhất, D: trùng);
+C4 -- Parent là danh mục khác Top. \textbf{Hành động:} A1 -- tạo danh mục ở cấp Top; A2 -- tạo danh mục dưới một danh mục khác; A3 -- báo lỗi.
+R7 kiểm tra việc Moodle cho phép hai danh mục cùng tên, kể cả cùng parent. Name $>$255 ký tự không đưa vào bảng vì kết quả là trang lỗi riêng,
+đã được kiểm thử ở TC-004-004.
+
+\begin{table}[H]
+\centering\footnotesize
+\begin{tabular}{|l|c|c|c|c|c|c|c|c|}
+\hline
+\rowcolor{gray!15}\textbf{Luật} & R1 & R2 & R3 & R4 & R5 & R6 & R7 & R8 \\ \hline
+C1 Name hợp lệ & Y & Y & Y & N & Y & N & Y & Y \\ \hline
+C2 Parent đã chọn & Y & Y & Y & Y & N & N & Y & Y \\ \hline
+C3 ID number & E & U & D & -- & -- & -- & E & U \\ \hline
+C4 Parent khác Top & N & N & Y & -- & -- & -- & Y & Y \\ \hline
+A1 Tạo ở cấp Top & X & X & & & & & & \\ \hline
+A2 Tạo dưới danh mục khác & & & & & & & X & X \\ \hline
+A3 Báo lỗi & & & X & X & X & X & & \\ \hline
+\textbf{Test case} & 012 & 001 & 006 & 002 & 007 & 018 & 019 & 020 \\ \hline
+\end{tabular}
+\caption{Decision table của Feature 004 (R4 dùng test case ECP 002; R3 và R7 dùng parent là tc004\_root)}
+\end{table}
+\textit{Ghi chú:} R7 tạo hai danh mục cùng tên \texttt{tc004\_same} dưới \texttt{tc004\_root} và cả hai đều được tạo (hệ thống phân biệt bằng id).
+
+\subsection{Kỹ thuật 4: Use-case testing}
+Từ activity diagram, các đường đi (scenario) được liệt kê như sau:
+
+\begin{table}[H]
+\centering\footnotesize
+\begin{tabular}{|c|L{7.4cm}|L{3.2cm}|c|}
+\hline
+\rowcolor{gray!15}\textbf{Path} & \textbf{Đường đi trong diagram} & \textbf{Loại} & \textbf{Test case} \\ \hline
+P1 & Mở form $\rightarrow$ nhập hợp lệ $\rightarrow$ Create category $\rightarrow$ tạo thành công & Luồng chính & 021 \\ \hline
+P2 & Gửi form thiếu Name $\rightarrow$ báo lỗi $\rightarrow$ nhập lại $\rightarrow$ thành công & Luồng thay thế A1 & 022 \\ \hline
+P3 & Gửi ID number trùng $\rightarrow$ báo lỗi $\rightarrow$ đổi ID $\rightarrow$ thành công & Luồng thay thế A2 & 023 \\ \hline
+P4 & Nhập dữ liệu $\rightarrow$ Cancel $\rightarrow$ không tạo danh mục & Luồng thay thế A5 & 024 \\ \hline
+P5 & Tạo danh mục cấp 1 $\rightarrow$ tạo danh mục con của nó & Luồng thay thế A4 & 025 \\ \hline
+P6 & Để Parent No selection $\rightarrow$ báo lỗi $\rightarrow$ chọn Top $\rightarrow$ thành công & Luồng thay thế A1 & 026 \\ \hline
+\end{tabular}
+\caption{Scenario và test case của use-case testing (Feature 004; nhánh A3 -- Name $>$255 ký tự -- được kiểm thử ở TC-004-004)}
+\end{table}
+
+\subsection{Danh sách test case của Feature 004}
+Tổng cộng \textbf{26 test case}: ECP 001--007, BVA 008--017, Decision table 018--020, Use-case 021--026.
+Các test case ghi ``ECP/BVA'' vừa là lớp không hợp lệ vừa là giá trị biên.
+Kết quả mong đợi chung: với test case hợp lệ -- chuyển về trang Manage course categories and courses và danh mục mới có trong cây danh mục;
+với test case không hợp lệ -- form báo lỗi tại trường tương ứng và danh mục không được tạo.
+Giới hạn 100 ký tự của ID number được kiểm tra bằng thuộc tính \texttt{maxlength} của ô nhập; giới hạn 255 ký tự của Name được kiểm tra
+bằng cách gửi form và quan sát trang lỗi. Các test case chạy với Parent đã chọn trong ô Parent category (trừ 007, 018, 026 kiểm tra Parent chưa chọn).
+
+\input{f004_list.tex}
+
+\subsection{Test case mẫu (đầy đủ bước và kết quả mong đợi)}
+Năm test case dưới đây minh họa cách ghi trong file \texttt{.xlsx}; các test case còn lại viết theo cùng khuôn.
+Dữ liệu dùng tiền tố \texttt{tc004\_} để dễ dọn dẹp; tên và ID number là giá trị cố định, đúng như trong script Katalon.
+
+\input{f004_detail.tex}
 \section{Feature 005: ---}
 % ================= 7 =================
 \section{Triển khai test case bằng Katalon Recorder}
@@ -539,7 +717,57 @@ có short name/ID number 1--2 ký tự). Phải dọn trước khi chạy lại 
 \textbf{Không xóa course hay category có sẵn của demo.}
 
 \subsection{TC-003-001}
-\subsection{TC-004-001}
+\subsection{Feature 004: TC-004-001 và các test case tiêu biểu}
+Bộ test của Feature 004 gồm \textbf{26 test case} Katalon \texttt{TC-004-001} đến \texttt{TC-004-026} trong file
+\texttt{F004\_Add\_new\_catogory.krecorder} (suite \texttt{F004\_TestSuite\_Optimized-v6}). Suite \emph{không có} script Setup/Cleanup:
+dữ liệu nền (\texttt{tc004\_root}, \texttt{tc004\_base}) được tạo thủ công theo Precondition và admin phải đăng nhập sẵn trong trình duyệt.
+Mỗi test case độc lập, tên và ID number được ghi cố định; các biến Katalon (ví dụ \texttt{LEN256}, \texttt{ID101}, \texttt{P5AID}) chỉ dùng trong phạm vi
+một test case. Mỗi test case có ít nhất một lệnh \texttt{verify...} (\texttt{verifyTextPresent}, \texttt{verifyText}, \texttt{verifyElementPresent},
+\texttt{verifyElementNotPresent}, \texttt{verifyAttribute}). \textbf{Giới hạn:} Description là trình soạn thảo TinyMCE (iframe) nên script không nhập
+Description; TC-004-001 và TC-004-017 chỉ kiểm thử trường hợp để trống, trường hợp có nội dung chưa được kiểm thử tự động.
+
+\textbf{TC-004-001 (dữ liệu hợp lệ):}
+\begin{lstlisting}
+open               | http://127.0.0.1:9501/course/editcategory.php?parent=0
+select             | id=id_parent | label=Top
+type               | id=id_name | tc004_valid
+type               | id=id_idnumber | tc004_id001
+clickAndWait       | id=id_submitbutton
+verifyTextPresent  | tc004_valid
+\end{lstlisting}
+
+\textbf{TC-004-003 (Name chỉ có khoảng trắng; giá trị của lệnh \texttt{type} là 3 dấu cách):}
+\begin{lstlisting}
+open               | http://127.0.0.1:9501/course/editcategory.php?parent=0
+select             | id=id_parent | label=tc004_root
+type               | id=id_name |    
+clickAndWait       | id=id_submitbutton
+clickAndWait       | link=tc004_root
+verifyTextPresent  | tc004_base
+\end{lstlisting}
+
+\textbf{TC-004-025 (danh mục con của danh mục con):}
+\begin{lstlisting}
+open                | http://127.0.0.1:9501/course/editcategory.php?parent=0
+select              | id=id_parent | label=tc004_root
+type                | id=id_name | tc004_p5a
+clickAndWait        | id=id_submitbutton
+verifyTextPresent   | tc004_p5a
+storeAttribute      | link=tc004_p5a@href | P5AHREF
+storeEval           | '${P5AHREF}'.split('categoryid=')[1].split('&')[0] | P5AID
+clickAndWait        | link=Create new category
+select              | id=id_parent | value=${P5AID}
+type                | id=id_name | tc004_p5b
+clickAndWait        | id=id_submitbutton
+clickAndWait        | link=tc004_p5a
+verifyElementPresent | link=tc004_p5b
+\end{lstlisting}
+
+\textbf{Dọn dữ liệu Feature 004:} các danh mục do test tạo có tên bắt đầu bằng \texttt{tc004\_}. Trước khi chạy lại:
+(1) xóa bốn danh mục cấp Top \texttt{tc004\_valid} (TC-004-001), \texttt{tc004\_id0} (TC-004-012), \texttt{tc004\_p1} (TC-004-021),
+\texttt{tc004\_p6} (TC-004-026); (2) xóa \texttt{tc004\_root} cùng toàn bộ danh mục con (\textit{Delete $>$ Delete all}), gồm cả danh mục tên rỗng do
+TC-004-003 tạo; (3) tạo lại \texttt{tc004\_root} và \texttt{tc004\_base} (ID number \texttt{tc004\_dup}). Các ID number cố định cần được giải phóng:
+\texttt{tc004\_id001}, \texttt{q}, \texttt{qq}, hai ID dài 99 và 100 ký tự, \texttt{tc004\_idchild}, \texttt{tc004\_p1id}, \texttt{tc004\_p3id}.
 \subsection{TC-005-001}
 
 
@@ -601,8 +829,24 @@ còn các bảng lệnh ở trên chỉ là script Katalon tương ứng để t
 \end{itemize}
 \subsection{[Thành viên 3]}
 \todo{Điền công cụ AI và prompt, hoặc câu xác nhận không dùng AI.}
-\subsection{[Thành viên 4]}
-\todo{Điền công cụ AI và prompt, hoặc câu xác nhận không dùng AI.}
+\subsection{[Đào Xuân Sơn]}
+\textbf{Công cụ:} Claude (Anthropic), model Claude Sonnet 5.5, dùng qua giao diện chat của ứng dụng Claude.
+
+\noindent\textbf{Prompt đã sử dụng} (nguyên văn, kèm các file đề bài và báo cáo nhóm):
+\begin{enumerate}[noitemsep]
+  \item ``hướng dẫn chi tiết làm''
+  \item ``Cho tôi vài testcase''
+  \item ``sửa lại báo cáo cho đồng bộ''
+  \item ``tc đúng rồi hãy làm báo cáo đồng bộ với testcase''
+  \item ``hãy thêm vào report''
+\end{enumerate}
+
+\noindent\textbf{Nội dung AI hỗ trợ:}
+\begin{itemize}[noitemsep]
+  \item Hướng dẫn các bước làm Project 2 dựa trên đề bài.
+  \item Gợi ý thiết kế test case cho Feature 004 theo bốn kỹ thuật (ECP, BVA, decision table, use-case testing); ban đầu cho feature Add an assignment, sau đó cho Add new category.
+  \item Soạn và định dạng LaTeX phần Feature 004 trong báo cáo này, đối chiếu với file \texttt{F004\_Add\_new\_catogory.krecorder} của nhóm.
+\end{itemize}
 \subsection{[Thành viên 5]}
 \todo{Điền công cụ AI và prompt, hoặc câu xác nhận không dùng AI.}
 
