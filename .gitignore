@@ -19,6 +19,7 @@
 *.toc
 *.vrb
 *.xdv
+*.pdf
 
 # Temporary files
 *.bak
