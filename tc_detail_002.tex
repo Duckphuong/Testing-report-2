@@ -1,0 +1,124 @@
+\bigskip\noindent\textbf{TC-002-001 -- Tạo course với dữ liệu hợp lệ (Show, có end date, có ID)}\\
+\noindent\textit{Precondition:} Moodle demo (Moodle 5.1, Docker) đang chạy tại http:/\allowbreak{}/\allowbreak{}127.0.0.1:9501 giao diện Moodle và trình duyệt là English; đã đăng nhập bằng admin (admin/\allowbreak{}admin). Đã có category "Category 1". Script Setup đã tạo sẵn course Full name "Existing Course", Short name "EXIST01", ID number "ID-EXIST" trong "Category 1". Chưa tồn tại course nào có Short name/\allowbreak{}ID number dùng trong test case này (script Cleanup xóa các course TC002-* sau khi chạy).
+\smallskip
+
+{\footnotesize
+\begin{longtable}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+\hline
+\rowcolor{gray!15}\textbf{\#} & \textbf{Bước} & \textbf{Mô tả} & \textbf{Kết quả mong đợi} \\ \hline
+\endhead
+1 & Mở trang Add a new course & Vào Site administration \textgreater{} Courses \textgreater{} Add a new course (hoặc mở \textless{}BASE\_\allowbreak{}URL\textgreater{}/\allowbreak{}course/\allowbreak{}edit.php?category=0). & Form "Add a new course" hiển thị: Course full name, Course short name, Course category (No selection), Course visibility, Course start date, Course end date, Course ID number. \\ \hline
+2 & Nhập Course full name & Nhập "TC002 Course 001" vào ô Course full name. & Ô Course full name hiển thị giá trị đã nhập. \\ \hline
+3 & Nhập Course short name & Nhập "TC002-001" vào ô Course short name. & Ô Course short name hiển thị giá trị đã nhập. \\ \hline
+4 & Chọn Course category & Click ô Search của Course category, gõ "Category 1" và chọn "Category 1" trong danh sách. & Course category hiển thị "Category 1". \\ \hline
+5 & Chọn Course visibility & Chọn "Show" trong dropdown Course visibility. & Dropdown hiển thị "Show". \\ \hline
+6 & Đặt Course start date & Chọn ngày/\allowbreak{}tháng/\allowbreak{}năm/\allowbreak{}giờ/\allowbreak{}phút = 1 January 2026 08:00. & Course start date hiển thị 1 January 2026 08:00. \\ \hline
+7 & Đặt Course end date & Tick "Enable" của Course end date, chọn 1 January 2027 08:00. & Course end date hiển thị 1 January 2027 08:00. \\ \hline
+8 & Nhập Course ID number & Nhập "ID-002-001" vào ô Course ID number. & Ô Course ID number hiển thị giá trị đã nhập. \\ \hline
+9 & Lưu course & Click nút "Save and display". & Không có thông báo lỗi; course được tạo và trang course hiển thị tiêu đề "TC002 Course 001"; breadcrumb chứa short name "TC002-001". \\ \hline
+\end{longtable}
+}
+
+\bigskip\noindent\textbf{TC-002-004 -- Full name chỉ có khoảng trắng}\\
+\noindent\textit{Precondition:} Moodle demo (Moodle 5.1, Docker) đang chạy tại http:/\allowbreak{}/\allowbreak{}127.0.0.1:9501 giao diện Moodle và trình duyệt là English; đã đăng nhập bằng admin (admin/\allowbreak{}admin). Đã có category "Category 1". Script Setup đã tạo sẵn course Full name "Existing Course", Short name "EXIST01", ID number "ID-EXIST" trong "Category 1". Chưa tồn tại course nào có Short name/\allowbreak{}ID number dùng trong test case này (script Cleanup xóa các course TC002-* sau khi chạy).
+\smallskip
+
+{\footnotesize
+\begin{longtable}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+\hline
+\rowcolor{gray!15}\textbf{\#} & \textbf{Bước} & \textbf{Mô tả} & \textbf{Kết quả mong đợi} \\ \hline
+\endhead
+1 & Mở trang Add a new course & Vào Site administration \textgreater{} Courses \textgreater{} Add a new course (hoặc mở \textless{}BASE\_\allowbreak{}URL\textgreater{}/\allowbreak{}course/\allowbreak{}edit.php?category=0). & Form "Add a new course" hiển thị: Course full name, Course short name, Course category (No selection), Course visibility, Course start date, Course end date, Course ID number. \\ \hline
+2 & Nhập Course full name & Nhập 3 ký tự khoảng trắng vào ô Course full name. & Ô Course full name hiển thị giá trị đã nhập. \\ \hline
+3 & Nhập Course short name & Nhập "TC002-004" vào ô Course short name. & Ô Course short name hiển thị giá trị đã nhập. \\ \hline
+4 & Chọn Course category & Click ô Search của Course category, gõ "Category 1" và chọn "Category 1" trong danh sách. & Course category hiển thị "Category 1". \\ \hline
+5 & Chọn Course visibility & Chọn "Show" trong dropdown Course visibility. & Dropdown hiển thị "Show". \\ \hline
+6 & Đặt Course start date & Chọn ngày/\allowbreak{}tháng/\allowbreak{}năm/\allowbreak{}giờ/\allowbreak{}phút = 1 January 2026 08:00. & Course start date hiển thị 1 January 2026 08:00. \\ \hline
+7 & Đặt Course end date & Tick "Enable" của Course end date, chọn 1 January 2027 08:00. & Course end date hiển thị 1 January 2027 08:00. \\ \hline
+8 & Nhập Course ID number & Để trống (xóa hết nội dung) vào ô Course ID number. & Ô Course ID number hiển thị giá trị đã nhập. \\ \hline
+9 & Lưu course & Click nút "Save and display". & Form được lưu với tên là 3 khoảng trắng \\ \hline
+\end{longtable}
+}
+
+\bigskip\noindent\textbf{TC-002-008 -- Short name đã tồn tại}\\
+\noindent\textit{Precondition:} Moodle demo (Moodle 5.1, Docker) đang chạy tại http:/\allowbreak{}/\allowbreak{}127.0.0.1:9501 giao diện Moodle và trình duyệt là English; đã đăng nhập bằng admin (admin/\allowbreak{}admin). Đã có category "Category 1". Script Setup đã tạo sẵn course Full name "Existing Course", Short name "EXIST01", ID number "ID-EXIST" trong "Category 1". Chưa tồn tại course nào có Short name/\allowbreak{}ID number dùng trong test case này (script Cleanup xóa các course TC002-* sau khi chạy).
+\smallskip
+
+{\footnotesize
+\begin{longtable}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+\hline
+\rowcolor{gray!15}\textbf{\#} & \textbf{Bước} & \textbf{Mô tả} & \textbf{Kết quả mong đợi} \\ \hline
+\endhead
+1 & Mở trang Add a new course & Vào Site administration \textgreater{} Courses \textgreater{} Add a new course (hoặc mở \textless{}BASE\_\allowbreak{}URL\textgreater{}/\allowbreak{}course/\allowbreak{}edit.php?category=0). & Form "Add a new course" hiển thị: Course full name, Course short name, Course category (No selection), Course visibility, Course start date, Course end date, Course ID number. \\ \hline
+2 & Nhập Course full name & Nhập "TC002 Course 008" vào ô Course full name. & Ô Course full name hiển thị giá trị đã nhập. \\ \hline
+3 & Nhập Course short name & Nhập "EXIST01" vào ô Course short name. & Ô Course short name hiển thị giá trị đã nhập. \\ \hline
+4 & Chọn Course category & Click ô Search của Course category, gõ "Category 1" và chọn "Category 1" trong danh sách. & Course category hiển thị "Category 1". \\ \hline
+5 & Chọn Course visibility & Chọn "Show" trong dropdown Course visibility. & Dropdown hiển thị "Show". \\ \hline
+6 & Đặt Course start date & Chọn ngày/\allowbreak{}tháng/\allowbreak{}năm/\allowbreak{}giờ/\allowbreak{}phút = 1 January 2026 08:00. & Course start date hiển thị 1 January 2026 08:00. \\ \hline
+7 & Đặt Course end date & Tick "Enable" của Course end date, chọn 1 January 2027 08:00. & Course end date hiển thị 1 January 2027 08:00. \\ \hline
+8 & Nhập Course ID number & Để trống (xóa hết nội dung) vào ô Course ID number. & Ô Course ID number hiển thị giá trị đã nhập. \\ \hline
+9 & Lưu course & Click nút "Save and display". & Form không được lưu, vẫn ở trang Add a new course; hiển thị lỗi "Short name is already used for another course (Existing Course)". Không có course mới được tạo. \\ \hline
+\end{longtable}
+}
+
+\bigskip\noindent\textbf{TC-002-010 -- End date bằng start date}\\
+\noindent\textit{Precondition:} Moodle demo (Moodle 5.1, Docker) đang chạy tại http:/\allowbreak{}/\allowbreak{}127.0.0.1:9501 giao diện Moodle và trình duyệt là English; đã đăng nhập bằng admin (admin/\allowbreak{}admin). Đã có category "Category 1". Script Setup đã tạo sẵn course Full name "Existing Course", Short name "EXIST01", ID number "ID-EXIST" trong "Category 1". Chưa tồn tại course nào có Short name/\allowbreak{}ID number dùng trong test case này (script Cleanup xóa các course TC002-* sau khi chạy).
+\smallskip
+
+{\footnotesize
+\begin{longtable}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+\hline
+\rowcolor{gray!15}\textbf{\#} & \textbf{Bước} & \textbf{Mô tả} & \textbf{Kết quả mong đợi} \\ \hline
+\endhead
+1 & Mở trang Add a new course & Vào Site administration \textgreater{} Courses \textgreater{} Add a new course (hoặc mở \textless{}BASE\_\allowbreak{}URL\textgreater{}/\allowbreak{}course/\allowbreak{}edit.php?category=0). & Form "Add a new course" hiển thị: Course full name, Course short name, Course category (No selection), Course visibility, Course start date, Course end date, Course ID number. \\ \hline
+2 & Nhập Course full name & Nhập "TC002 Course 010" vào ô Course full name. & Ô Course full name hiển thị giá trị đã nhập. \\ \hline
+3 & Nhập Course short name & Nhập "TC002-010" vào ô Course short name. & Ô Course short name hiển thị giá trị đã nhập. \\ \hline
+4 & Chọn Course category & Click ô Search của Course category, gõ "Category 1" và chọn "Category 1" trong danh sách. & Course category hiển thị "Category 1". \\ \hline
+5 & Chọn Course visibility & Chọn "Show" trong dropdown Course visibility. & Dropdown hiển thị "Show". \\ \hline
+6 & Đặt Course start date & Chọn ngày/\allowbreak{}tháng/\allowbreak{}năm/\allowbreak{}giờ/\allowbreak{}phút = 1 January 2026 08:00. & Course start date hiển thị 1 January 2026 08:00. \\ \hline
+7 & Đặt Course end date & Tick "Enable" của Course end date, chọn 1 January 2026 08:00. & Course end date hiển thị 1 January 2026 08:00. \\ \hline
+8 & Nhập Course ID number & Để trống (xóa hết nội dung) vào ô Course ID number. & Ô Course ID number hiển thị giá trị đã nhập. \\ \hline
+9 & Lưu course & Click nút "Save and display". & Form không được lưu, vẫn ở trang Add a new course; hiển thị lỗi "The course end date must be after the start date.". Không có course mới được tạo. \\ \hline
+\end{longtable}
+}
+
+\bigskip\noindent\textbf{TC-002-031 -- DT-R4: Thiếu toàn bộ trường bắt buộc}\\
+\noindent\textit{Precondition:} Moodle demo (Moodle 5.1, Docker) đang chạy tại http:/\allowbreak{}/\allowbreak{}127.0.0.1:9501 giao diện Moodle và trình duyệt là English; đã đăng nhập bằng admin (admin/\allowbreak{}admin). Đã có category "Category 1". Script Setup đã tạo sẵn course Full name "Existing Course", Short name "EXIST01", ID number "ID-EXIST" trong "Category 1". Chưa tồn tại course nào có Short name/\allowbreak{}ID number dùng trong test case này (script Cleanup xóa các course TC002-* sau khi chạy).
+\smallskip
+
+{\footnotesize
+\begin{longtable}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+\hline
+\rowcolor{gray!15}\textbf{\#} & \textbf{Bước} & \textbf{Mô tả} & \textbf{Kết quả mong đợi} \\ \hline
+\endhead
+1 & Mở trang Add a new course & Vào Site administration \textgreater{} Courses \textgreater{} Add a new course (hoặc mở \textless{}BASE\_\allowbreak{}URL\textgreater{}/\allowbreak{}course/\allowbreak{}edit.php?category=0). & Form "Add a new course" hiển thị: Course full name, Course short name, Course category (No selection), Course visibility, Course start date, Course end date, Course ID number. \\ \hline
+2 & Nhập Course full name & Để trống (xóa hết nội dung) vào ô Course full name. & Ô Course full name hiển thị giá trị đã nhập. \\ \hline
+3 & Nhập Course short name & Để trống (xóa hết nội dung) vào ô Course short name. & Ô Course short name hiển thị giá trị đã nhập. \\ \hline
+4 & Không chọn Course category & Giữ nguyên Course category là "No selection". & Course category vẫn là "No selection". \\ \hline
+5 & Chọn Course visibility & Chọn "Show" trong dropdown Course visibility. & Dropdown hiển thị "Show". \\ \hline
+6 & Đặt Course start date & Chọn ngày/\allowbreak{}tháng/\allowbreak{}năm/\allowbreak{}giờ/\allowbreak{}phút = 1 January 2026 08:00. & Course start date hiển thị 1 January 2026 08:00. \\ \hline
+7 & Đặt Course end date & Tick "Enable" của Course end date, chọn 1 January 2027 08:00. & Course end date hiển thị 1 January 2027 08:00. \\ \hline
+8 & Nhập Course ID number & Để trống (xóa hết nội dung) vào ô Course ID number. & Ô Course ID number hiển thị giá trị đã nhập. \\ \hline
+9 & Lưu course & Click nút "Save and display". & Form không được lưu, vẫn ở trang Add a new course; hiển thị lỗi "Missing full name", "Missing short name" và "You must supply a value here." cùng lúc. Không có course mới được tạo. \\ \hline
+\end{longtable}
+}
+
+\bigskip\noindent\textbf{TC-002-037 -- UC-P5: Short name trùng rồi đổi}\\
+\noindent\textit{Precondition:} Moodle demo (Moodle 5.1, Docker) đang chạy tại http:/\allowbreak{}/\allowbreak{}127.0.0.1:9501 giao diện Moodle và trình duyệt là English; đã đăng nhập bằng admin (admin/\allowbreak{}admin). Đã có category "Category 1". Script Setup đã tạo sẵn course Full name "Existing Course", Short name "EXIST01", ID number "ID-EXIST" trong "Category 1". Chưa tồn tại course nào có Short name/\allowbreak{}ID number dùng trong test case này (script Cleanup xóa các course TC002-* sau khi chạy).
+\smallskip
+
+{\footnotesize
+\begin{longtable}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+\hline
+\rowcolor{gray!15}\textbf{\#} & \textbf{Bước} & \textbf{Mô tả} & \textbf{Kết quả mong đợi} \\ \hline
+\endhead
+1 & Mở trang quản lý course & Vào Site administration \textgreater{} Courses \textgreater{} Manage courses and categories, chọn "Category 1". & Trang Course and category management hiển thị, liệt kê course của Category 1. \\ \hline
+2 & Mở form tạo course & Click link "Create new course". & Form "Add a new course" hiển thị, Course category mặc định là "Category 1". \\ \hline
+3 & Nhập Course full name & Nhập "TC002 UC Dup" vào ô Course full name. & Ô hiển thị giá trị đã nhập. \\ \hline
+4 & Nhập Course short name & Nhập "EXIST01" vào ô Course short name. & Ô hiển thị giá trị đã nhập. \\ \hline
+5 & Gửi form & Click "Save and display". & Hiển thị "Short name is already used for another course (Existing Course)". \\ \hline
+6 & Đổi Short name & Xóa ô Course short name, nhập "TC002-UC5". & Ô hiển thị "TC002-UC5". \\ \hline
+7 & Gửi lại & Click "Save and display". & Trang course "TC002 UC Dup" hiển thị. \\ \hline
+\end{longtable}
+}
+
