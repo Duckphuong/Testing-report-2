@@ -465,7 +465,7 @@ python -m unittest -v perf_create_user
 
 \textbf{Kết luận:} \textbf{đạt}, trung bình 1,858 giây thấp hơn ngưỡng 3 giây, và 19/20 lần dưới ngưỡng; chỉ lần đầu tiên vượt ngưỡng (3,205 giây). Thời gian giảm dần theo các lần đầu (khoảng 2,0 giây ở lần 2--8, khoảng 1,6 giây từ lần 10 trở đi); chưa kiểm chứng nguyên nhân, có thể do Moodle/PHP và trình duyệt được làm nóng bộ nhớ đệm. Thời gian mở form chỉ khoảng 0,3--0,8 giây. Ngưỡng 3 giây do nhóm tự đặt vì đề không quy định. 
 
-\textbf{Cấu hình máy đo:} Windows, RAM 16 GB DDR4 (khoảng 15,7 GB khả dụng), đồ họa tích hợp Intel Iris Xe, ổ SSD NVMe; \todo{ghi tên chip CPU từ Task Manager, mục CPU}. Docker Desktop 4.96.2 dùng WSL 2, Docker thấy \textbf{12 CPU (luồng logic)} và \textbf{7,6 GiB RAM}. Lúc đo trên máy còn chạy các ứng dụng khác nên thời gian có thể dao động giữa các lần chạy.
+\textbf{Cấu hình máy đo:} Windows, RAM 16 GB DDR4 (khoảng 15,7 GB khả dụng), đồ họa tích hợp Intel Iris Xe, ổ SSD NVMe. Docker Desktop 4.96.2 dùng WSL 2, Docker \textbf{12 CPU (luồng logic)} và \textbf{7,6 GiB RAM}.
 
 \subsection{Chi tiết phần của }
 \subsection{Chi tiết phần của }
