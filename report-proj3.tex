@@ -1,0 +1,503 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[utf8]{inputenc}
+  \usepackage[T5]{fontenc}
+  \usepackage[vietnamese]{babel}
+  \usepackage{lmodern}
+\else
+  % phương án dự phòng khi biên dịch bằng XeLaTeX/LuaLaTeX
+  \usepackage{fontspec}
+  \setmainfont{Latin Modern Roman}\setsansfont{Latin Modern Sans}\setmonofont{Latin Modern Mono}
+  \renewcommand{\contentsname}{Mục lục}\renewcommand{\figurename}{Hình}\renewcommand{\tablename}{Bảng}
+\fi
+\usepackage[margin=2.2cm]{geometry}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{tikz}
+\usetikzlibrary{calc,shapes.geometric,arrows.meta,positioning}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage[table]{xcolor}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage[hidelinks]{hyperref}
+
+\definecolor{bkblue}{RGB}{3,43,145}
+\definecolor{codebg}{RGB}{246,248,250}
+\newcommand{\todo}[1]{\textcolor{red}{\textbf{[#1]}}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+\lstset{
+  basicstyle=\ttfamily\footnotesize, backgroundcolor=\color{codebg},
+  frame=single, rulecolor=\color{black!20},
+  breaklines=true, showstringspaces=false, columns=fullflexible
+}
+
+\titleformat{\section}{\Large\bfseries\color{bkblue}}{\thesection.}{0.6em}{}
+\titleformat{\subsection}{\large\bfseries}{\thesubsection.}{0.6em}{}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Kiểm tra phần mềm -- Nhóm HEHE2027}
+\rhead{Bài tập lớn 3}
+\cfoot{\thepage}
+\setlength{\headheight}{15pt}
+
+\renewcommand{\arraystretch}{1.2}
+\sloppy
+\setlength{\emergencystretch}{3em}
+
+\begin{document}
+
+\begin{titlepage}
+\begin{tikzpicture}[overlay,remember picture]
+\draw [line width=2.25pt]
+    ($ (current page.north west) + (2.0cm,-1.5cm) $)
+    rectangle
+    ($ (current page.south east) + (-1.5cm,2cm) $);
+\draw [line width=0.5pt]
+    ($ (current page.north west) + (2.2cm,-1.7cm) $)
+    rectangle
+    ($ (current page.south east) + (-1.7cm,2.2cm) $);
+\end{tikzpicture}
+\begin{center}
+\textbf{ĐẠI HỌC QUỐC GIA THÀNH PHỐ HỒ CHÍ MINH} \\
+\textbf{TRƯỜNG ĐẠI HỌC BÁCH KHOA}\\
+\textbf{KHOA KHOA HỌC VÀ KỸ THUẬT MÁY TÍNH}
+
+\vspace{1cm}
+\includegraphics[width=0.32\textwidth]{img/logo/logo.png}
+\vspace{1cm}
+
+\begin{tabular}{c}
+    \textbf{\Large KIỂM TRA PHẦN MỀM (SOFTWARE TESTING)}\\[0.4cm]
+    \textbf{\large BÀI TẬP LỚN 3: DATA-DRIVEN AUTOMATION TESTING}\\
+    \textbf{\large VÀ NON-FUNCTIONAL TESTING}\\[0.2cm]
+    \large Kiểm thử hệ thống quản lý học tập \textit{Moodle LMS}\\[0.4cm]
+    \textbf{Học kỳ 1, năm học 2026--2027 -- Lớp L01 -- Nhóm HEHE2027}\\
+    \hline
+\end{tabular}
+
+\vspace{1cm}
+\begin{tabular}{p{3cm} p{6cm} l}
+    \textbf{GVHD:} & Trần Thị Ngọc Trâm & \\[0.2cm]
+    \textbf{Sinh viên:} & Nguyễn Đức Phương & 2312749 \\
+                        & Lê Sĩ Nhật Quang & 2312791 \\
+                        & Huỳnh Đức Tài & 2212971 \\
+                        & Đào Xuân Sơn & 2312954 \\
+                        & Sơn Văn Phát & 2212535 \\
+\end{tabular}
+
+\vfill
+\fontsize{14pt}{0pt}\selectfont TP. HỒ CHÍ MINH, THÁNG 11/2026
+\end{center}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+\section{Giới thiệu}
+Bài tập lớn 3 tự động hóa lại các test case của Bài tập lớn 2 bằng \textbf{kiểm thử hướng dữ liệu}
+(\textit{data-driven testing}) viết bằng \textbf{Python 3}, \textbf{Selenium WebDriver} và \textbf{unittest},
+đồng thời thực hiện \textbf{kiểm thử phi chức năng} (\textit{non-functional testing}) trên Moodle LMS.
+
+\begin{itemize}[noitemsep]
+  \item \textbf{Level 1:} các test case chỉ khác nhau về dữ liệu được gộp thành một script; dữ liệu đầu vào \emph{và}
+        kết quả mong đợi (\textit{Expected Result}) nằm trong file \texttt{.csv}.
+  \item \textbf{Level 2:} ngoài dữ liệu, \textbf{test item} (URL của site, locator của ô nhập, nút bấm\ldots) cũng được đưa ra
+        file cấu hình/dữ liệu, script không còn chứa hằng số về giao diện.
+  \item \textbf{Non-functional:} mỗi thành viên kiểm thử ít nhất một yêu cầu phi chức năng; báo cáo nêu loại kiểm thử, cách tiếp cận và công cụ.
+\end{itemize}
+
+\textbf{Thang điểm của đề:} Level 1 -- 5 điểm; Level 2 -- 2 điểm; Non-functional -- 2 điểm; báo cáo -- 1 điểm.
+
+\subsection*{Cấu trúc file nộp (BK LMS)}
+Bài nộp gồm một file báo cáo PDF và một file nén \texttt{.zip} cùng tên; file nén chứa năm thư mục, mỗi thư mục là một feature của một thành viên, trong đó file Level 1 và Level 2 được tách riêng:
+\begin{lstlisting}
+ASSIGNMENT_3__HEHE2027__L01.pdf          (bao cao cua ca nhom)
+ASSIGNMENT_3__HEHE2027__L01.zip
+  |-- F001/                              (Add a new user - Phuong)
+  |     |-- level1/
+  |     |     l1_common.py, test_create_user_*.py (3 file), data_L1_*.csv (3 file)
+  |     |-- level2/
+  |     |     l2_common.py, test_create_user_*.py (3 file), data_L2_*.csv (3 file)
+  |     |     config.csv, locators.csv, form_fields.csv
+  |     |-- nonfunctional/
+  |           perf_create_user.py
+  |-- F002/                              (Add a new course - Quang)
+  |     |-- level1/   |-- level2/   |-- nonfunctional/
+  |-- F003/                              (Tai)
+  |     |-- level1/   |-- level2/   |-- nonfunctional/
+  |-- F004/                              (Add new category - Son)
+  |     |-- level1/   |-- level2/   |-- nonfunctional/
+  |-- F005/                              (Add a Choice - Phat)
+        |-- level1/   |-- level2/   |-- nonfunctional/
+\end{lstlisting}
+Chỉ nộp mã Python và file dữ liệu, \textbf{không} nộp file Katalon. Trong mỗi thư mục feature, các script dùng chung hàm trong file \texttt{l1\_common.py}/\texttt{l2\_common.py} của chính thư mục đó, nên mỗi feature có thể chạy độc lập (\texttt{cd F001/level1} rồi chạy \texttt{python -m unittest -v \ldots}).
+
+\section{Phân công công việc}
+{\small
+\begin{longtable}{|c|L{3.1cm}|L{3.4cm}|L{4.3cm}|c|}
+\hline
+\rowcolor{gray!15}
+\textbf{STT} & \textbf{Thành viên} & \textbf{Feature (BTL2)} & \textbf{Công việc BTL3} & \textbf{Đóng góp} \\ \hline
+\endhead
+1 & Nguyễn Đức Phương \newline 2312749 & 001 -- Add a new user & Level 1, Level 2 cho feature 001; kiểm thử phi chức năng (mục \ref{sec:nf}) & 100\%  \\ \hline
+2 & Lê Sĩ Nhật Quang \newline 2312791 & 002 -- Add a new course & Level 1, Level 2 cho feature 002; phi chức năng & \todo{\%} \\ \hline
+3 & Huỳnh Đức Tài \newline 2212971 & \todo{chưa có feature} & \todo{điền} & \todo{\%} \\ \hline
+4 & Đào Xuân Sơn \newline 2312954 & 004 -- Add new category & Level 1, Level 2 cho feature 004; phi chức năng & \todo{\%} \\ \hline
+5 & Sơn Văn Phát \newline 2212535 & 005 -- Add a Choice & Level 1, Level 2 cho feature 005; phi chức năng & \todo{\%} \\ \hline
+\end{longtable}
+}
+
+\section{Môi trường và công cụ}
+\begin{itemize}[noitemsep]
+  \item Moodle 5.1 chạy bằng Docker, \texttt{http://127.0.0.1:9501}, tài khoản \texttt{admin}/\texttt{admin}. Không đổi mật khẩu các user mặc định.
+  \item Python 3.x, Selenium 4 (Selenium Manager tự tải driver), module chuẩn \texttt{unittest}, \texttt{csv}; Chrome, Firefox.
+  \item Katalon Recorder chỉ dùng để thu thao tác và tham khảo locator; sản phẩm nộp là script Python.
+  \item Ngôn ngữ giao diện Moodle: English.
+\end{itemize}
+
+\section{Feature 001: Add a new user -- kiểm thử hướng dữ liệu}
+
+\subsection{Phân tích gộp 50 test case thành các script}
+Quan sát: 45 test case đầu của BTL2 (ECP, BVA, decision table) có cùng một quy trình --
+\emph{mở form, điền các trường, bấm Create user, kiểm tra kết quả} -- chỉ khác dữ liệu và kết quả mong đợi.
+Các use-case còn lại khác về luồng thao tác nên tách riêng. Kết quả gộp:
+
+\begin{table}[H]
+\centering\small
+\begin{tabular}{|L{4.4cm}|L{2.7cm}|L{4.6cm}|c|}
+\hline
+\rowcolor{gray!15}\textbf{Script (Level 1)} & \textbf{Test case gộp} & \textbf{Luồng} & \textbf{Số dòng dữ liệu} \\ \hline
+\texttt{test\_create\_user\_form} & TC-001-001 đến 045 & Điền form, Create user, so với Expected Result (thành công hoặc lỗi tại một trường). & 45 \\ \hline
+\texttt{test\_create\_user\_retry} & TC-001-047, 048 & Gửi dữ liệu lần 1 (lỗi), sửa trường lỗi, gửi lần 2 (thành công). & 2 \\ \hline
+\texttt{test\_create\_user\_nav} & TC-001-046, 049, 050 & Luồng điều hướng: từ danh sách user vào form, Cancel, hoặc tick Generate password (khóa ô New password). & 3 \\ \hline
+\end{tabular}
+\caption{Gộp 50 test case thành 3 script}
+\end{table}
+Tính ra, 50 test case thủ công được thay bằng 3 script và 3 file dữ liệu; thêm một test case mới chỉ là thêm một dòng vào file \texttt{.csv}.
+
+\subsection{Cấu trúc file dữ liệu Level 1}
+File \texttt{data\_L1\_create\_user.csv} (một dòng = một test case):
+
+\begin{table}[H]
+\centering\footnotesize
+\begin{tabular}{|L{5.0cm}|L{9.6cm}|}
+\hline
+\rowcolor{gray!15}\textbf{Cột} & \textbf{Ý nghĩa} \\ \hline
+\texttt{tc\_id} & Mã test case (ví dụ \texttt{TC-001-003}), dùng làm tên \texttt{subTest}. \\ \hline
+\texttt{username, password, firstname, lastname, email, city} & Dữ liệu nhập. Chuỗi dài viết bằng ký hiệu \texttt{<a*101>} (101 ký tự \texttt{a}), script mở rộng khi chạy. \\ \hline
+\texttt{generate\_password, force\_change, suspended} & \texttt{0/1}: trạng thái ba checkbox. \\ \hline
+\texttt{expected\_type} & \texttt{success} (có thông báo ``Changes saved''; thường là về trang danh sách, riêng Generate password thì ở lại form) hoặc \texttt{error} (ở lại form, hiện lỗi). \\ \hline
+\texttt{error\_field} & Trường báo lỗi (\texttt{username}, \texttt{newpassword}, \texttt{firstname}, \texttt{lastname}, \texttt{email}\ldots); rỗng nếu thành công. \\ \hline
+\texttt{expected\_text} & Nội dung thông báo mong đợi (ví dụ \texttt{This username already exists, choose another}). \\ \hline
+\end{tabular}
+\caption{Cột của file dữ liệu Level 1}
+\end{table}
+
+Ví dụ một số dòng (rút gọn):
+\begin{lstlisting}
+tc_id,username,password,firstname,lastname,email,city,generate_password,force_change,suspended,expected_type,error_field,expected_text
+TC-001-001,hehe001,Test@1234,An,Nguyen,hehe001@example.com,HCM,0,0,0,success,,Changes saved
+TC-001-002,,Test@1234,An,Nguyen,hehe002@example.com,,0,0,0,error,username,Required
+TC-001-004,HeheUPPER,Test@1234,An,Nguyen,hehe004@example.com,,0,0,0,error,username,Only lowercase letters allowed
+TC-001-006,admin,Test@1234,An,Nguyen,hehe006@example.com,,0,0,0,error,username,This username already exists
+TC-001-014,hehe014,Test@1234,An,Nguyen,khong-co-a-cong,,0,0,0,error,email,Invalid email address
+TC-001-029,hehe029,Test@1234,<a*100>,Nguyen,hehe029@example.com,,0,0,0,success,,Changes saved
+\end{lstlisting}
+
+\subsection{Thiết kế script Level 1}
+Mã đầy đủ nằm trong thư mục \texttt{F001/level1/} (hàm dùng chung ở \texttt{l1\_common.py}, ba script \texttt{test\_create\_user\_*.py}); đoạn dưới đây là bản rút gọn. Script dùng \texttt{unittest.TestCase}; mỗi dòng CSV chạy trong một \texttt{subTest}, nên một dòng sai không làm dừng các dòng còn lại và báo cáo ghi rõ test case nào fail.
+
+\begin{lstlisting}[language=Python]
+import csv, os, re, unittest
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+BASE = "http://127.0.0.1:9501"
+DATA = os.path.join(os.path.dirname(__file__), "data_L1_create_user.csv")
+
+def expand(v):                      # "<a*101>" -> "a" * 101
+    return re.sub(r"<(.)\*(\d+)>", lambda m: m.group(1) * int(m.group(2)), v)
+
+def read_rows(path):
+    with open(path, newline="", encoding="utf-8") as f:
+        return [{k: expand(v) for k, v in r.items()} for r in csv.DictReader(f)]
+
+class CreateUserForm(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.d = webdriver.Chrome()
+        cls.wait = WebDriverWait(cls.d, 10)
+        cls.d.get(BASE + "/login/index.php")           # buoc chuan bi, khong phai doi tuong test
+        cls.d.find_element(By.ID, "username").send_keys("admin")
+        cls.d.find_element(By.ID, "password").send_keys("admin")
+        cls.d.find_element(By.ID, "loginbtn").click()
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.d.quit()
+
+    def set_checkbox(self, elem_id, want):
+        box = self.d.find_element(By.ID, elem_id)
+        if box.is_selected() != (want == "1"):
+            box.click()
+
+    def fill_form(self, r):
+        d = self.d
+        d.get(BASE + "/user/editadvanced.php?id=-1")
+        for fid in ("username", "firstname", "lastname", "email", "city"):
+            e = d.find_element(By.ID, "id_" + fid); e.clear(); e.send_keys(r[fid])
+        self.set_checkbox("id_createpassword", r["generate_password"])
+        if r["generate_password"] != "1":              # o password bi an, gan bang JS
+            d.execute_script("arguments[0].value = arguments[1];",
+                             d.find_element(By.ID, "id_newpassword"), r["password"])
+        self.set_checkbox("id_preference_auth_forcepasswordchange", r["force_change"])
+        self.set_checkbox("id_suspended", r["suspended"])
+        d.find_element(By.ID, "id_submitbutton").click()
+
+    def test_create_user(self):
+        for r in read_rows(DATA):
+            with self.subTest(tc=r["tc_id"]):
+                self.fill_form(r)
+                if r["expected_type"] == "success":
+                    self.wait.until(lambda x: "/admin/user.php" in x.current_url
+                                    or "Changes saved" in x.page_source)
+                    self.assertIn(r["expected_text"], self.d.page_source)
+                else:
+                    err = self.wait.until(EC.visibility_of_element_located(
+                        (By.ID, "id_error_" + r["error_field"])))
+                    self.assertIn(r["expected_text"], err.text)
+
+if __name__ == "__main__":
+    unittest.main(verbosity=2)
+\end{lstlisting}
+
+\noindent\textbf{Lưu ý thiết kế:}
+\begin{itemize}[noitemsep]
+  \item \textbf{Dữ liệu độc nhất:} username/email trong CSV là duy nhất cho mỗi dòng và mỗi lần chạy phải xóa user đã tạo (hoặc đổi tiền tố); nếu không, lần chạy sau sẽ báo trùng.
+  \item \textbf{Giới hạn \texttt{maxlength}:} ô First name/Last name/Email/City có \texttt{maxlength}, nên chuỗi 101 ký tự bị trình duyệt cắt còn 100; Expected Result của các dòng này phải khớp hành vi thực tế (ví dụ \texttt{success}).
+  \item \textbf{Hộp thoại ``Reload site?''} do Moodle bật khi form đang sửa dở: script phải tắt cảnh báo này (hoặc dùng \texttt{get} sau khi đã submit) trước khi mở trang mới.
+  \item Ô New password bị ẩn nên gán bằng JavaScript (không bị trình duyệt tự cắt); script tự cắt giá trị theo thuộc tính \texttt{maxlength} (128) để mô phỏng người dùng gõ, nên dòng 129 ký tự được kỳ vọng là \texttt{success} với mật khẩu 128 ký tự.
+\end{itemize}
+
+\subsection{Level 2: đưa test item ra ngoài script}
+Ở Level 2, script không còn chứa URL hay locator. Ba file cấu hình bổ sung:
+
+\begin{lstlisting}
+config.csv        key,value
+                  base_url,http://127.0.0.1:9501
+                  login_path,/login/index.php
+                  form_path,/user/editadvanced.php?id=-1
+                  admin_user,admin
+                  admin_pass,admin
+
+locators.csv      name,by,value
+                  username_input,id,id_username
+                  submit_button,id,id_submitbutton
+                  error_username,id,id_error_username
+                  ...
+
+form_fields.csv   data_column,locator,kind
+                  username,username_input,text
+                  password,password_input,password_js
+                  suspended,suspended_checkbox,checkbox
+\end{lstlisting}
+Script Level 2 đọc \texttt{form\_fields.csv} theo thứ tự và với mỗi dòng gọi hành động tương ứng với \texttt{kind} (\texttt{text}, \texttt{password\_js}, \texttt{checkbox}); locator được tra trong \texttt{locators.csv} bằng \texttt{by} (\texttt{id}, \texttt{name}, \texttt{xpath}, \texttt{css}) ánh xạ sang \texttt{selenium.webdriver.common.by.By}. Cột \texttt{error\_field} của file dữ liệu cũng là một \textbf{tên locator} (ví dụ \texttt{error\_username}) chứ không còn là chuỗi id cố định.
+
+\begin{lstlisting}[language=Python]
+LOCATORS = {r["name"]: (BY[r["by"]], r["value"]) for r in read_csv("locators.csv")}
+FIELDS   = read_csv("form_fields.csv")
+CFG      = {r["key"]: r["value"] for r in read_csv("config.csv")}
+
+def fill_form(self, row):
+    self.d.get(CFG["base_url"] + CFG["form_path"])
+    for f in FIELDS:
+        by, val = LOCATORS[f["locator"]]
+        el = self.d.find_element(by, val)
+        if f["kind"] == "text":
+            el.clear(); el.send_keys(row[f["data_column"]])
+        elif f["kind"] == "password_js":
+            self.d.execute_script("arguments[0].value = arguments[1];", el, row[f["data_column"]])
+        elif f["kind"] == "checkbox":
+            if el.is_selected() != (row[f["data_column"]] == "1"): el.click()
+\end{lstlisting}
+Khi giao diện đổi (ví dụ id của ô nhập thay đổi, hoặc nhóm chạy ở site khác) chỉ cần sửa \texttt{locators.csv} hoặc \texttt{config.csv}, không sửa script. Thêm trường mới vào form chỉ cần thêm một dòng vào \texttt{form\_fields.csv} và một cột vào file dữ liệu.
+
+\begin{table}[H]
+\centering\small
+\begin{tabular}{|L{3.4cm}|L{5.4cm}|L{5.4cm}|}
+\hline
+\rowcolor{gray!15} & \textbf{Level 1} & \textbf{Level 2} \\ \hline
+Dữ liệu và Expected Result & Trong CSV & Trong CSV \\ \hline
+URL site & Hằng số trong script & \texttt{config.csv} \\ \hline
+Locator ô nhập, nút bấm & Hằng số trong script & \texttt{locators.csv} \\ \hline
+Danh sách trường của form & Viết cứng trong \texttt{fill\_form} & \texttt{form\_fields.csv} \\ \hline
+\end{tabular}
+\caption{So sánh Level 1 và Level 2}
+\end{table}
+
+\subsection{Cách chạy}
+\begin{lstlisting}
+pip install selenium
+cd level1
+python -m unittest -v test_create_user_form test_create_user_retry test_create_user_nav
+\end{lstlisting}
+Biến môi trường tùy chọn: \texttt{RUN\_ID} (đặt mã lần chạy), \texttt{KEEP\_DATA=1} (không xóa user sau khi chạy). Cuối mỗi script có bước dọn dữ liệu: xóa các user có username/email chứa \texttt{tc001\_} hoặc \texttt{a@b.co} qua trang \texttt{/admin/user.php}; Level 2 chạy tương tự trong thư mục \texttt{F001/level2/}.
+
+\subsection{Kết quả chạy}
+Chạy ngày 21/11/2026 trên Chrome for Testing 158, Moodle 5.1 demo (\texttt{http://127.0.0.1:9501}), lệnh
+\texttt{python -m unittest -v test\_create\_user\_form test\_create\_user\_retry test\_create\_user\_nav} trong thư mục \texttt{level1/}.
+
+\begin{table}[H]
+\centering\small
+\begin{tabular}{|L{5.0cm}|L{3.6cm}|c|c|}
+\hline
+\rowcolor{gray!15}\textbf{Script} & \textbf{Test case} & \textbf{Số dòng} & \textbf{Kết quả} \\ \hline
+\texttt{test\_create\_user\_form} & TC-001-001 đến 045 & 45 & 45 pass \\ \hline
+\texttt{test\_create\_user\_retry} & TC-001-047, 048 & 2 & 2 pass \\ \hline
+\texttt{test\_create\_user\_nav} & TC-001-046, 049, 050 & 3 & 3 pass \\ \hline
+\end{tabular}
+\caption{Kết quả chạy Level 1: 50/50 test case pass, tổng thời gian khoảng 367 giây}
+\end{table}
+
+\textbf{Các điều chỉnh rút ra khi chạy lần đầu:}
+\begin{itemize}[noitemsep]
+  \item TC-001-004 và TC-001-005: thông báo thực tế của Moodle là \texttt{Only lowercase letters allowed} và \texttt{The username can only contain alphanumeric lowercase characters\ldots}; Expected Result trong file dữ liệu được sửa theo đó.
+  \item TC-001-041 (Generate password): Moodle ở lại trang form và hiện thông báo \texttt{Changes saved} thay vì chuyển sang danh sách; điều kiện thành công của script được sửa thành ``chuyển sang danh sách hoặc có \texttt{Changes saved}''.
+  \item Nút Create user nằm cuối trang dài và bị che bởi footer dính nên script cuộn phần tử vào giữa màn hình trước khi bấm; đăng nhập được thử lại và kiểm tra giá trị ô nhập để tránh gõ thiếu khi trang chưa tải xong.
+\end{itemize}
+\textbf{Level 2:} chạy cùng lệnh trong thư mục \texttt{level2/}, với URL, locator và danh sách trường đọc từ \texttt{config.csv}, \texttt{locators.csv}, \texttt{form\_fields.csv}.
+
+\begin{table}[H]
+\centering\small
+\begin{tabular}{|L{5.0cm}|L{3.6cm}|c|c|}
+\hline
+\rowcolor{gray!15}\textbf{Script} & \textbf{Test case} & \textbf{Số dòng} & \textbf{Kết quả} \\ \hline
+\texttt{test\_create\_user\_form} & TC-001-001 đến 045 & 45 & 45 pass \\ \hline
+\texttt{test\_create\_user\_retry} & TC-001-047, 048 & 2 & 2 pass \\ \hline
+\texttt{test\_create\_user\_nav} & TC-001-046, 049, 050 & 3 & 3 pass \\ \hline
+\end{tabular}
+\caption{Kết quả chạy Level 2: 50/50 test case pass, tổng thời gian khoảng 362 giây}
+\end{table}
+
+\section{Feature 002}
+\section{Feature 003}
+\section{Feature 004}
+\section{Feature 005}
+
+\section{Kiểm thử phi chức năng}\label{sec:nf}
+
+\begin{table}[H]
+\centering\footnotesize
+\begin{tabular}{|c|L{2.4cm}|L{3.2cm}|L{3.6cm}|L{3.0cm}|}
+\hline
+\rowcolor{gray!15}\textbf{Thành viên} & \textbf{Loại kiểm thử} & \textbf{Yêu cầu} & \textbf{Cách tiếp cận} & \textbf{Công cụ} \\ \hline
+Phương & Hiệu năng (performance) & Gửi form Create user phản hồi trong $\le$ 3 giây (trung bình) với 20 lần lặp. & Script đo thời gian từ lúc bấm Create user đến khi trang danh sách hiển thị, 20 lần; tính trung bình, lớn nhất. & Selenium + \texttt{time.perf\_counter}, \texttt{Navigation Timing API} \\ \hline
+Quang & Tương thích (compatibility) & Form Add a new course hoạt động giống nhau trên Chrome và Firefox. & Chạy lại script Level 1 trên hai trình duyệt, so sánh kết quả từng dòng. & Selenium (Chrome, Firefox) \\ \hline
+Tài & \todo{điền} & \todo{điền} & \todo{điền} & \todo{điền} \\ \hline
+Sơn & Bảo mật cơ bản (security) & Dữ liệu có ký tự đặc biệt (\verb|<script>|, dấu nháy) không làm hỏng trang và không bị thực thi. & Nhập chuỗi XSS/SQL injection vào Name của category, kiểm tra trang kết quả hiển thị thành văn bản, không có hộp thoại. & Selenium, OWASP payload mẫu \\ \hline
+Phát & Khả dụng/truy cập (usability, accessibility) & Các ô nhập của form Add a Choice có nhãn, điểm accessibility đạt mức chấp nhận. & Chạy kiểm tra trên trang form, ghi điểm và danh sách vi phạm. & Lighthouse (Chrome DevTools) \\ \hline
+\end{tabular}
+\caption{Yêu cầu phi chức năng theo thành viên}
+\end{table}
+
+\subsection{Chi tiết phần của Phương: hiệu năng của Create user}
+\textbf{Loại kiểm thử:} kiểm thử hiệu năng (thời gian phản hồi) ở mức một người dùng.
+\textbf{Cách tiếp cận:} dùng script Level 1 với dữ liệu hợp lệ, mỗi lần dùng username khác nhau; ghi thời gian giữa hai thời điểm: ngay trước khi bấm Create user và khi trang \texttt{/admin/user.php} hiển thị xong. Lặp 20 lần, báo cáo trung bình, nhỏ nhất, lớn nhất.
+\textbf{Công cụ:} Selenium WebDriver, \texttt{time.perf\_counter}.
+
+\begin{lstlisting}[language=Python]
+t0 = time.perf_counter()
+driver.find_element(By.ID, "id_submitbutton").click()
+wait.until(EC.url_contains("/admin/user.php"))
+elapsed = time.perf_counter() - t0
+times.append(elapsed)
+\end{lstlisting}
+\textbf{Tiêu chí đạt:} thời gian trung bình $\le$ 3 giây.
+
+\textbf{Script và cách chạy:} \texttt{F001/nonfunctional/perf\_create\_user.py} (dùng lại hàm của \texttt{F001/level1/l1\_common.py}). Mỗi lần lặp tạo một user hợp lệ có username/email duy nhất, đo thời gian từ lúc bấm Create user đến lúc hiện ``Changes saved'' hoặc trang danh sách, ghi vào \texttt{perf\_results.csv}, in trung bình, nhỏ nhất, lớn nhất và phân vị 95; test fail nếu trung bình vượt ngưỡng. Sau khi chạy script xóa các user đã tạo.
+\begin{lstlisting}
+cd nonfunctional
+python -m unittest -v perf_create_user
+\end{lstlisting}
+
+\textbf{Kết quả đo} (20 lần, chạy ngày 21/11/2026, Chrome for Testing 158, Moodle 5.1 chạy bằng Docker trên cùng máy):
+
+\begin{table}[H]
+\centering\small
+\begin{tabular}{|c|c|c|c|}
+\hline
+\rowcolor{gray!15}\textbf{Lần} & \textbf{Create user (s)} & \textbf{Lần} & \textbf{Create user (s)} \\ \hline
+1 & 3.205 & 11 & 1.581 \\ \hline
+2 & 2.009 & 12 & 1.620 \\ \hline
+3 & 2.010 & 13 & 1.623 \\ \hline
+4 & 2.155 & 14 & 1.635 \\ \hline
+5 & 2.035 & 15 & 1.745 \\ \hline
+6 & 2.000 & 16 & 1.680 \\ \hline
+7 & 2.061 & 17 & 1.590 \\ \hline
+8 & 1.971 & 18 & 1.603 \\ \hline
+9 & 1.677 & 19 & 1.649 \\ \hline
+10 & 1.661 & 20 & 1.641 \\ \hline
+\end{tabular}
+\caption{Thời gian từ lúc bấm Create user đến lúc Moodle hiển thị kết quả}
+\end{table}
+
+\begin{table}[H]
+\centering\small
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\rowcolor{gray!15}\textbf{Trung bình} & \textbf{Nhỏ nhất} & \textbf{Lớn nhất} & \textbf{p95} & \textbf{Ngưỡng} \\ \hline
+1,858 s & 1,581 s & 3,205 s & 2,155 s & 3,0 s \\ \hline
+\end{tabular}
+\caption{Tổng hợp 20 lần đo}
+\end{table}
+
+\textbf{Kết luận:} \textbf{đạt}, trung bình 1,858 giây thấp hơn ngưỡng 3 giây, và 19/20 lần dưới ngưỡng; chỉ lần đầu tiên vượt ngưỡng (3,205 giây). Thời gian giảm dần theo các lần đầu (khoảng 2,0 giây ở lần 2--8, khoảng 1,6 giây từ lần 10 trở đi); chưa kiểm chứng nguyên nhân, có thể do Moodle/PHP và trình duyệt được làm nóng bộ nhớ đệm. Thời gian mở form chỉ khoảng 0,3--0,8 giây. Ngưỡng 3 giây do nhóm tự đặt vì đề không quy định. 
+
+\textbf{Cấu hình máy đo:} Windows, RAM 16 GB DDR4 (khoảng 15,7 GB khả dụng), đồ họa tích hợp Intel Iris Xe, ổ SSD NVMe; \todo{ghi tên chip CPU từ Task Manager, mục CPU}. Docker Desktop 4.96.2 dùng WSL 2, Docker thấy \textbf{12 CPU (luồng logic)} và \textbf{7,6 GiB RAM}. Lúc đo trên máy còn chạy các ứng dụng khác nên thời gian có thể dao động giữa các lần chạy.
+
+\subsection{Chi tiết phần của }
+\subsection{Chi tiết phần của }
+\subsection{Chi tiết phần của }
+\subsection{Chi tiết phần của }
+
+
+\section{AI Usage Declaration}
+
+\subsection{Nguyễn Đức Phương}
+\textbf{Công cụ:} Claude (Anthropic), model Claude Sonnet 5.5, dùng qua ứng dụng Claude (bản desktop).
+
+\noindent\textbf{Prompt đã sử dụng} cho Bài tập lớn 3 (nguyên văn):
+\begin{enumerate}[noitemsep]
+  \item ``hãy trình bày lại yêu cầu đề cho tôi'' (kèm file mô tả đề)
+  \item ``hãy soạn phần report cho tôi''
+\end{enumerate}
+
+\noindent\textbf{Kết quả, nhận xét và đề xuất của AI:}
+\begin{itemize}[noitemsep]
+  \item Tóm tắt yêu cầu đề, thang điểm và tài liệu cần nộp.
+  \item Đề xuất cách gộp 50 test case của Feature 001 thành 3 script data-driven.
+  \item Soạn khung báo cáo.
+\end{itemize}
+
+\subsection{Lê Sĩ Nhật Quang}
+\todo{Điền công cụ AI và prompt, hoặc câu xác nhận không dùng AI.}
+\subsection{Huỳnh Đức Tài}
+\todo{Điền công cụ AI và prompt, hoặc câu xác nhận không dùng AI.}
+\subsection{Đào Xuân Sơn}
+\todo{Điền công cụ AI và prompt, hoặc câu xác nhận không dùng AI.}
+\subsection{Sơn Văn Phát}
+\todo{Điền công cụ AI và prompt, hoặc câu xác nhận không dùng AI.}
+
+\end{document}
