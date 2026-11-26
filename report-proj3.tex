@@ -9,7 +9,7 @@
 \else
   % phương án dự phòng khi biên dịch bằng XeLaTeX/LuaLaTeX
   \usepackage{fontspec}
-  \setmainfont[BoldFont=lmroman10-bold.otf,ItalicFont=lmroman10-italic.otf,BoldItalicFont=lmroman10-bolditalic.otf]{lmroman10-regular.otf}\setsansfont{lmsans10-regular.otf}\setmonofont{lmmono10-regular.otf}
+  \setmainfont{Latin Modern Roman}\setsansfont{Latin Modern Sans}\setmonofont{Latin Modern Mono}
   \renewcommand{\contentsname}{Mục lục}\renewcommand{\figurename}{Hình}\renewcommand{\tablename}{Bảng}
 \fi
 \usepackage[margin=2.2cm]{geometry}
@@ -139,13 +139,9 @@ ASSIGNMENT_3__HEHE2027__L01.zip
   |-- F004/                              (Add new category - Son)
   |     |-- level1/   |-- level2/   |-- nonfunctional/
   |-- F005/                              (Add a Choice - Phat)
-        |-- level1/   (test_choice.py, engine.py, settings.py, choice_data.csv)
-        |-- level2/   (test_choice.py, engine.py, choice_data.csv,
-        |             environment.csv, ui_elements.csv)
-        |-- nonfunctional/ (test_compatibility.py)
-        run_all.py, CHAY_TAT_CA.cmd, README.md
+        |-- level1/   |-- level2/   |-- nonfunctional/
 \end{lstlisting}
-Chỉ nộp mã Python và file dữ liệu, \textbf{không} nộp file Katalon. Các script dùng hàm chung trong chính thư mục feature: Feature 001 dùng \texttt{l1\_common.py}/\texttt{l2\_common.py}; Feature 005 dùng \texttt{engine.py}. Cách chạy cụ thể trình bày ở từng feature. Với Feature 005, giữ các thư mục \texttt{level1}, \texttt{level2}, \texttt{nonfunctional} cạnh nhau để script tương thích gọi lại mã Level 2.
+Chỉ nộp mã Python và file dữ liệu, \textbf{không} nộp file Katalon. Trong mỗi thư mục feature, các script dùng chung hàm trong file \texttt{l1\_common.py}/\texttt{l2\_common.py} của chính thư mục đó, nên mỗi feature có thể chạy độc lập (\texttt{cd F001/level1} rồi chạy \texttt{python -m unittest -v \ldots}).
 
 \section{Phân công công việc}
 {\small
@@ -157,7 +153,7 @@ Chỉ nộp mã Python và file dữ liệu, \textbf{không} nộp file Katalon.
 1 & Nguyễn Đức Phương \newline 2312749 & 001 -- Add a new user & Level 1, Level 2 cho feature 001; kiểm thử phi chức năng (mục \ref{sec:nf}) & 100\%  \\ \hline
 2 & Lê Sĩ Nhật Quang \newline 2312791 & 002 -- Add a new course & Level 1, Level 2 cho feature 002; phi chức năng & \todo{\%} \\ \hline
 3 & Huỳnh Đức Tài \newline 2212971 & \todo{chưa có feature} & \todo{điền} & \todo{\%} \\ \hline
-4 & Đào Xuân Sơn \newline 2312954 & 004 -- Add new category & Level 1, Level 2 cho feature 004; phi chức năng & \todo{\%} \\ \hline
+4 & Đào Xuân Sơn \newline 2312954 & 004 -- Add new category & Level 1, Level 2 cho feature 004; phi chức năng & 100\% \\ \hline
 5 & Sơn Văn Phát \newline 2212535 & 005 -- Add a Choice & Level 1, Level 2 cho feature 005; phi chức năng & 100\% \\ \hline
 \end{longtable}
 }
@@ -165,7 +161,7 @@ Chỉ nộp mã Python và file dữ liệu, \textbf{không} nộp file Katalon.
 \section{Môi trường và công cụ}
 \begin{itemize}[noitemsep]
   \item Moodle 5.1 chạy bằng Docker, \texttt{http://127.0.0.1:9501}, tài khoản \texttt{admin}/\texttt{admin}. Không đổi mật khẩu các user mặc định.
-  \item Python 3.x, Selenium 4 (Selenium Manager tự tải driver), module chuẩn \texttt{unittest}, \texttt{csv}; Chrome, Firefox. Feature 005 chạy trên Chrome và Edge.
+  \item Python 3.x, Selenium 4 (Selenium Manager tự tải driver), module chuẩn \texttt{unittest}, \texttt{csv}; Chrome, Firefox.
   \item Katalon Recorder chỉ dùng để thu thao tác và tham khảo locator; sản phẩm nộp là script Python.
   \item Ngôn ngữ giao diện Moodle: English.
 \end{itemize}
@@ -398,7 +394,7 @@ Chạy ngày 21/11/2026 trên Chrome for Testing 158, Moodle 5.1 demo (\texttt{h
 
 \section{Feature 002}
 \section{Feature 003}
-\section{Feature 004: Add new category -- kiểm thử hướng dữ liệu}
+\section{Feature 004: Add new category}
 
 \subsection{Phân tích gộp 26 test case thành các script}
 Phần lớn test case của BTL2 cho feature 004 (ECP, BVA, decision table, use-case) có cùng quy trình:
@@ -807,9 +803,8 @@ bằng chứng được đặt tên \texttt{F005\_Level1\_Chrome} và \texttt{F0
 Phương & Hiệu năng (performance) & Gửi form Create user phản hồi trong $\le$ 3 giây (trung bình) với 20 lần lặp. & Script đo thời gian từ lúc bấm Create user đến khi trang danh sách hiển thị, 20 lần; tính trung bình, lớn nhất. & Selenium + \texttt{time.perf\_counter}, \texttt{Navigation Timing API} \\ \hline
 Quang & Tương thích (compatibility) & Form Add a new course hoạt động giống nhau trên Chrome và Firefox. & Chạy lại script Level 1 trên hai trình duyệt, so sánh kết quả từng dòng. & Selenium (Chrome, Firefox) \\ \hline
 Tài & \todo{điền} & \todo{điền} & \todo{điền} & \todo{điền} \\ \hline
-Sơn & Hiệu năng (performance) & Form Add new category tải trong $\le$ 3 giây và tạo danh mục hợp lệ phản hồi trong $\le$ 5 giây (phân vị 95, 10 lần lặp). & Script đo thời gian tải form và thời gian từ lúc bấm Create category đến khi trang Manage course categories hiển thị, 10 lần; tính trung bình, trung vị, p95, lớn nhất. & Selenium + \texttt{time.perf\_counter}, \texttt{Navigation Timing API} \\ \hline
-Sơn & Bảo mật cơ bản (security) & Người chưa đăng nhập không vào được form; mã HTML/JS trong Category name không bị thực thi; chuỗi giống SQL injection chỉ được xử lý như văn bản. & Truy cập form bằng trình duyệt không có phiên; tạo danh mục với payload XSS/SQL (đọc từ CSV), kiểm tra không có hộp thoại, không có mã được thực thi, không có lỗi CSDL, danh mục kiểm soát còn nguyên. & Selenium, payload XSS/SQL mẫu tự soạn \\ \hline
-Phát & Tương thích (compatibility) & Bốn luồng Add a Choice đạt và cho dữ liệu đọc lại tương đương trên Chrome/Edge. & Chạy 4 ca trên mỗi trình duyệt, so kết quả kiểm tra và các quan sát đã lưu. & Python, Selenium (Chrome, Edge), \texttt{unittest} \\ \hline
+Sơn & Bảo mật cơ bản (security) & Dữ liệu có ký tự đặc biệt (\verb|<script>|, dấu nháy) không làm hỏng trang và không bị thực thi. & Nhập chuỗi XSS/SQL injection vào Name của category, kiểm tra trang kết quả hiển thị thành văn bản, không có hộp thoại. & Selenium, OWASP payload mẫu \\ \hline
+Phát & Khả dụng/truy cập (usability, accessibility) & Các ô nhập của form Add a Choice có nhãn, điểm accessibility đạt mức chấp nhận. & Chạy kiểm tra trên trang form, ghi điểm và danh sách vi phạm. & Lighthouse (Chrome DevTools) \\ \hline
 \end{tabular}
 \caption{Yêu cầu phi chức năng theo thành viên}
 \end{table}
