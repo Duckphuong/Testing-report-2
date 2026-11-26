@@ -9,13 +9,14 @@
 \else
   % phương án dự phòng khi biên dịch bằng XeLaTeX/LuaLaTeX
   \usepackage{fontspec}
-  \setmainfont{Latin Modern Roman}\setsansfont{Latin Modern Sans}\setmonofont{Latin Modern Mono}
+  \setmainfont[BoldFont=lmroman10-bold.otf,ItalicFont=lmroman10-italic.otf,BoldItalicFont=lmroman10-bolditalic.otf]{lmroman10-regular.otf}\setsansfont{lmsans10-regular.otf}\setmonofont{lmmono10-regular.otf}
   \renewcommand{\contentsname}{Mục lục}\renewcommand{\figurename}{Hình}\renewcommand{\tablename}{Bảng}
 \fi
 \usepackage[margin=2.2cm]{geometry}
 \usepackage{amssymb}
 \usepackage{graphicx}
 \usepackage{float}
+\PassOptionsToPackage{table}{xcolor}
 \usepackage{tikz}
 \usetikzlibrary{calc,shapes.geometric,arrows.meta,positioning}
 \usepackage{booktabs}
@@ -138,9 +139,13 @@ ASSIGNMENT_3__HEHE2027__L01.zip
   |-- F004/                              (Add new category - Son)
   |     |-- level1/   |-- level2/   |-- nonfunctional/
   |-- F005/                              (Add a Choice - Phat)
-        |-- level1/   |-- level2/   |-- nonfunctional/
+        |-- level1/   (test_choice.py, engine.py, settings.py, choice_data.csv)
+        |-- level2/   (test_choice.py, engine.py, choice_data.csv,
+        |             environment.csv, ui_elements.csv)
+        |-- nonfunctional/ (test_compatibility.py)
+        run_all.py, CHAY_TAT_CA.cmd, README.md
 \end{lstlisting}
-Chỉ nộp mã Python và file dữ liệu, \textbf{không} nộp file Katalon. Trong mỗi thư mục feature, các script dùng chung hàm trong file \texttt{l1\_common.py}/\texttt{l2\_common.py} của chính thư mục đó, nên mỗi feature có thể chạy độc lập (\texttt{cd F001/level1} rồi chạy \texttt{python -m unittest -v \ldots}).
+Chỉ nộp mã Python và file dữ liệu, \textbf{không} nộp file Katalon. Các script dùng hàm chung trong chính thư mục feature: Feature 001 dùng \texttt{l1\_common.py}/\texttt{l2\_common.py}; Feature 005 dùng \texttt{engine.py}. Cách chạy cụ thể trình bày ở từng feature. Với Feature 005, giữ các thư mục \texttt{level1}, \texttt{level2}, \texttt{nonfunctional} cạnh nhau để script tương thích gọi lại mã Level 2.
 
 \section{Phân công công việc}
 {\small
@@ -153,14 +158,14 @@ Chỉ nộp mã Python và file dữ liệu, \textbf{không} nộp file Katalon.
 2 & Lê Sĩ Nhật Quang \newline 2312791 & 002 -- Add a new course & Level 1, Level 2 cho feature 002; phi chức năng & \todo{\%} \\ \hline
 3 & Huỳnh Đức Tài \newline 2212971 & \todo{chưa có feature} & \todo{điền} & \todo{\%} \\ \hline
 4 & Đào Xuân Sơn \newline 2312954 & 004 -- Add new category & Level 1, Level 2 cho feature 004; phi chức năng & \todo{\%} \\ \hline
-5 & Sơn Văn Phát \newline 2212535 & 005 -- Add a Choice & Level 1, Level 2 cho feature 005; phi chức năng & \todo{\%} \\ \hline
+5 & Sơn Văn Phát \newline 2212535 & 005 -- Add a Choice & Level 1, Level 2 cho feature 005; phi chức năng & 100\% \\ \hline
 \end{longtable}
 }
 
 \section{Môi trường và công cụ}
 \begin{itemize}[noitemsep]
   \item Moodle 5.1 chạy bằng Docker, \texttt{http://127.0.0.1:9501}, tài khoản \texttt{admin}/\texttt{admin}. Không đổi mật khẩu các user mặc định.
-  \item Python 3.x, Selenium 4 (Selenium Manager tự tải driver), module chuẩn \texttt{unittest}, \texttt{csv}; Chrome, Firefox.
+  \item Python 3.x, Selenium 4 (Selenium Manager tự tải driver), module chuẩn \texttt{unittest}, \texttt{csv}; Chrome, Firefox. Feature 005 chạy trên Chrome và Edge.
   \item Katalon Recorder chỉ dùng để thu thao tác và tham khảo locator; sản phẩm nộp là script Python.
   \item Ngôn ngữ giao diện Moodle: English.
 \end{itemize}
@@ -393,8 +398,404 @@ Chạy ngày 21/11/2026 trên Chrome for Testing 158, Moodle 5.1 demo (\texttt{h
 
 \section{Feature 002}
 \section{Feature 003}
-\section{Feature 004}
-\section{Feature 005}
+\section{Feature 004: Add new category -- kiểm thử hướng dữ liệu}
+
+\subsection{Phân tích gộp 26 test case thành các script}
+Phần lớn test case của BTL2 cho feature 004 (ECP, BVA, decision table, use-case) có cùng quy trình:
+\emph{mở form \texttt{editcategory.php}, chọn Parent category, nhập Category name và Category ID number, bấm Create category (hoặc Cancel), kiểm tra kết quả}.
+Chúng chỉ khác dữ liệu và kết quả mong đợi nên được gộp vào một hàm \texttt{run\_step} dùng chung. Mô tả (Description) là trình soạn thảo TinyMCE nên không được nhập; TC-004-017 chỉ kiểm thử trường hợp để trống, giống BTL2.
+
+\begin{table}[H]
+\centering\small
+\begin{tabular}{|L{4.0cm}|L{2.9cm}|L{4.9cm}|c|}
+\hline
+\rowcolor{gray!15}\textbf{File dữ liệu (Level 1)} & \textbf{Test case gộp} & \textbf{Luồng} & \textbf{Số dòng} \\ \hline
+\texttt{form\_data.csv} & TC-004-001 đến 021 & Điền form, Create category (hoặc ô chỉ nhập để kiểm tra \texttt{maxlength}), so với Expected Result. & 21 \\ \hline
+\texttt{usecase\_data.csv} & TC-004-022 đến 026 & Luồng nhiều bước (mỗi dòng một bước): gửi lỗi rồi sửa, Cancel, tạo danh mục con. & 9 \\ \hline
+\end{tabular}
+\caption{Gộp 26 test case của feature 004 thành 2 file dữ liệu và 1 kịch bản tự động}
+\end{table}
+Mỗi mã test case sinh một phương thức \texttt{unittest} riêng (\texttt{test\_TC\_004\_001}, \ldots), nên kết quả báo theo từng test case.
+
+\subsection{Cấu trúc file dữ liệu Level 1}
+\begin{table}[H]
+\centering\footnotesize
+\begin{tabular}{|L{4.2cm}|L{10.4cm}|}
+\hline
+\rowcolor{gray!15}\textbf{Cột} & \textbf{Ý nghĩa} \\ \hline
+\texttt{tc\_id}, \texttt{step} & Mã test case; thứ tự bước (chỉ có trong \texttt{usecase\_data.csv}). \\ \hline
+\texttt{parent, name, idnumber} & Dữ liệu nhập. \texttt{parent} là tên danh mục cha, \texttt{Top} hoặc \texttt{No selection}. \\ \hline
+\texttt{action} & \texttt{submit} (bấm Create category), \texttt{cancel}, hoặc \texttt{none} (chỉ nhập dữ liệu). \\ \hline
+\texttt{expected\_outcome} & \texttt{created} (chuyển sang Manage course categories, danh mục có trong cây), \texttt{error\_field} (ở lại form, hiện đúng thông báo), \texttt{error\_page} (trang lỗi), \texttt{maxlength} (ô chặn nhập), \texttt{cancelled} (không tạo). \\ \hline
+\texttt{expected\_text, match, open\_link, repeat} & Chuỗi mong đợi (nhiều chuỗi ngăn cách bằng \texttt{||}); cách so khớp \texttt{exact}/\texttt{partial}/\texttt{text}; link cần mở trước khi kiểm tra; số lần tạo (TC-004-019 tạo hai lần). \\ \hline
+\end{tabular}
+\caption{Cột của file dữ liệu Level 1}
+\end{table}
+
+Token dữ liệu trong CSV, được script mở rộng khi chạy: \texttt{\{RUN\}} (mã ngẫu nhiên của lần chạy, giúp tên và ID number không trùng giữa các lần chạy), \texttt{\{SPACES:n\}}, \texttt{\{GEN:tiền tố:ký tự:độ dài tổng\}} (chuỗi đúng độ dài biên 99/100/101 và 254/255/256) và \texttt{\{RAND:n\}} (n chữ cái hoặc chữ số ngẫu nhiên, dùng cho tên và ID number 1--2 ký tự). Script tự tạo dữ liệu nền (\texttt{tc004\_root\_<RUN>} và danh mục con \texttt{tc004\_base\_<RUN>} có ID number \texttt{tc004\_dup\_<RUN>}) thay cho việc tạo thủ công ở BTL2.
+
+Ví dụ một số dòng (rút gọn):
+\begin{lstlisting}
+tc_id,description,parent,name,idnumber,action,expected_outcome,expected_text,match,open_link,repeat
+TC-004-006,...,tc004_root_{RUN},tc004_dupid_{RUN},tc004_dup_{RUN},submit,error_field,ID number is already used for another category,,,1
+TC-004-011,...,tc004_root_{RUN},{GEN:tc004_n255_{RUN}_:a:255},,submit,created,tc004_n255_{RUN}_,partial,,1
+TC-004-019,...,tc004_root_{RUN},tc004_same_{RUN},,submit,created,tc004_same_{RUN},exact,,2
+\end{lstlisting}
+
+\subsection{Ánh xạ 26 test case của BTL2 sang dữ liệu Level 1}
+{\footnotesize
+\begin{longtable}{|c|L{4.2cm}|c|L{2.8cm}|L{4.2cm}|}
+\hline\rowcolor{gray!15}\textbf{TC} & \textbf{Tên test case} & \textbf{Kỹ thuật} & \textbf{Dữ liệu} & \textbf{Kết quả mong đợi} \\ \hline\endhead
+001 & Tạo danh mục với dữ liệu hợp lệ & ECP & \texttt{form\_data} d.2 & tạo thành công \\ \hline
+002 & Category name rỗng & ECP & \texttt{form\_data} d.3 & lỗi tại form: \texttt{Required} \\ \hline
+003 & Category name chỉ có khoảng trắng & ECP & \texttt{form\_data} d.4 & tạo thành công \\ \hline
+004 & Category name 256 ký tự (max+1) & ECP/BVA & \texttt{form\_data} d.5 & trang lỗi: \texttt{Category name too long} \\ \hline
+005 & Category ID number 101 ký tự (max+1) & ECP/BVA & \texttt{form\_data} d.6 & ô chặn nhập \\ \hline
+006 & Category ID number đã tồn tại & ECP & \texttt{form\_data} d.7 & lỗi tại form: \texttt{ID number is already used for anot} \\ \hline
+007 & Parent category = No selection & ECP & \texttt{form\_data} d.8 & lỗi tại form: \texttt{You must supply a value here.} \\ \hline
+008 & Category name 1 ký tự & BVA & \texttt{form\_data} d.9 & tạo thành công \\ \hline
+009 & Category name 2 ký tự & BVA & \texttt{form\_data} d.10 & tạo thành công \\ \hline
+010 & Category name 254 ký tự & BVA & \texttt{form\_data} d.11 & tạo thành công \\ \hline
+011 & Category name 255 ký tự & BVA & \texttt{form\_data} d.12 & tạo thành công \\ \hline
+012 & Category ID number 0 ký tự (để trống) & BVA & \texttt{form\_data} d.13 & tạo thành công \\ \hline
+013 & Category ID number 1 ký tự & BVA & \texttt{form\_data} d.14 & tạo thành công \\ \hline
+014 & Category ID number 2 ký tự & BVA & \texttt{form\_data} d.15 & tạo thành công \\ \hline
+015 & Category ID number 99 ký tự & BVA & \texttt{form\_data} d.16 & tạo thành công \\ \hline
+016 & Category ID number 100 ký tự & BVA & \texttt{form\_data} d.17 & tạo thành công \\ \hline
+017 & Description để trống (0 ký tự) & BVA & \texttt{form\_data} d.18 & tạo thành công \\ \hline
+018 & R6: Name rỗng và Parent No selection & DT & \texttt{form\_data} d.19 & lỗi tại form: \texttt{Required||You must supply a value } \\ \hline
+019 & R7: Hai danh mục trùng tên & DT & \texttt{form\_data} d.20 & tạo thành công \\ \hline
+020 & R8: Parent là danh mục khác Top & DT & \texttt{form\_data} d.21 & tạo thành công \\ \hline
+021 & UC-P1: Luồng chính tạo danh mục & UC & \texttt{form\_data} d.22 & tạo thành công \\ \hline
+022 & UC-P2: Bỏ trống Name rồi nhập lại & UC & \texttt{usecase\_data} d.2, 3 & lỗi tại form: \texttt{Required} $\rightarrow$ tạo thành công \\ \hline
+023 & UC-P3: ID number trùng rồi đổi & UC & \texttt{usecase\_data} d.4, 5 & lỗi tại form: \texttt{ID number is already used for anot} $\rightarrow$ tạo thành công \\ \hline
+024 & UC-P4: Hủy tạo danh mục (Cancel) & UC & \texttt{usecase\_data} d.6 & không tạo (Cancel) \\ \hline
+025 & UC-P5: Tạo danh mục con của danh mục con & UC & \texttt{usecase\_data} d.7, 8 & tạo thành công $\rightarrow$ tạo thành công \\ \hline
+026 & UC-P6: Parent No selection, báo lỗi, chọn Top & UC & \texttt{usecase\_data} d.9, 10 & lỗi tại form: \texttt{You must supply a value here.} $\rightarrow$ tạo thành công \\ \hline
+\end{longtable}
+}
+
+\subsection{Thiết kế script Level 1}
+Mã đầy đủ nằm trong \texttt{F004/level1/test\_f004\_level1.py}; URL và locator (\texttt{id\_parent}, \texttt{id\_name}, \texttt{id\_idnumber}, \texttt{id\_submitbutton}, \texttt{id\_cancel}) là hằng số trong script. Đoạn dưới đây là bản rút gọn.
+\begin{lstlisting}[language=Python]
+def run_step(drv, row, step=1):
+    repeat = int(row.get("repeat") or 1)
+    for i in range(repeat):
+        open_form(drv, step if i == 0 else 1)
+        fill(drv, row["parent"], row["name"], row["idnumber"])
+        if row["action"] == "submit":
+            click_and_wait(drv, drv.find_element(By.ID, ID_SUBMIT))
+        elif row["action"] == "cancel":
+            click_and_wait(drv, drv.find_element(By.ID, ID_CANCEL))
+    verify(drv, row, repeat)
+
+def _make_test(tc_id, rows):              # one unittest method per tc_id
+    def test(self):
+        for step, row in enumerate(rows, start=1):
+            run_step(self.drv, expanded(row), step)
+    return test
+
+for tc_id, rows in _load_cases().items():
+    setattr(F004Level1, "test_" + tc_id.replace("-", "_"), _make_test(tc_id, rows))
+\end{lstlisting}
+\noindent\textbf{Lưu ý thiết kế:}
+\begin{itemize}[noitemsep]
+  \item \textbf{Ô Parent category} là danh sách tự động hoàn thành; script đặt giá trị cho thẻ \texttt{select} ẩn rồi phát sự kiện \texttt{change} (như lệnh \texttt{select} của Katalon ở BTL2), khớp tên đầy đủ hoặc phần cuối của đường dẫn ``cha / con''.
+  \item \textbf{\texttt{maxlength}:} script dùng \texttt{send\_keys} nên tôn trọng thuộc tính này (TC-004-005 gõ 101 ký tự, kỳ vọng ô chỉ nhận 100); Katalon \texttt{type} ở BTL2 gán giá trị trực tiếp.
+  \item \textbf{Đếm danh mục:} tên danh mục xuất hiện nhiều lần trên trang (cây danh mục, breadcrumb\ldots) nên script đếm riêng trong cây (\texttt{a.categoryname}); nếu không có cây thì chấp nhận từ một link trở lên.
+  \item \textbf{Dữ liệu độc nhất:} tên và ID number chứa \texttt{\{RUN\}} nên chạy lại không bị trùng; giá trị 1 ký tự có xác suất nhỏ (khoảng 1/36) trùng với danh mục còn sót từ lần chạy trước, nên cần xóa các danh mục \texttt{tc004\_} và các danh mục tên 1--2 ký tự trước khi chạy lại. Script không tự xóa danh mục.
+\end{itemize}
+
+\subsection{Level 2: đưa test item ra ngoài script}
+Script Level 2 (\texttt{F004/level2/test\_f004\_level2.py}) là một engine tổng quát, không chứa URL, locator hay giá trị kiểm thử. Nó đọc hai file:
+\begin{itemize}[noitemsep]
+  \item \texttt{config/site\_config.json}: địa chỉ site, các URL (\texttt{login}, \texttt{add\_category}, \texttt{management}) và tên logic của từng phần tử (\texttt{parent}, \texttt{name}, \texttt{idnumber}, \texttt{btn\_create}, \texttt{btn\_cancel}, \texttt{link\_create\_category}\ldots) cùng cách định vị (\texttt{by}, \texttt{value}).
+  \item \texttt{data/scenarios.csv}: mỗi dòng là một bước \texttt{tc\_id, step, action, target, value, arg2}; gồm 26 test case và nhóm \texttt{SETUP} tạo dữ liệu nền (tổng 237 bước). File được sinh từ dữ liệu Level 1 bằng \texttt{generate\_scenarios.py}, nên hai level kiểm thử cùng bộ dữ liệu.
+\end{itemize}
+\begin{lstlisting}
+tc_id,step,action,target,value,arg2
+TC-004-022,1,open,,add_category,
+TC-004-022,1,select_option,parent,tc004_root_{RUN},
+TC-004-022,1,type,name,,
+TC-004-022,1,click_and_wait,btn_create,,
+TC-004-022,1,verify_text,,Required,
+TC-004-022,2,type,name,tc004_p2_{RUN},
+TC-004-022,2,click_and_wait,btn_create,,
+TC-004-022,2,wait_url_contains,,management,
+TC-004-022,2,verify_link_count,,tc004_p2_{RUN},1
+\end{lstlisting}
+Các từ khóa (\textit{action}) của engine: \texttt{open}, \texttt{click\_or\_open}, \texttt{select\_option}, \texttt{type}, \texttt{click\_and\_wait}, \texttt{click\_link}, \texttt{wait\_url\_contains}, \texttt{verify\_url\_contains}, \texttt{verify\_url\_not\_contains}, \texttt{verify\_text}, \texttt{verify\_source\_contains}, \texttt{verify\_link\_count}, \texttt{verify\_link\_count\_partial}, \texttt{verify\_attribute}, \texttt{verify\_value\_length}. Khi giao diện đổi chỉ cần sửa \texttt{site\_config.json}.
+
+\begin{table}[H]
+\centering\small
+\begin{tabular}{|L{3.4cm}|L{5.4cm}|L{5.4cm}|}
+\hline
+\rowcolor{gray!15} & \textbf{Level 1} & \textbf{Level 2} \\ \hline
+Dữ liệu và Expected Result & Trong CSV (\texttt{form\_data}, \texttt{usecase\_data}) & Trong CSV (\texttt{scenarios.csv}) \\ \hline
+URL site & Hằng số trong script & \texttt{site\_config.json} \\ \hline
+Locator ô nhập, nút bấm & Hằng số trong script & \texttt{site\_config.json} \\ \hline
+Các bước thao tác & Viết cứng trong \texttt{run\_step} & Từng dòng trong \texttt{scenarios.csv} \\ \hline
+\end{tabular}
+\caption{So sánh Level 1 và Level 2 của feature 004}
+\end{table}
+
+\subsection{Cách chạy}
+\begin{lstlisting}
+pip install selenium
+cd F004/level1
+python test_f004_level1.py
+cd ../level2
+python test_f004_level2.py
+\end{lstlisting}
+Biến môi trường tùy chọn: \texttt{MOODLE\_BASE\_URL}, \texttt{MOODLE\_USER}, \texttt{MOODLE\_PASS}, \texttt{BROWSER=firefox}, \texttt{HEADLESS=1}, \texttt{RUN\_ID}. Mỗi lần chạy ghi một file \texttt{results/level*\_results.csv} (mã test case, đạt/không đạt, thời gian, chi tiết lỗi). Script tự đăng nhập (bước chuẩn bị, không phải đối tượng kiểm thử).
+
+\subsection{Kết quả chạy}
+Chạy trên Chrome, Moodle 5.1 demo (\texttt{http://127.0.0.1:9501}).
+\begin{table}[H]
+\centering\small
+\begin{tabular}{|L{3.0cm}|L{4.2cm}|c|c|c|}
+\hline
+\rowcolor{gray!15}\textbf{Level} & \textbf{Test case} & \textbf{Số TC} & \textbf{Kết quả} & \textbf{Thời gian} \\ \hline
+Level 1 & TC-004-001 đến 026 & 26 & 26 pass & khoảng 209 s \\ \hline
+Level 2 & TC-004-001 đến 026 & 26 & 26 pass & khoảng 155 s \\ \hline
+\end{tabular}
+\caption{Kết quả chạy Level 1 và Level 2 của feature 004: 26/26 test case pass ở cả hai level}
+\end{table}
+Kết quả thực tế khớp với kết quả mong đợi ghi nhận ở BTL2 cho cả 26 test case. \textbf{Các điều chỉnh rút ra khi chạy lần đầu:} tên danh mục xuất hiện hai lần trên trang nên phép kiểm ``đúng một link'' sai; script được sửa để đếm trong cây danh mục. Dữ liệu 1--2 ký tự ban đầu dùng chữ Hán ngẫu nhiên nhưng được đổi sang chữ cái và chữ số ASCII ngẫu nhiên cho dễ đọc.
+\section{Feature 005: Add a Choice -- kiểm thử hướng dữ liệu}
+
+\subsection{Phân tích gộp 24 test case thành script}
+Các test case của Feature 005 ở BTL2 cùng thao tác trên form Add a Choice, nhưng khác tên hoạt động,
+phương án trả lời và các thiết lập. Vì vậy, hai mức kiểm thử dùng chung một luồng xử lý trong
+\texttt{engine.py}; dữ liệu và kết quả mong đợi của 24 ca nằm trong \texttt{choice\_data.csv}.
+Ba nhóm luồng được phân biệt bằng giá trị \texttt{outcome}:
+
+\begin{table}[H]
+\centering\small
+\begin{tabular}{|L{2.7cm}|L{4.0cm}|L{5.0cm}|c|}
+\hline
+\rowcolor{gray!15}\textbf{Nhóm} & \textbf{Test case gộp} & \textbf{Luồng} & \textbf{Số dòng} \\ \hline
+Tạo hợp lệ & TC-005-001, 003--006, 008--019, 021--023 & Nhập dữ liệu, lưu, kiểm tên và mở lại Settings để đối chiếu cấu hình. & 20 \\ \hline
+Báo lỗi rồi sửa & TC-005-002, 007, 020 & Gửi dữ liệu sai, kiểm thông báo lỗi, sửa trường lỗi rồi lưu lại. & 3 \\ \hline
+Hủy tạo & TC-005-024 & Nhập dữ liệu, bấm Cancel, kiểm danh sách hoạt động không thay đổi. & 1 \\ \hline
+\end{tabular}
+\caption{Gộp 24 test case của Add a Choice theo luồng xử lý}
+\end{table}
+
+Khác với cách tách ba script của Feature 001, Feature 005 sử dụng một script
+\texttt{test\_choice.py} cho cả ba nhóm. Khi chạy, mỗi dòng CSV được tạo thành một test
+\texttt{unittest} riêng, có tên tương ứng với mã ca. Một ca lỗi không làm dừng các ca còn lại.
+
+\subsection{Cấu trúc file dữ liệu Level 1}
+File \texttt{F005/level1/choice\_data.csv} có 24 dòng dữ liệu, mã hóa UTF-8 BOM để mở được tiếng Việt
+trong Excel. Các nhóm giá trị được lưu dưới dạng chuỗi JSON trong ô CSV, do số phương án và trường
+thiết lập không giống nhau giữa các ca.
+
+\begin{table}[H]
+\centering\small
+\begin{tabular}{|L{3.6cm}|L{10.5cm}|}
+\hline
+\rowcolor{gray!15}\textbf{Cột} & \textbf{Ý nghĩa} \\ \hline
+\texttt{case\_id} & Mã ca, từ TC-005-001 đến TC-005-024; dùng trong tên test và file kết quả. \\ \hline
+\texttt{case\_name} & Nội dung kiểm thử, ví dụ tên rỗng, giới hạn lượt chọn hoặc Cancel. \\ \hline
+\texttt{fields\_json} & Dữ liệu nhập lần đầu: tên, các phương án, mô tả, giới hạn và thời gian mở/đóng. \\ \hline
+\texttt{repair\_json} & Dữ liệu sửa sau khi kiểm lỗi; rỗng đối với ca không có bước sửa. \\ \hline
+\texttt{expected\_json} & Kết quả mong đợi: loại luồng, tên, số phương án, thông báo lỗi và các giá trị cần đọc lại sau khi lưu. \\ \hline
+\end{tabular}
+\caption{Cột của file dữ liệu Level 1 -- Feature 005}
+\end{table}
+
+Trong \texttt{expected\_json}, \texttt{outcome} nhận một trong ba giá trị:
+\texttt{created}, \texttt{error\_then\_created}, \texttt{cancelled}.
+Ví dụ dưới đây biểu diễn dữ liệu của TC-005-002 sau khi đọc và giải mã các ô CSV, đã lược bớt
+các thiết lập giữ mặc định:
+
+\begin{lstlisting}[language=Python]
+case_id = "TC-005-002"
+fields = {"name": ""}  # Other input fields omitted.
+repair = {"name": "F005-CHOICE-002"}
+expected = {
+    "outcome": "error_then_created",
+    "error_field": "name",
+    "error_text": "You must supply a value here.",
+    "title": "F005-CHOICE-002",
+    "option_count": 2,
+    "saved_fields": {"name": "F005-CHOICE-002", "...": "..."}
+}
+\end{lstlisting}
+Hai chuỗi tên ở TC-005-005 và TC-005-006 được lưu đầy đủ trong CSV, lần lượt có 1.332 và 1.333
+ký tự. Các thiết lập khác gồm hiển thị dọc, cho phép thay đổi câu trả lời, chọn nhiều phương án,
+giới hạn 0/1/2, giờ mở/đóng, cột người chưa trả lời và công bố kết quả ẩn danh.
+
+\subsection{Thiết kế script Level 1}
+Mã nằm trong \texttt{F005/level1/}: \texttt{test\_choice.py} là điểm chạy,
+\texttt{engine.py} chứa phần xử lý dùng chung, còn \texttt{settings.py} chứa URL và locator.
+Script đọc CSV bằng \texttt{csv.DictReader}, giải mã các nhóm giá trị bằng \texttt{json.loads},
+rồi chạy cùng hàm \texttt{scenario} cho từng dòng.
+
+Đoạn dưới rút gọn cách kiểm tra ba nhóm luồng; các hàm thao tác trang được cài đặt trong
+\texttt{ChoicePage}:
+
+\begin{lstlisting}[language=Python]
+def scenario(self, row):
+    page, expected = self.page, row["expected"]
+    page.edit_mode(True)
+    before = page.activity_ids()
+    page.go("create_url")
+    page.fields(row["fields"])
+
+    if expected["outcome"] == "cancelled":
+        page.click("cancel")
+        page.wait.until(lambda d: "/course/view.php" in d.current_url)
+        self.assertEqual(before, page.activity_ids())
+        return
+
+    page.click("save")
+    if expected["outcome"] == "error_then_created":
+        error = page.element("error", field=expected["error_field"])
+        self.assertEqual(expected["error_text"], error.text.strip())
+        page.fields(row["repair"])
+        page.click("save")
+
+    cmid = page.wait_created()
+    self.assertEqual(expected["title"],
+                     page.element("activity_heading").text.strip())
+    page.go("settings_url", cmid=cmid)
+    for key, value in expected["saved_fields"].items():
+        self.assertEqual(value, page.read_field(key))
+\end{lstlisting}
+
+\noindent\textbf{Lưu ý thiết kế:}
+\begin{itemize}[noitemsep]
+  \item \textbf{Đọc lại dữ liệu:} sau khi lưu, mở Settings của hoạt động vừa tạo để đối chiếu
+        giá trị thực với \texttt{saved\_fields}; kiểm thêm số phương án đã lưu. Các ca 016, 017 và 024
+        đều có phép kiểm tra kết quả, thay cho phần còn thiếu trong bản ghi Katalon.
+  \item \textbf{Chờ đúng trạng thái:} dùng \texttt{WebDriverWait} để chờ trang đổi sau khi bật/tắt Edit mode,
+        chờ lỗi hiển thị và chờ hoạt động bị xóa. Không dùng ID YUI sinh theo lần tải trang.
+  \item \textbf{Mô tả:} nhập văn bản trong iframe TinyMCE. TC-005-010 còn kiểm mô tả xuất hiện
+        tại đúng hoạt động trên trang khóa học.
+  \item \textbf{Dọn dữ liệu:} lấy ID hoạt động từ URL sau khi tạo. Trong \texttt{tearDown}, chỉ xóa
+        hoạt động của ca vừa chạy, kiểm đã xóa xong rồi tắt Edit mode. Giữ nguyên khóa học và dữ liệu có sẵn.
+        Lỗi dọn dữ liệu được ghi nhận là \texttt{ERROR}, không tính là pass.
+\end{itemize}
+
+\subsection{Level 2: đưa test item ra ngoài script}
+Level 2 tiếp tục dùng \texttt{choice\_data.csv}, đồng thời chuyển cấu hình từ
+\texttt{settings.py} sang hai file CSV:
+
+\begin{table}[H]
+\centering\small
+\begin{tabular}{|L{4.2cm}|L{9.9cm}|}
+\hline
+\rowcolor{gray!15}\textbf{File} & \textbf{Nội dung} \\ \hline
+\texttt{environment.csv} & Các cặp \texttt{key,value}: địa chỉ Moodle, ID và tên khóa học,
+thời gian chờ, URL đăng nhập, khóa học, form tạo Choice và Settings. \\ \hline
+\texttt{ui\_elements.csv} & Các cột \texttt{key,by,selector,kind}: tên phần tử, loại locator,
+selector và kiểu thao tác như nhập văn bản, chọn giá trị, checkbox, ngày giờ hoặc editor. \\ \hline
+\end{tabular}
+\caption{File cấu hình bổ sung của Level 2 -- Feature 005}
+\end{table}
+
+Ví dụ dữ liệu cấu hình, rút gọn:
+\begin{lstlisting}
+environment.csv   key,value
+                  base_url,http://127.0.0.1:9501
+                  course_id,2
+                  course_name,F005
+                  course_url,{base_url}/course/view.php?id={course_id}
+
+ui_elements.csv   key,by,selector,kind
+                  name,css,#id_name,text
+                  option,css,#id_option_{index},text
+                  allowmultiple,css,#id_allowmultiple,select
+                  save,css,#id_submitbutton,text
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python]
+CONFIG = {row["key"]: row["value"]
+          for row in read_csv(ROOT / "environment.csv")}
+UI = {row["key"]: row
+      for row in read_csv(ROOT / "ui_elements.csv")}
+run(CONFIG, UI, ROOT)
+\end{lstlisting}
+
+Hàm thao tác tra locator theo tên phần tử trong \texttt{UI}; các mẫu
+\texttt{\{index\}} và \texttt{\{cmid\}} được thay bằng chỉ số phương án hoặc ID hoạt động thực tế.
+Khi thay địa chỉ Moodle hoặc selector của phần tử đã hỗ trợ, chỉ cần sửa CSV tương ứng.
+
+\begin{table}[H]
+\centering\small
+\begin{tabular}{|L{4.0cm}|L{4.8cm}|L{5.0cm}|}
+\hline
+\rowcolor{gray!15} & \textbf{Level 1} & \textbf{Level 2} \\ \hline
+Dữ liệu và Expected Result & \texttt{choice\_data.csv} & \texttt{choice\_data.csv} \\ \hline
+URL và cấu hình khóa học & \texttt{settings.py} & \texttt{environment.csv} \\ \hline
+Locator và kiểu phần tử & \texttt{settings.py} & \texttt{ui\_elements.csv} \\ \hline
+Luồng và phép kiểm tra & \texttt{engine.py} & \texttt{engine.py} \\ \hline
+\end{tabular}
+\caption{So sánh hai mức triển khai của Feature 005}
+\end{table}
+
+\subsection{Cách chạy}
+\textbf{Tiền điều kiện:} Moodle đã khởi động, tài khoản quản trị đăng nhập được và có khóa học
+tên đầy đủ F005. Trên Moodle mới, tạo khóa một lần tại
+\emph{Site administration > Courses > Add a new course}, sau đó lấy ID từ URL
+\texttt{/course/view.php?id=N}. Đây là bước chuẩn bị môi trường, không nằm trong 24 ca Add a Choice.
+Bộ mã được kiểm chứng trong báo cáo này chưa tự tạo khóa học.
+
+Từ thư mục \texttt{F005}, cài thư viện rồi chạy từng mức:
+\begin{lstlisting}
+python -m pip install -r level1/requirements.txt
+python level1/test_choice.py --course-id 2
+python level2/test_choice.py --course-id 2
+\end{lstlisting}
+Số 2 là ID của khóa học trong lần chạy được ghi nhận; trên máy khác thay bằng ID thực tế.
+Với cấu hình mặc định này có thể chạy \texttt{python run\_all.py}, hoặc bấm
+\texttt{CHAY\_TAT\_CA.cmd} trên Windows để chạy lần lượt cả hai Level và phần tương thích.
+Khi ID khác 2, chạy từng script với \texttt{--course-id N}; phần phi chức năng dùng cùng tham số.
+
+Chạy riêng một ca hoặc không hiện cửa sổ trình duyệt:
+\begin{lstlisting}
+python level1/test_choice.py --case TC-005-001
+python level2/test_choice.py --headless
+\end{lstlisting}
+Các tham số tùy chọn gồm \texttt{--base-url}, \texttt{--browser}, \texttt{--keep-created}.
+Tài khoản mặc định là admin/admin; có thể đặt \texttt{MOODLE\_USERNAME} và
+\texttt{MOODLE\_PASSWORD} khi môi trường dùng tài khoản khác.
+
+\subsection{Kết quả chạy}
+Chạy ngày 24/11/2026 trên Windows, Chrome 158.0.8127.37, Selenium 4.54.0,
+Moodle demo chạy bằng Docker tại \texttt{http://127.0.0.1:9501}, khóa F005 có ID 2.
+Số liệu dưới đây lấy từ lần chạy của Sơn Văn Phát, có đối chiếu \texttt{results.csv},
+\texttt{run.json} và kết quả hiển thị trên PowerShell.
+
+\begin{table}[H]
+\centering\small
+\begin{tabular}{|L{4.7cm}|L{3.5cm}|c|c|}
+\hline
+\rowcolor{gray!15}\textbf{Nhóm luồng} & \textbf{Script} & \textbf{Level 1} & \textbf{Level 2} \\ \hline
+Tạo Choice hợp lệ & \texttt{test\_choice.py} & 20 pass & 20 pass \\ \hline
+Báo lỗi rồi sửa & \texttt{test\_choice.py} & 3 pass & 3 pass \\ \hline
+Cancel & \texttt{test\_choice.py} & 1 pass & 1 pass \\ \hline
+\textbf{Tổng} & \textbf{24 dòng dữ liệu} & \textbf{24/24 pass} & \textbf{24/24 pass} \\ \hline
+\end{tabular}
+\caption{Kết quả kiểm thử hướng dữ liệu của Feature 005}
+\end{table}
+
+Thời gian do \texttt{unittest} ghi nhận là khoảng \textbf{238,128 giây} ở Level 1 và
+\textbf{196,423 giây} ở Level 2, bao gồm thao tác từng ca và dọn dữ liệu. Đây là thời gian thực thi
+bộ test, không dùng làm tiêu chí đánh giá hiệu năng của Moodle.
+Mỗi lần chạy có \texttt{results.csv} ghi trạng thái từng ca và \texttt{run.json} ghi cấu hình,
+phiên bản trình duyệt và tổng số pass/fail/error. Trong bộ file đưa lên Drive, hai thư mục
+bằng chứng được đặt tên \texttt{F005\_Level1\_Chrome} và \texttt{F005\_Level2\_Chrome}.
+
+\textbf{Các điều chỉnh rút ra khi chạy lần đầu:}
+\begin{itemize}[noitemsep]
+  \item Chờ trang cũ kết thúc chuyển hướng sau khi đổi Edit mode trước khi mở form tạo Choice.
+  \item Cuộn iframe TinyMCE vào vùng nhìn thấy trước khi nhập mô tả, tránh thanh điều hướng che vị trí bấm.
+  \item Sau khi xác nhận xóa, chờ hoạt động biến mất rồi mới tải lại trang khóa học; tránh báo lỗi
+        do trang được tải lại khi Moodle còn đang xử lý xóa.
+\end{itemize}
 
 \section{Kiểm thử phi chức năng}\label{sec:nf}
 
@@ -406,8 +807,9 @@ Chạy ngày 21/11/2026 trên Chrome for Testing 158, Moodle 5.1 demo (\texttt{h
 Phương & Hiệu năng (performance) & Gửi form Create user phản hồi trong $\le$ 3 giây (trung bình) với 20 lần lặp. & Script đo thời gian từ lúc bấm Create user đến khi trang danh sách hiển thị, 20 lần; tính trung bình, lớn nhất. & Selenium + \texttt{time.perf\_counter}, \texttt{Navigation Timing API} \\ \hline
 Quang & Tương thích (compatibility) & Form Add a new course hoạt động giống nhau trên Chrome và Firefox. & Chạy lại script Level 1 trên hai trình duyệt, so sánh kết quả từng dòng. & Selenium (Chrome, Firefox) \\ \hline
 Tài & \todo{điền} & \todo{điền} & \todo{điền} & \todo{điền} \\ \hline
-Sơn & Bảo mật cơ bản (security) & Dữ liệu có ký tự đặc biệt (\verb|<script>|, dấu nháy) không làm hỏng trang và không bị thực thi. & Nhập chuỗi XSS/SQL injection vào Name của category, kiểm tra trang kết quả hiển thị thành văn bản, không có hộp thoại. & Selenium, OWASP payload mẫu \\ \hline
-Phát & Khả dụng/truy cập (usability, accessibility) & Các ô nhập của form Add a Choice có nhãn, điểm accessibility đạt mức chấp nhận. & Chạy kiểm tra trên trang form, ghi điểm và danh sách vi phạm. & Lighthouse (Chrome DevTools) \\ \hline
+Sơn & Hiệu năng (performance) & Form Add new category tải trong $\le$ 3 giây và tạo danh mục hợp lệ phản hồi trong $\le$ 5 giây (phân vị 95, 10 lần lặp). & Script đo thời gian tải form và thời gian từ lúc bấm Create category đến khi trang Manage course categories hiển thị, 10 lần; tính trung bình, trung vị, p95, lớn nhất. & Selenium + \texttt{time.perf\_counter}, \texttt{Navigation Timing API} \\ \hline
+Sơn & Bảo mật cơ bản (security) & Người chưa đăng nhập không vào được form; mã HTML/JS trong Category name không bị thực thi; chuỗi giống SQL injection chỉ được xử lý như văn bản. & Truy cập form bằng trình duyệt không có phiên; tạo danh mục với payload XSS/SQL (đọc từ CSV), kiểm tra không có hộp thoại, không có mã được thực thi, không có lỗi CSDL, danh mục kiểm soát còn nguyên. & Selenium, payload XSS/SQL mẫu tự soạn \\ \hline
+Phát & Tương thích (compatibility) & Bốn luồng Add a Choice đạt và cho dữ liệu đọc lại tương đương trên Chrome/Edge. & Chạy 4 ca trên mỗi trình duyệt, so kết quả kiểm tra và các quan sát đã lưu. & Python, Selenium (Chrome, Edge), \texttt{unittest} \\ \hline
 \end{tabular}
 \caption{Yêu cầu phi chức năng theo thành viên}
 \end{table}
@@ -467,10 +869,102 @@ python -m unittest -v perf_create_user
 
 \textbf{Cấu hình máy đo:} Windows, RAM 16 GB DDR4 (khoảng 15,7 GB khả dụng), đồ họa tích hợp Intel Iris Xe, ổ SSD NVMe. Docker Desktop 4.96.2 dùng WSL 2, Docker \textbf{12 CPU (luồng logic)} và \textbf{7,6 GiB RAM}.
 
-\subsection{Chi tiết phần của }
-\subsection{Chi tiết phần của }
-\subsection{Chi tiết phần của }
-\subsection{Chi tiết phần của }
+\subsection{Chi tiết phần của Quang}
+\subsection{Chi tiết phần của Tài}
+\subsection{Chi tiết phần của Sơn: hiệu năng và bảo mật của Add new category}
+Mã nằm trong \texttt{F004/nonfunctional/} (\texttt{nf\_common.py}, \texttt{nf\_performance\_test.py}, \texttt{nf\_security\_test.py}, \texttt{data/security\_payloads.csv}); kết quả ghi vào \texttt{results/nf\_performance.csv} và \texttt{results/nf\_security.csv}.
+
+\textbf{1. Kiểm thử hiệu năng (thời gian đáp ứng).} \textbf{Cách tiếp cận:} đăng nhập, rồi lặp $N=10$ lần (biến \texttt{PERF\_RUNS}): đo thời gian tải form \texttt{editcategory.php} (và \texttt{loadEventEnd - navigationStart} của Navigation Timing API), sau đó nhập dữ liệu hợp lệ có tên duy nhất và đo thời gian từ lúc bấm Create category đến khi trang \texttt{management.php} tải xong. \textbf{Công cụ:} Selenium WebDriver, \texttt{time.perf\_counter}.
+\begin{center}\small
+\begin{tabular}{|c|L{7.0cm}|L{3.4cm}|}\hline
+\rowcolor{gray!15}\textbf{Mã} & \textbf{Yêu cầu phi chức năng} & \textbf{Tiêu chí đạt} \\ \hline
+NFR-P1 & Form Add new category tải nhanh & p95 $\le$ 3 000 ms \\ \hline
+NFR-P2 & Tạo danh mục hợp lệ phản hồi nhanh & p95 $\le$ 5 000 ms \\ \hline
+\end{tabular}\end{center}
+Ngưỡng do nhóm tự đặt vì đề không quy định, đổi được bằng \texttt{LIMIT\_FORM\_MS}, \texttt{LIMIT\_CREATE\_MS}. \textbf{Kết quả:} NFR-P1 và NFR-P2 đều \textbf{đạt}.
+\begin{table}[H]
+\centering\small
+\begin{tabular}{|L{4.0cm}|c|c|c|c|c|}
+\hline
+\rowcolor{gray!15}\textbf{Chỉ số (ms)} & \textbf{Trung bình} & \textbf{Trung vị} & \textbf{p95} & \textbf{Lớn nhất} & \textbf{Ngưỡng} \\ \hline
+Tải form (NFR-P1) & \todo{điền} & \todo{điền} & \todo{điền} & \todo{điền} & 3000 \\ \hline
+Tạo danh mục (NFR-P2) & \todo{điền} & \todo{điền} & \todo{điền} & \todo{điền} & 5000 \\ \hline
+\end{tabular}
+\caption{Tổng hợp 10 lần đo của feature 004 (số liệu lấy từ \texttt{nf\_performance.csv})}
+\end{table}
+\textbf{Giới hạn:} chỉ đo một người dùng trên máy cục bộ, cùng cấu hình máy với phần đo của Phương; tải đồng thời nhiều người cần công cụ như JMeter hoặc Locust.
+
+\textbf{2. Kiểm thử bảo mật cơ bản.} \textbf{Cách tiếp cận:} dữ liệu hướng dữ liệu, payload nằm trong \texttt{security\_payloads.csv}. Trước khi thử payload, script tạo một danh mục kiểm soát để chắc chắn dữ liệu cũ không bị ảnh hưởng.
+\begin{center}\small
+\begin{tabular}{|c|L{4.2cm}|L{6.6cm}|}\hline
+\rowcolor{gray!15}\textbf{Mã} & \textbf{Yêu cầu} & \textbf{Cách kiểm thử và tiêu chí đạt} \\ \hline
+NFR-S1 & Người chưa đăng nhập không vào được form & Trình duyệt mới (không có phiên) mở \texttt{editcategory.php}; phải bị chuyển tới trang login và không thấy ô Category name. \\ \hline
+NFR-S2 & Mã HTML/JS trong Category name không được thực thi hoặc hiển thị như HTML (4 payload: thẻ \texttt{script}, \texttt{img onerror}, thẻ HTML thường, \texttt{svg onload}) & Tạo danh mục với payload; không có hộp thoại, biến \texttt{window.\_\_xss} không được đặt, không có phần tử được chèn; tải lại danh sách để kiểm tra stored XSS. Hệ thống từ chối hoặc lưu dạng văn bản đều được chấp nhận. \\ \hline
+NFR-S3 & Chuỗi giống SQL injection được xử lý như văn bản (3 payload: tautology với nháy đơn và nháy kép, câu lệnh \texttt{DROP TABLE}) & Trang vẫn chạy, không có thông báo lỗi CSDL, danh mục kiểm soát vẫn còn. \\ \hline
+\end{tabular}\end{center}
+\textbf{Kết quả:} cả 3 yêu cầu (1 kiểm tra truy cập và 7 payload) đều \textbf{đạt}; không có payload nào bị thực thi. \textbf{Giới hạn:} kiểm thử mức giao diện với một số payload tiêu biểu, không thay thế công cụ quét bảo mật chuyên dụng (ví dụ OWASP ZAP).
+\subsection{Chi tiết phần của Phát: tương thích của Add a Choice}
+\textbf{Loại kiểm thử:} kiểm thử tương thích chức năng trên Chrome và Microsoft Edge.
+Yêu cầu được lựa chọn là \texttt{NFR-COMP-001}: bốn luồng đại diện của Add a Choice phải chạy đạt
+trên cả hai trình duyệt và cho dữ liệu đọc lại tương đương.
+
+\textbf{Cách tiếp cận:} chọn TC-005-001 (tạo hợp lệ), TC-005-002 (thiếu tên rồi sửa),
+TC-005-013 (cho phép chọn nhiều phương án) và TC-005-024 (Cancel).
+Chạy cùng dữ liệu lần lượt trên Chrome và Edge bằng mã Level 2, sau đó so sánh các quan sát thực tế:
+tên hoạt động, cấu hình đã lưu, số phương án, thông báo lỗi hoặc trạng thái danh sách không đổi sau Cancel.
+Các ca này đại diện cho bốn luồng, không thay thế bộ 24 ca đã chạy riêng ở mỗi Level.
+
+\textbf{Công cụ:} Python, Selenium WebDriver, \texttt{unittest}, trình duyệt Chrome và Edge.
+
+\begin{lstlisting}[language=Python]
+CASES = ["TC-005-001", "TC-005-002", "TC-005-013", "TC-005-024"]
+for browser in ("chrome", "edge"):
+    subprocess.run([
+        sys.executable, "level2/test_choice.py",
+        "--browser", browser, "--case", ",".join(CASES),
+        "--course-id", course_id
+    ])
+# Read results.csv and observations.json from each browser run.
+# Compare the actual observations for corresponding case IDs.
+\end{lstlisting}
+Đoạn trên rút gọn cách gọi lại mã kiểm thử. Script đầy đủ nằm ở
+\texttt{F005/nonfunctional/test\_compatibility.py}, sử dụng đường dẫn tương đối đến
+\texttt{F005/level2/test\_choice.py}; hai thư mục phải được giữ cạnh nhau.
+
+\textbf{Tiêu chí đạt:} cả bốn ca đều pass trên mỗi trình duyệt và các giá trị đọc lại của từng cặp ca
+giống nhau. Chỉ một trình duyệt không đạt hoặc quan sát khác nhau thì phần kiểm thử tương thích
+không được kết luận pass.
+
+\textbf{Script và cách chạy:} từ thư mục \texttt{F005}, chạy lệnh dưới đây; thay ID 2 bằng ID khóa học
+thực tế trên máy đang dùng:
+\begin{lstlisting}
+python nonfunctional/test_compatibility.py --course-id 2
+\end{lstlisting}
+
+\textbf{Kết quả chạy:} Chrome 158.0.8127.37 và Edge 158.0.4370.33,
+Selenium 4.54.0, cùng Moodle demo và khóa F005 của lần chạy chức năng.
+
+\begin{table}[H]
+\centering\small
+\begin{tabular}{|L{2.6cm}|L{5.0cm}|c|c|c|}
+\hline
+\rowcolor{gray!15}\textbf{Ca} & \textbf{Luồng} & \textbf{Chrome} & \textbf{Edge} & \textbf{So sánh} \\ \hline
+TC-005-001 & Tạo Choice hợp lệ & Pass & Pass & Giống nhau \\ \hline
+TC-005-002 & Báo lỗi tên rỗng, sửa và lưu & Pass & Pass & Giống nhau \\ \hline
+TC-005-013 & Lưu thiết lập chọn nhiều & Pass & Pass & Giống nhau \\ \hline
+TC-005-024 & Cancel không thêm hoạt động & Pass & Pass & Giống nhau \\ \hline
+\end{tabular}
+\caption{Kết quả tương thích Chrome/Edge của Feature 005}
+\end{table}
+
+\textbf{Kết luận:} \textbf{đạt} trong phạm vi đã kiểm tra: 8/8 lượt thực thi pass,
+4/4 cặp quan sát tương đương; script in \texttt{NFR-COMP-001: PASS}.
+File \texttt{compatibility.csv} ghi kết quả so sánh, \texttt{report.json} chứa tổng hợp và các quan sát;
+mỗi trình duyệt có thêm \texttt{results.csv} và \texttt{run.json}.
+Thư mục bằng chứng trên Drive được đặt tên \texttt{F005\_Compatibility\_Chrome\_Edge}.
+
+Chrome và Edge cùng sử dụng Chromium, nên kết quả chỉ xác nhận bốn luồng nêu trên ở hai phiên bản
+đã chạy trên Windows; chưa có kết quả cho Firefox, Safari, thiết bị di động hoặc đánh giá accessibility.
 
 
 \section{AI Usage Declaration}
@@ -496,8 +990,36 @@ python -m unittest -v perf_create_user
 \subsection{Huỳnh Đức Tài}
 \todo{Điền công cụ AI và prompt, hoặc câu xác nhận không dùng AI.}
 \subsection{Đào Xuân Sơn}
-\todo{Điền công cụ AI và prompt, hoặc câu xác nhận không dùng AI.}
+\textbf{Công cụ:} Claude (Anthropic), model Claude Sonnet 5.5, dùng qua giao diện chat của ứng dụng Claude.
+
+\noindent\textbf{Prompt đã sử dụng} cho Bài tập lớn 3 (tin nhắn của sinh viên, theo thứ tự; kèm file đề, báo cáo BTL2 và các file \texttt{.tex} của feature 004):
+\begin{enumerate}[noitemsep]
+  \item ``hướng dẫn tôi làm bài'' (kèm file mô tả đề)
+  \item ``hướng dẫn chi tiết từng bước''
+  \item ``thêm report vào đây'' (kèm file \texttt{report-proj3.tex} của nhóm)
+\end{enumerate}
+
+\noindent\textbf{Kết quả, nhận xét và đề xuất của AI:}
+\begin{itemize}[noitemsep]
+  \item AI tóm tắt các yêu cầu cốt lõi của đề bài (Level 1 tách dữ liệu, Level 2 tách cả locator/URL, kiểm thử phi chức năng tối thiểu 2 yêu cầu/thành viên) và gợi ý lộ trình thực hiện từ việc ghi kịch bản bằng Katalon Recorder đến xuất sang mã nguồn Python (\texttt{WebDriver} + \texttt{unittest}).
+  \item hướng dẫn cấu trúc thư mục dự án, cách đọc dữ liệu từ file \texttt{.csv} bằng thư viện \texttt{csv} của Python, sử dụng \texttt{subTest} để chạy lặp qua các bộ dữ liệu và cách tổ chức file cấu hình locator cho Level 2. Ngoài ra, AI đề xuất một số công cụ kiểm thử phi chức năng phù hợp như JMeter/Locust (hiệu năng) và Google Lighthouse/OWASP ZAP (tốc độ tải trang, bảo mật).
+  \item AI rà soát cấu trúc file \texttt{report-proj3.tex} dựa trên rubric chấm điểm của đề bài, đề xuất bổ sung bảng phân công công việc chi tiết theo từng thành viên, phần mô tả rõ phương pháp và công cụ cho kiểm thử phi chức năng, đồng thời rà soát lỗi chính tả và định dạng LaTeX trước khi xuất bản PDF.
+\end{itemize}
+
 \subsection{Sơn Văn Phát}
-\todo{Điền công cụ AI và prompt, hoặc câu xác nhận không dùng AI.}
+\textbf{Công cụ:} GPT-6 (OpenAI), sử dụng qua ứng dụng Codex.
+
+\noindent\textbf{Yêu cầu đã gửi cho AI} (tóm tắt nội dung trao đổi):
+\begin{enumerate}[noitemsep]
+  \item Trình bày lại mô tả chính của BTL3 và yêu cầu chung về hình thức nộp bài, dựa trên file mô tả đề.
+  \item Hỗ trợ chuyển bộ 24 ca Add a Choice sang Python.
+\end{enumerate}
+
+\noindent\textbf{Kết quả, nhận xét và đề xuất của AI:}
+\begin{itemize}[noitemsep]
+  \item Tóm tắt yêu cầu của hai Level, phần kiểm thử phi chức năng và các file cần nộp.
+  \item Hỗ trợ viết và rà soát mã Python; đề xuất cách đọc dữ liệu, kiểm tra kết quả đã lưu và dọn hoạt động sau mỗi ca.
+  \item Phân tích lỗi thao tác Edit mode, nhập mô tả và chờ xóa dữ liệu; hỗ trợ trình bày báo cáo từ log chạy thực tế.
+\end{itemize}
 
 \end{document}
