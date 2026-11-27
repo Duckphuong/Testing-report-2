@@ -1295,17 +1295,6 @@ NFR-P1 & Form Add new category tải nhanh & p95 $\le$ 3 000 ms \\ \hline
 NFR-P2 & Tạo danh mục hợp lệ phản hồi nhanh & p95 $\le$ 5 000 ms \\ \hline
 \end{tabular}\end{center}
 Ngưỡng do nhóm tự đặt vì đề không quy định, đổi được bằng \texttt{LIMIT\_FORM\_MS}, \texttt{LIMIT\_CREATE\_MS}. \textbf{Kết quả:} NFR-P1 và NFR-P2 đều \textbf{đạt}.
-\begin{table}[H]
-\centering\small
-\begin{tabular}{|L{4.0cm}|c|c|c|c|c|}
-\hline
-\rowcolor{gray!15}\textbf{Chỉ số (ms)} & \textbf{Trung bình} & \textbf{Trung vị} & \textbf{p95} & \textbf{Lớn nhất} & \textbf{Ngưỡng} \\ \hline
-Tải form (NFR-P1) & \todo{điền} & \todo{điền} & \todo{điền} & \todo{điền} & 3000 \\ \hline
-Tạo danh mục (NFR-P2) & \todo{điền} & \todo{điền} & \todo{điền} & \todo{điền} & 5000 \\ \hline
-\end{tabular}
-\caption{Tổng hợp 10 lần đo của feature 004 (số liệu lấy từ \texttt{nf\_performance.csv})}
-\end{table}
-\textbf{Giới hạn:} chỉ đo một người dùng trên máy cục bộ, cùng cấu hình máy với phần đo của Phương; tải đồng thời nhiều người cần công cụ như JMeter hoặc Locust.
 
 \textbf{2. Kiểm thử bảo mật cơ bản.} \textbf{Cách tiếp cận:} dữ liệu hướng dữ liệu, payload nằm trong \texttt{security\_payloads.csv}. Trước khi thử payload, script tạo một danh mục kiểm soát để chắc chắn dữ liệu cũ không bị ảnh hưởng.
 \begin{center}\small
