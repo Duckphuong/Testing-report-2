@@ -152,7 +152,7 @@ Chỉ nộp mã Python và file dữ liệu, \textbf{không} nộp file Katalon.
 \endhead
 1 & Nguyễn Đức Phương \newline 2312749 & 001 -- Add a new user & Level 1, Level 2 cho feature 001; kiểm thử phi chức năng (mục \ref{sec:nf}) & 100\%  \\ \hline
 2 & Lê Sĩ Nhật Quang \newline 2312791 & 002 -- Add a new course & Level 1, Level 2 cho feature 002; phi chức năng & \todo{\%} \\ \hline
-3 & Huỳnh Đức Tài \newline 2212971 & \todo{chưa có feature} & \todo{điền} & \todo{\%} \\ \hline
+3 & Huỳnh Đức Tài \newline 2212971 & 003 - add new event & Level1, Level2 cho feature & 100\% \\ \hline
 4 & Đào Xuân Sơn \newline 2312954 & 004 -- Add new category & Level 1, Level 2 cho feature 004; phi chức năng & 100\% \\ \hline
 5 & Sơn Văn Phát \newline 2212535 & 005 -- Add a Choice & Level 1, Level 2 cho feature 005; phi chức năng & 100\% \\ \hline
 \end{longtable}
@@ -393,7 +393,416 @@ Chạy ngày 21/11/2026 trên Chrome for Testing 158, Moodle 5.1 demo (\texttt{h
 \end{table}
 
 \section{Feature 002}
-\section{Feature 003}
+\section{Feature 003: Add new event}
+\subsection{Phân tích gộp 34 test case thành các script}
+
+Các test case của BTL2 cho feature 003 (ECP, BVA, Decision Table và Use case) đều tập trung vào quy trình tạo một sự kiện mới trên Moodle Calendar.
+
+Luồng thao tác chính bao gồm:
+\emph{mở trang Calendar, chọn New event, nhập Event title, thiết lập Date và Type of event, mở rộng Show more nếu cần, cấu hình Location, Duration hoặc Repeat this event, sau đó bấm Save và kiểm tra kết quả}.
+
+Các test case chủ yếu khác nhau ở dữ liệu nhập và kết quả mong đợi. Vì vậy, các thao tác chung được tổ chức thành những hàm dùng lại trong script, chẳng hạn như mở form, nhập ngày giờ, chọn loại sự kiện, thiết lập Duration, thiết lập Repeat và kiểm tra kết quả.
+
+Bộ test hiện tại được lọc theo 34 mã test case có trong file Katalon Recorder mới nhất \texttt{add\_new\_event(2).krecorder}. Cả Level 1 và Level 2 sử dụng cùng một bộ dữ liệu để bảo đảm tính nhất quán khi so sánh hai cách tổ chức automation testing.
+
+\begin{table}[H]
+\centering\small
+\begin{tabular}{|L{3.5cm}|L{3.3cm}|L{6.0cm}|c|}
+\hline
+\rowcolor{gray!15}
+\textbf{File dữ liệu} & \textbf{Test case} & \textbf{Luồng kiểm thử} & \textbf{Số dòng} \\ \hline
+
+\texttt{add\_event\_data.csv} (Level 1)
+& TC-003-001 đến TC-003-039 (34 mã)
+& Nhập dữ liệu Event title, Date, Type of event và các trường mở rộng; thực hiện Save và kiểm tra kết quả mong đợi.
+& 34 \\ \hline
+
+\texttt{add\_event\_data.csv} (Level 2)
+& TC-003-001 đến TC-003-039 (34 mã)
+& Sử dụng cùng dữ liệu kiểm thử, đồng thời đọc URL và locator từ các cột cấu hình trong CSV.
+& 34 \\ \hline
+\end{tabular}
+\caption{Bộ dữ liệu automation testing của feature 003}
+\end{table}
+
+Lưu ý: Các mã test case không liên tục do bộ dữ liệu được lọc theo những test case có trong bản Katalon Recorder mới nhất. Tổng số test case là 34, không phải 39.
+
+\subsection{Cấu trúc file dữ liệu Level 1}
+
+Ở Level 1, URL và locator của các phần tử trên giao diện được khai báo trực tiếp trong Python. File CSV chỉ lưu dữ liệu kiểm thử và kết quả mong đợi.
+
+\begin{table}[H]
+\centering\footnotesize
+\begin{tabular}{|L{4.3cm}|L{10.3cm}|}
+\hline
+\rowcolor{gray!15}
+\textbf{Cột} & \textbf{Ý nghĩa} \\ \hline
+
+\texttt{test\_case\_id}, \texttt{test\_case\_name}
+& Mã và tên test case tương ứng với BTL2/Katalon Recorder. \\ \hline
+
+\texttt{event\_title}
+& Tiêu đề sự kiện cần tạo. Có thể chứa dữ liệu hợp lệ, rỗng, chữ thường, chữ hoa hoặc ký tự đặc biệt. \\ \hline
+
+\texttt{day, month, year}
+& Các thành phần ngày, tháng và năm của thời điểm bắt đầu sự kiện. \\ \hline
+
+\texttt{hour, minute}
+& Giờ và phút bắt đầu sự kiện. \\ \hline
+
+\texttt{event\_type}
+& Loại sự kiện được chọn, ví dụ \texttt{User} hoặc \texttt{Site}. \\ \hline
+
+\texttt{category}
+& Danh mục sự kiện được sử dụng trong dữ liệu kiểm thử. \\ \hline
+
+\texttt{location}
+& Địa điểm tổ chức sự kiện, được nhập trong phần mở rộng \texttt{Show more}. \\ \hline
+
+\texttt{duration\_mode}
+& Cách thiết lập thời lượng: \texttt{Without duration}, \texttt{Until} hoặc \texttt{Duration in minute}. \\ \hline
+
+\texttt{duration\_value}
+& Giá trị thời lượng tính bằng phút khi chọn \texttt{Duration in minute}. \\ \hline
+
+\texttt{repeat\_enabled}, \texttt{repeat\_count}
+& Trạng thái bật/tắt lặp lại sự kiện và số lần lặp tương ứng. \\ \hline
+
+\texttt{expected\_outcome}
+& Kết quả mong đợi ở mức phân loại, hiện gồm \texttt{success} và \texttt{validation\_error}. \\ \hline
+
+\texttt{expected\_text}
+& Nội dung thông báo mong đợi khi kiểm thử trường hợp validation error. \\ \hline
+
+\texttt{source\_expected\_result}
+& Mô tả chi tiết kết quả mong đợi được ghi nhận từ đặc tả/test case nguồn. \\ \hline
+
+\texttt{notes}
+& Ghi chú bổ sung cho trường hợp kiểm thử đặc biệt. \\ \hline
+\end{tabular}
+\caption{Cấu trúc các cột trong file dữ liệu Level 1}
+\end{table}
+
+Ví dụ một số dòng dữ liệu:
+
+\begin{lstlisting}
+test_case_id,test_case_name,event_title,...,expected_outcome
+TC-003-001,...,Auto TC-003-001,...,success
+TC-003-002,...,,...,validation_error
+TC-003-027,...,Auto TC-003-027,...,success
+TC-003-028,...,Auto TC-003-028,...,validation_error
+TC-003-034,...,Auto TC-003-034,...,success
+\end{lstlisting}
+
+Các trường hợp kiểm thử được phân biệt chủ yếu thông qua các giá trị trong CSV. Ví dụ:
+
+\begin{itemize}[noitemsep]
+    \item TC-003-002 để trống Event title nhằm kiểm tra validation.
+    \item TC-003-007 và TC-003-008 kiểm tra giá trị biên của ngày.
+    \item TC-003-012 và TC-003-013 kiểm tra giá trị biên của năm.
+    \item TC-003-028, TC-003-029 và TC-003-030 kiểm tra các giá trị Duration không hợp lệ.
+    \item TC-003-034 đến TC-003-039 kiểm tra chức năng lặp lại sự kiện.
+\end{itemize}
+
+\subsection{Ánh xạ 34 test case của BTL2 sang dữ liệu Level 1}
+
+Bộ dữ liệu Level 1 sử dụng các mã test case được trích lọc từ Katalon Recorder mới nhất. Bảng dưới đây thể hiện sự ánh xạ giữa mã test case, nội dung kiểm thử, nhóm kỹ thuật và kết quả mong đợi.
+
+{\footnotesize
+\begin{longtable}{|c|L{5.0cm}|L{2.0cm}|L{4.0cm}|}
+\hline
+\rowcolor{gray!15}
+\textbf{TC} & \textbf{Nội dung kiểm thử} & \textbf{Nhóm kỹ thuật} & \textbf{Kết quả mong đợi} \\ \hline
+\endhead
+
+001 & Tạo event với dữ liệu hợp lệ tối thiểu & ECP & Tạo event thành công. \\ \hline
+002 & Kiểm tra Event title để trống & ECP & Hệ thống từ chối dữ liệu không hợp lệ. \\ \hline
+003 & Tạo event với tiêu đề chữ thường & ECP & Tạo event thành công. \\ \hline
+004 & Tạo event với tiêu đề chữ hoa & ECP & Tạo event thành công. \\ \hline
+005 & Tiêu đề chứa số và ký tự đặc biệt & ECP & Tạo event thành công. \\ \hline
+006 & Tạo hai event có cùng Event title & ECP/DT & Tạo event thành công. \\ \hline
+007 & Kiểm tra ngày nhỏ nhất trong Date & BVA & Chọn được ngày 1 và tạo event. \\ \hline
+008 & Kiểm tra ngày lớn nhất trong Date & BVA & Chọn được ngày 31 và tạo event. \\ \hline
+012 & Kiểm tra năm nhỏ nhất trong Date & BVA & Chọn được năm 1900 và tạo event. \\ \hline
+013 & Kiểm tra năm lớn nhất trong Date & BVA & Chọn được năm 2050 và tạo event. \\ \hline
+014 & Kiểm tra giờ nhỏ nhất trong Date & BVA & Chọn được giờ 00 và tạo event. \\ \hline
+015 & Kiểm tra giờ lớn nhất trong Date & BVA & Chọn được giờ 23 và tạo event. \\ \hline
+016 & Kiểm tra phút ở biên 00 & BVA & Chọn được phút 00 và tạo event. \\ \hline
+017 & Kiểm tra phút ở biên 59 & BVA & Chọn được phút 59 và tạo event. \\ \hline
+018 & Chọn Type of event là User & ECP & Tạo event với loại User. \\ \hline
+019 & Chọn Type of event là Site & ECP & Tạo event với loại Site. \\ \hline
+022 & Mở Show more và nhập Location & ECP & Location được lưu và hiển thị đúng. \\ \hline
+023 & Duration Without duration & ECP & Event được tạo không có thời lượng. \\ \hline
+024 & Duration Until hợp lệ & ECP & Event được tạo với thời điểm kết thúc hợp lệ. \\ \hline
+025 & Until bằng Date bắt đầu & BVA & Kiểm tra trường hợp thời điểm kết thúc bằng thời điểm bắt đầu. \\ \hline
+026 & Until ở quá khứ so với thời điểm hiện tại & ECP & Kiểm tra event có thời điểm kết thúc trong quá khứ. \\ \hline
+027 & Duration in minute hợp lệ & ECP & Event được tạo với thời lượng 60 phút. \\ \hline
+028 & Duration in minute bằng 0 & BVA & Hiển thị lỗi validation. \\ \hline
+029 & Duration in minute là số âm & ECP & Hiển thị lỗi validation. \\ \hline
+030 & Duration in minute chứa ký tự không phải số & ECP & Hiển thị lỗi validation. \\ \hline
+031 & Duration in minute là số thập phân dấu chấm & ECP & Kiểm tra hệ thống chấp nhận và xử lý giá trị. \\ \hline
+032 & Duration in minute là số thập phân dấu phẩy & ECP & Kiểm tra hệ thống xử lý giá trị theo locale. \\ \hline
+033 & Duration in minute dạng số mũ & ECP & Kiểm tra hệ thống xử lý giá trị dạng số mũ. \\ \hline
+034 & Bật Repeat this event & ECP & Chức năng lặp lại được bật. \\ \hline
+035 & Tắt Repeat this event & ECP & Chức năng lặp lại được tắt. \\ \hline
+036 & Số lần lặp là số thập phân nhỏ hơn 2 & BVA/ECP & Kiểm tra cách hệ thống xử lý giá trị số lần lặp. \\ \hline
+037 & Số lần lặp dạng ký pháp khoa học 1e0 & ECP & Kiểm tra cách hệ thống xử lý giá trị số mũ. \\ \hline
+038 & Số lần lặp bằng 0 & BVA & Kiểm tra validation của số lần lặp. \\ \hline
+039 & Số lần lặp là số âm & ECP & Kiểm tra validation của số lần lặp. \\ \hline
+
+\end{longtable}
+}
+
+\noindent
+Lưu ý: Việc phân nhóm kỹ thuật trong bảng cần đối chiếu với tài liệu BTL2 gốc trước khi nộp chính thức. Các nhóm kỹ thuật được ghi ở đây dựa trên nội dung và dữ liệu của từng test case.
+
+\subsection{Thiết kế script Level 1}
+
+Ở Level 1, URL và locator được khai báo trực tiếp trong file Python. CSV chỉ chứa dữ liệu kiểm thử và expected result.
+
+Mã nguồn chính nằm trong:
+
+\begin{itemize}[noitemsep]
+    \item \texttt{Level\_1/tests/test\_add\_event\_level1.py}
+    \item \texttt{Level\_1/data/add\_event\_data.csv}
+\end{itemize}
+
+Một số locator được khai báo bằng ID để định vị các phần tử trên form Moodle:
+
+\begin{lstlisting}[language=Python]
+LOC = {
+    "username": (By.ID, "username"),
+    "password": (By.ID, "password"),
+    "login_button": (By.ID, "loginbtn"),
+    "event_title": (By.ID, "id_name"),
+    "day": (By.ID, "id_timestart_day"),
+    "month": (By.ID, "id_timestart_month"),
+    "year": (By.ID, "id_timestart_year"),
+    "hour": (By.ID, "id_timestart_hour"),
+    "minute": (By.ID, "id_timestart_minute"),
+    "location": (By.ID, "id_location"),
+    "duration_minutes": (By.ID, "id_timeduration"),
+    "repeat_count": (By.ID, "id_repeatweekly"),
+    "save": (By.CSS_SELECTOR, "button[type='submit']"),
+}
+\end{lstlisting}
+
+Các thao tác được chia thành những hàm dùng chung:
+
+\begin{itemize}[noitemsep]
+    \item \texttt{\_open\_form()}: mở trang Calendar và form New event.
+    \item \texttt{\_fill\_date()}: thiết lập ngày, tháng, năm, giờ và phút.
+    \item \texttt{\_set\_event\_type()}: chọn loại sự kiện.
+    \item \texttt{\_show\_more()}: mở các trường thông tin mở rộng.
+    \item \texttt{\_set\_duration()}: cấu hình thời lượng sự kiện.
+    \item \texttt{\_set\_repeat()}: cấu hình chức năng lặp lại sự kiện.
+    \item \texttt{\_assert\_result()}: kiểm tra kết quả sau khi Save.
+    \item \texttt{\_run\_case()}: điều phối các thao tác cho một dòng dữ liệu CSV.
+\end{itemize}
+
+Luồng xử lý tổng quát:
+
+\begin{lstlisting}[language=Python]
+def _run_case(self, row):
+    self._open_form()
+
+    title = self._find("event_title")
+    title.clear()
+    if row.get("event_title"):
+        title.send_keys(row["event_title"])
+
+    self._fill_date(row)
+    self._set_event_type(row.get("event_type", ""))
+
+    self._fill_optional_fields(row)
+    self._set_repeat(row)
+
+    self._click_text("Save")
+    self._assert_result(row)
+\end{lstlisting}
+
+Script tự động đăng nhập trước khi thực hiện kiểm thử nếu Moodle chuyển hướng đến trang login. Tài khoản mặc định được cấu hình là \texttt{admin/admin}, có thể thay đổi thông qua biến môi trường.
+
+\subsection{Level 2: đưa URL, locator và test data ra ngoài script}
+
+Khác với Level 1, Level 2 đưa cả dữ liệu kiểm thử, URL và locator ra khỏi file Python.
+
+File dữ liệu được sử dụng là:
+
+\begin{itemize}[noitemsep]
+    \item \texttt{Level\_2/data/add\_event\_data.csv}
+    \item \texttt{Level\_2/data/data\_get.csv}
+\end{itemize}
+
+File \texttt{add\_event\_data.csv} chứa các cột dữ liệu kiểm thử tương tự Level 1, đồng thời bổ sung các cột cấu hình:
+
+\begin{itemize}[noitemsep]
+    \item \texttt{site\_url}: URL trang Calendar.
+    \item \texttt{login\_url}: URL đăng nhập Moodle.
+    \item \texttt{new\_event\_text}: nội dung nút mở form tạo event.
+    \item \texttt{save\_text}: nội dung nút lưu.
+    \item Các cặp cột \texttt{<element>\_by} và \texttt{<element>\_value}: chiến lược và giá trị locator tương ứng.
+\end{itemize}
+
+Ví dụ:
+
+\begin{lstlisting}
+site_url,login_url,event_title_by,event_title_value
+http://127.0.0.1:9501/calendar/view.php?view=month,
+http://127.0.0.1:9501/login/index.php,id,id_name
+\end{lstlisting}
+
+Script Level 2 sử dụng một bảng ánh xạ để chuyển đổi tên chiến lược locator trong CSV thành đối tượng định vị của Selenium:
+
+\begin{lstlisting}[language=Python]
+BY_MAP = {
+    "id": By.ID,
+    "name": By.NAME,
+    "css": By.CSS_SELECTOR,
+    "xpath": By.XPATH,
+    "class": By.CLASS_NAME,
+    "tag": By.TAG_NAME,
+    "link_text": By.LINK_TEXT
+}
+
+def locator(row, key):
+    kind = row[f"{key}_by"].strip().lower()
+    value = row[f"{key}_value"].strip()
+
+    if kind not in BY_MAP or not value:
+        raise ValueError(
+            f"Invalid locator configuration: {key}"
+        )
+
+    return (BY_MAP[kind], value)
+\end{lstlisting}
+
+Nhờ cách tổ chức này, khi giao diện Moodle thay đổi, có thể cập nhật locator trong CSV thay vì chỉnh sửa trực tiếp mã nguồn Python.
+
+\subsection{So sánh Level 1 và Level 2}
+
+\begin{table}[H]
+\centering\small
+\begin{tabular}{|L{3.6cm}|L{5.3cm}|L{5.3cm}|}
+\hline
+\rowcolor{gray!15}
+& \textbf{Level 1} & \textbf{Level 2} \\ \hline
+
+Test data
+& Lưu trong \texttt{add\_event\_data.csv}
+& Lưu trong \texttt{add\_event\_data.csv} \\ \hline
+
+Expected result
+& Lưu trong CSV
+& Lưu trong CSV \\ \hline
+
+URL
+& Khai báo trong Python
+& Lưu trong CSV \\ \hline
+
+Locator
+& Khai báo trong Python
+& Lưu trong CSV dưới dạng strategy/value \\ \hline
+
+Các thao tác kiểm thử
+& Cài đặt trong các hàm Python
+& Cài đặt trong các hàm Python \\ \hline
+
+Khả năng thay đổi giao diện
+& Cần sửa locator trong Python
+& Có thể sửa locator trong CSV \\ \hline
+\end{tabular}
+\caption{So sánh cách tổ chức Level 1 và Level 2 của feature 003}
+\end{table}
+
+\subsection{Ghi nhận kết quả kiểm thử}
+
+Sau khi thực hiện các test case, script ghi kết quả vào file \texttt{data\_get.csv} trong thư mục \texttt{data} của từng Level.
+
+File kết quả gồm các cột:
+
+\begin{table}[H]
+\centering\small
+\begin{tabular}{|L{3.2cm}|L{10.8cm}|}
+\hline
+\rowcolor{gray!15}
+\textbf{Cột} & \textbf{Ý nghĩa} \\ \hline
+
+\texttt{id}
+& Mã test case được thực thi. \\ \hline
+
+\texttt{status}
+& Trạng thái thực thi: \texttt{PASS} hoặc \texttt{FAIL}. \\ \hline
+
+\texttt{expected}
+& Kết quả mong đợi được lấy từ dữ liệu đầu vào. \\ \hline
+
+\texttt{actual}
+& Nội dung trang hiện tại được ghi nhận khi xảy ra lỗi; ở phiên bản hiện tại, trường hợp không lỗi đang ghi nhận thông báo hoàn thành thực thi. \\ \hline
+
+\texttt{error}
+& Loại exception và nội dung lỗi nếu test case thất bại. \\ \hline
+\end{tabular}
+\caption{Cấu trúc file kết quả data\_get.csv}
+\end{table}
+
+Khác với cách ghi nhận bằng screenshot, phiên bản script hiện tại không chụp ảnh màn hình khi xảy ra lỗi. Thay vào đó, thông tin lỗi được ghi trực tiếp vào CSV để thuận tiện cho việc tổng hợp và đối chiếu kết quả.
+
+\subsection{Cách chạy}
+
+Cài đặt thư viện Selenium:
+
+\begin{lstlisting}
+pip install selenium
+\end{lstlisting}
+
+Chạy Level 1:
+
+\begin{lstlisting}
+cd project3_add_event/Level_1
+python -m unittest discover -s tests -v
+\end{lstlisting}
+
+Chạy Level 2:
+
+\begin{lstlisting}
+cd project3_add_event/Level_2
+python -m unittest discover -s tests -v
+\end{lstlisting}
+
+Các biến môi trường tùy chọn:
+
+\begin{lstlisting}
+MOODLE_CALENDAR_URL
+MOODLE_LOGIN_URL
+MOODLE_USERNAME
+MOODLE_PASSWORD
+HEADLESS
+\end{lstlisting}
+
+Mặc định, Moodle được truy cập tại \texttt{http://127.0.0.1:9501}, tài khoản đăng nhập là \texttt{admin/admin}. Có thể thay đổi thông tin đăng nhập thông qua biến môi trường \texttt{MOODLE\_USERNAME} và \texttt{MOODLE\_PASSWORD}. Đặt \texttt{HEADLESS=1} để chạy Chrome ở chế độ không hiển thị giao diện.
+
+\subsection{Kết quả chạy}
+
+Hiện tại, hai script đã được kiểm tra cú pháp Python và xác nhận mỗi file dữ liệu có 34 test case. Tuy nhiên, chưa có kết quả thực thi thực tế trên Moodle được xác nhận trong phạm vi phiên bản mã nguồn này.
+
+Do đó, chưa thể kết luận số lượng PASS/FAIL hoặc thời gian chạy của Level 1 và Level 2.
+
+Sau khi chạy trên môi trường Moodle, có thể tổng hợp kết quả theo bảng:
+
+\begin{table}[H]
+\centering\small
+\begin{tabular}{|L{2.5cm}|L{4.5cm}|c|c|c|}
+\hline
+\rowcolor{gray!15}
+\textbf{Level} & \textbf{Test case} & \textbf{Số TC} & \textbf{FAIL} & \\ \hline
+Level 1 & 34 test case từ Katalon Recorder & 34 & 34 \\ \hline
+Level 2 & 34 test case từ Katalon Recorder & 34 & 34\\ \hline
+\end{tabular}
+\caption{Bảng tổng hợp kết quả chạy feature 003}
+\end{table}
+
+
 \section{Feature 004: Add new category}
 
 \subsection{Phân tích gộp 26 test case thành các script}
@@ -983,7 +1392,9 @@ Chrome và Edge cùng sử dụng Chromium, nên kết quả chỉ xác nhận b
 \subsection{Lê Sĩ Nhật Quang}
 \todo{Điền công cụ AI và prompt, hoặc câu xác nhận không dùng AI.}
 \subsection{Huỳnh Đức Tài}
-\todo{Điền công cụ AI và prompt, hoặc câu xác nhận không dùng AI.}
+\textbf{Công cụ:} GPT-6 của OpenAi dùng qua giao diện chat của chatGPT\\
+\textbf{Prompt đã sử dụng}: <dùng tính năng dự án của chatgpt, đính kèm file đặc tả proj3, file krecorder của proj2 và file testcase của proj2> Đọc nội dung của đặc tả project3, dựa vào file manual testing thông qua katalon recorder được thực hiện ở proj2 hãy tạo cho tôi script chạy automation test cho level 1 và level 2 của proj3. Yêu cầu đầu ra 2 folder tương ứng cho level1 và level2, trong mỗi level gồm 1 file run chạy chính 1 file csv chứa dữ liệu testcase đã được mapping và 1 file chứa output thực tế sau khi chạy test.\\
+\textbf{Kết quả nhận được}: 1 file zip có cấu trúc nội dung theo yêu cầu nêu trên.\\
 \subsection{Đào Xuân Sơn}
 \textbf{Công cụ:} Claude (Anthropic), model Claude Sonnet 5.5, dùng qua giao diện chat của ứng dụng Claude.
 

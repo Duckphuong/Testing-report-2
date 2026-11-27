@@ -1,0 +1,918 @@
+\bigskip\noindent\textbf{**TC-003-001 -- Tạo event với dữ liệu hợp lệ tối thiểu**}\\
+
+\noindent\textit{*Precondition:*} Moodle demo (Moodle 5.1, Docker) đang chạy tại http://127.0.0.1:9501; giao diện Moodle và trình duyệt là English; đã đăng nhập bằng admin (admin/admin). Có quyền tạo event.
+
+\smallskip
+
+{\footnotesize
+
+\begin{*longtable*}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+
+\hline
+\rowcolor{gray!15}\textbf{**\\#**} & \textbf{**Bước**} & \textbf{**Mô tả**} & \textbf{**Kết quả mong đợi**} \\\ \hline
+\endhead
+
+1 & Step 1: Mở form Add a new event & Mở Calendar và chọn New event / Add a new event. & Form Add a new event hiển thị các trường Event title, Date, Type of event và tùy chọn Show more. \\\ \hline
+2 & Step 2: Nhập Event title & Nhập \texttt{TC003 Event Minimal 001} vào Event title. Thời gian tại thời điểm tạo event & Ô Event title hiển thị đúng nội dung đã nhập. \\\ \hline
+3 & Step 3: Lưu event & Nhấn Save / Save changes. & Event được tạo thành công; event xuất hiện trong Calendar tại ngày đã chọn; không hiển thị lỗi validation. \\\ \hline
+\end{*longtable*}
+
+}
+
+\bigskip\noindent\textbf{**TC-003-002 -- Kiểm tra Event title để trống**}\\
+
+\noindent\textit{*Precondition:*} Moodle demo (Moodle 5.1, Docker) đang chạy tại http://127.0.0.1:9501; giao diện Moodle và trình duyệt là English, đã đăng nhập bằng admin; đang mở form Add a new event.
+
+\smallskip
+
+{\footnotesize
+
+\begin{*longtable*}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+
+\hline
+\rowcolor{gray!15}\textbf{**\\#**} & \textbf{**Bước**} & \textbf{**Mô tả**} & \textbf{**Kết quả mong đợi**} \\\ \hline
+\endhead
+
+1 & Step 1: Mở form Add a new event & Mở Calendar và chọn New event / Add a new event. & Form Add a new event hiển thị các trường Event title, Date, Type of event và tùy chọn Show more. \\\ \hline
+2 & Step 2: Để trống Event title & Không nhập dữ liệu vào Event title; giữ các trường khác ở giá trị hợp lệ mặc định. & Event title vẫn để trống. \\\ \hline
+3 & Step 3: Lưu event & Nhấn Save / Save changes. & Event không được tạo; hệ thống hiển thị thông báo yêu cầu nhập Event title và giữ form để người dùng sửa. \\\ \hline
+\end{*longtable*}
+
+}
+
+\bigskip\noindent\textbf{**TC-003-003 -- Tạo event với tiêu đề chữ thường**}\\
+
+\noindent\textit{*Precondition:*} Moodle demo (Moodle 5.1, Docker) đang chạy tại http://127.0.0.1:9501; giao diện Moodle và trình duyệt là English, đã đăng nhập bằng admin; đang mở form Add a new event.
+
+\smallskip
+
+{\footnotesize
+
+\begin{*longtable*}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+
+\hline
+\rowcolor{gray!15}\textbf{**\\#**} & \textbf{**Bước**} & \textbf{**Mô tả**} & \textbf{**Kết quả mong đợi**} \\\ \hline
+\endhead
+
+1 & Step 1: Mở form Add a new event & Mở Calendar và chọn New event / Add a new event. & Form Add a new event hiển thị các trường Event title, Date, Type of event và tùy chọn Show more. \\\ \hline
+2 & Step 2: Nhập tiêu đề chữ thường & Nhập \texttt{meeting team alpha} vào Event title. & Ô Event title chấp nhận và hiển thị nguyên văn chữ thường. \\\ \hline
+3 & Step 3: Lưu event & Chọn ngày hợp lệ và nhấn Save. & Event được tạo; tiêu đề hiển thị đúng chữ thường đã nhập. \\\ \hline
+\end{*longtable*}
+
+}
+
+\bigskip\noindent\textbf{**TC-003-004 -- Tạo event với tiêu đề chữ hoa**}\\
+
+\noindent\textit{*Precondition:*} Moodle demo (Moodle 5.1, Docker) đang chạy tại http://127.0.0.1:9501; giao diện Moodle và trình duyệt là English, đã đăng nhập bằng admin; đang mở form Add a new event.
+
+\smallskip
+
+{\footnotesize
+
+\begin{*longtable*}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+
+\hline
+\rowcolor{gray!15}\textbf{**\\#**} & \textbf{**Bước**} & \textbf{**Mô tả**} & \textbf{**Kết quả mong đợi**} \\\ \hline
+\endhead
+
+1 & Step 1: Mở form Add a new event & Mở Calendar và chọn New event / Add a new event. & Form Add a new event hiển thị các trường Event title, Date, Type of event và tùy chọn Show more. \\\ \hline
+2 & Step 2: Nhập tiêu đề chữ hoa & Nhập \texttt{MEETING TEAM ALPHA} vào Event title. & Ô Event title chấp nhận và hiển thị nguyên văn chữ hoa. \\\ \hline
+3 & Step 3: Lưu event & Chọn ngày hợp lệ và nhấn Save. & Event được tạo; tiêu đề hiển thị đúng chữ hoa đã nhập. \\\ \hline
+\end{*longtable*}
+
+}
+
+\bigskip\noindent\textbf{**TC-003-005 -- Tạo event với tiêu đề có số và ký tự đặc biệt**}\\
+
+\noindent\textit{*Precondition:*} Moodle demo (Moodle 5.1, Docker) đang chạy tại http://127.0.0.1:9501; giao diện Moodle và trình duyệt là English, đã đăng nhập bằng admin; đang mở form Add a new event.
+
+\smallskip
+
+{\footnotesize
+
+\begin{*longtable*}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+
+\hline
+\rowcolor{gray!15}\textbf{**\\#**} & \textbf{**Bước**} & \textbf{**Mô tả**} & \textbf{**Kết quả mong đợi**} \\\ \hline
+\endhead
+
+1 & Step 1: Mở form Add a new event & Mở Calendar và chọn New event / Add a new event. & Form Add a new event hiển thị các trường Event title, Date, Type of event và tùy chọn Show more. \\\ \hline
+2 & Step 2: Nhập tiêu đề có ký tự đặc biệt & Nhập \texttt{Sprint \#3 - Review (A\&B) 2026!} vào Event title. & Ô Event title chấp nhận và hiển thị đầy đủ số, dấu cách và ký tự đặc biệt. \\\ \hline
+3 & Step 3: Lưu event & Chọn ngày hợp lệ và nhấn Save. & Event được tạo; tiêu đề được lưu và hiển thị đúng, không bị mất hoặc biến đổi ký tự. \\\ \hline
+\end{*longtable*}
+
+}
+
+\bigskip\noindent\textbf{**TC-003-006 -- Tạo hai event có cùng Event title**}\\
+
+\noindent\textit{*Precondition:*} Moodle demo (Moodle 5.1, Docker) đang chạy tại http://127.0.0.1:9501; giao diện Moodle và trình duyệt là English; đã đăng nhập bằng admin (admin/admin). Có quyền tạo event. Chọn được hai ngày hoặc thời điểm phù hợp.
+
+\smallskip
+
+{\footnotesize
+
+\begin{*longtable*}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+
+\hline
+\rowcolor{gray!15}\textbf{**\\#**} & \textbf{**Bước**} & \textbf{**Mô tả**} & \textbf{**Kết quả mong đợi**} \\\ \hline
+\endhead
+
+1 & Step 1: Mở form Add a new event & Mở Calendar và chọn New event / Add a new event. & Form Add a new event hiển thị các trường Event title, Date, Type of event và tùy chọn Show more. \\\ \hline
+2 & Step 2: Tạo event thứ nhất & Tạo và lưu event có tiêu đề \texttt{Weekly Meeting Duplicate} tại ngày thứ nhất. & Event thứ nhất được tạo thành công. \\\ \hline
+3 & Step 3: Lưu event & Chọn ngày hợp lệ và nhấn Save. & Event được tạo \\\ \hline
+4 & Step 4: Tạo event thứ hai trùng tên & Tạo event mới với cùng tiêu đề \texttt{Weekly Meeting Duplicate} chọn cùng ngày; nhấn Save. & Event thứ hai cũng được tạo thành công; hệ thống không từ chối chỉ vì trùng Event title; cả hai event tồn tại độc lập. \\\ \hline
+\end{*longtable*}
+
+}
+
+\bigskip\noindent\textbf{**TC-003-007 -- Kiểm tra ngày nhỏ nhất trong Date**}\\
+
+\noindent\textit{*Precondition:*} Moodle demo (Moodle 5.1, Docker) đang chạy tại http://127.0.0.1:9501; giao diện Moodle và trình duyệt là English, đã đăng nhập bằng admin; đang mở form Add a new event.
+
+\smallskip
+
+{\footnotesize
+
+\begin{*longtable*}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+
+\hline
+\rowcolor{gray!15}\textbf{**\\#**} & \textbf{**Bước**} & \textbf{**Mô tả**} & \textbf{**Kết quả mong đợi**} \\\ \hline
+\endhead
+
+1 & Step 1: Mở form Add a new event & Mở Calendar và chọn New event / Add a new event. & Form Add a new event hiển thị các trường Event title, Date, Type of event và tùy chọn Show more. \\\ \hline
+2 & Step 2: Chọn ngày 1 & Trong Date, chọn ngày 1 và chọn tháng/năm/giờ/phút hợp lệ. & Danh sách cho phép chọn ngày 1; giá trị Date hiển thị ngày 1 đã chọn. \\\ \hline
+3 & Step 3: Lưu event & Điền event title hợp lệ và nhấn Save. & Event được tạo, hiển thị ngày 1 tháng mm năm yyyy hh giờ pp phút \\\ \hline
+\end{*longtable*}
+
+}
+
+\bigskip\noindent\textbf{**TC-003-008 -- Kiểm tra ngày lớn nhất trong Date**}\\
+
+\noindent\textit{*Precondition:*} Moodle demo (Moodle 5.1, Docker) đang chạy tại http://127.0.0.1:9501; giao diện Moodle và trình duyệt là English, đã đăng nhập bằng admin; đang mở form Add a new event.
+
+\smallskip
+
+{\footnotesize
+
+\begin{*longtable*}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+
+\hline
+\rowcolor{gray!15}\textbf{**\\#**} & \textbf{**Bước**} & \textbf{**Mô tả**} & \textbf{**Kết quả mong đợi**} \\\ \hline
+\endhead
+
+1 & Step 1: Mở form Add a new event & Mở Calendar và chọn New event / Add a new event. & Form Add a new event hiển thị các trường Event title, Date, Type of event và tùy chọn Show more. \\\ \hline
+2 & Step 2: Chọn tháng có 31 ngày & Chọn tháng 10, sau đó chọn ngày 31. & Date hiển thị ngày 31 tháng 10. \\\ \hline
+3 & Step 3: Lưu event & Điền event title hợp lệ và nhấn Save. & Event được tạo; hiển thị ngày 31 tháng 10. \\\ \hline
+\end{*longtable*}
+
+}
+
+\bigskip\noindent\textbf{**TC-003-009 -- Kiểm tra tự điều chỉnh ngày khi chọn tháng 30 ngày**}\\
+
+\noindent\textit{*Precondition:*} Moodle demo (Moodle 5.1, Docker) đang chạy tại http://127.0.0.1:9501; giao diện Moodle và trình duyệt là English, đã đăng nhập bằng admin; đang mở form Add a new event.
+
+\smallskip
+
+{\footnotesize
+
+\begin{*longtable*}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+
+\hline
+\rowcolor{gray!15}\textbf{**\\#**} & \textbf{**Bước**} & \textbf{**Mô tả**} & \textbf{**Kết quả mong đợi**} \\\ \hline
+\endhead
+
+1 & Step 1: Mở form Add a new event & Mở Calendar và chọn New event / Add a new event. & Form Add a new event hiển thị các trường Event title, Date, Type of event và tùy chọn Show more. \\\ \hline
+2 & Step 2: Đặt ngày 31 & Chọn ngày 31 và tháng 11 trong Date. & Date hiển thị 1 tháng 12. \\\ \hline
+3 & Step 3: Lưu event & Điền event title hợp lệ và nhấn Save. & Event được tạo; hiển thị ngày 1 tháng 12. \\\ \hline
+\end{*longtable*}
+
+}
+
+\bigskip\noindent\textbf{**TC-003-010 -- Kiểm tra Date với tháng 2 năm không nhuận**}\\
+
+\noindent\textit{*Precondition:*} Moodle demo (Moodle 5.1, Docker) đang chạy tại http://127.0.0.1:9501; giao diện Moodle và trình duyệt là English, đã đăng nhập bằng admin; đang mở form Add a new event.
+
+\smallskip
+
+{\footnotesize
+
+\begin{*longtable*}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+
+\hline
+\rowcolor{gray!15}\textbf{**\\#**} & \textbf{**Bước**} & \textbf{**Mô tả**} & \textbf{**Kết quả mong đợi**} \\\ \hline
+\endhead
+
+1 & Step 1: Mở form Add a new event & Mở Calendar và chọn New event / Add a new event. & Form Add a new event hiển thị các trường Event title, Date, Type of event và tùy chọn Show more. \\\ \hline
+2 & Step 2: Chọn tháng 2 năm không nhuận & Chọn February 2025, sau đó chọn ngày 31. & Date tự điều chỉnh thành 3 tháng 3 2025. \\\ \hline
+3 & Step 3: Lưu event & Điền event title hợp lệ và nhấn Save. & Event được tạo; hiển thị ngày 3 tháng 3. \\\ \hline
+\end{*longtable*}
+
+}
+
+\bigskip\noindent\textbf{**TC-003-011 -- Kiểm tra Date với tháng 2 năm nhuận**}\\
+
+\noindent\textit{*Precondition:*} Moodle demo (Moodle 5.1, Docker) đang chạy tại http://127.0.0.1:9501; giao diện Moodle và trình duyệt là English, đã đăng nhập bằng admin; đang mở form Add a new event.
+
+\smallskip
+
+{\footnotesize
+
+\begin{*longtable*}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+
+\hline
+\rowcolor{gray!15}\textbf{**\\#**} & \textbf{**Bước**} & \textbf{**Mô tả**} & \textbf{**Kết quả mong đợi**} \\\ \hline
+\endhead
+
+1 & Step 1: Mở form Add a new event & Mở Calendar và chọn New event / Add a new event. & Form Add a new event hiển thị các trường Event title, Date, Type of event và tùy chọn Show more. \\\ \hline
+2 & Step 2: Chọn tháng 2 năm nhuận & Chọn February 2024, sau đó chọn ngày 31 nếu danh sách cho phép. & Date tự điều chỉnh thành 2 tháng 3 2024. \\\ \hline
+3 & Step 3: Lưu event & Điền event title hợp lệ và nhấn Save. & Event được tạo; hiển thị ngày 2 tháng 3. \\\ \hline
+\end{*longtable*}
+
+}
+
+\bigskip\noindent\textbf{**TC-003-012 -- Kiểm tra năm nhỏ nhất trong Date**}\\
+
+\noindent\textit{*Precondition:*} Moodle demo (Moodle 5.1, Docker) đang chạy tại http://127.0.0.1:9501; giao diện Moodle và trình duyệt là English, đã đăng nhập bằng admin; đang mở form Add a new event.
+
+\smallskip
+
+{\footnotesize
+
+\begin{*longtable*}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+
+\hline
+\rowcolor{gray!15}\textbf{**\\#**} & \textbf{**Bước**} & \textbf{**Mô tả**} & \textbf{**Kết quả mong đợi**} \\\ \hline
+\endhead
+
+1 & Step 1: Mở form Add a new event & Mở Calendar và chọn New event / Add a new event. & Form Add a new event hiển thị các trường Event title, Date, Type of event và tùy chọn Show more. \\\ \hline
+2 & Step 2: Chọn năm 1900 & Trong Date, chọn năm 1900 và các thành phần ngày giờ hợp lệ. & Danh sách cho phép chọn năm 1900; Date hiển thị đúng năm 1900. \\\ \hline
+3 & Step 3: Lưu event & Điền event title hợp lệ và nhấn Save. & Event được tạo; hiển thị ngày dd tháng mm năm 1900. \\\ \hline
+\end{*longtable*}
+
+}
+
+\bigskip\noindent\textbf{**TC-003-013 -- Kiểm tra năm lớn nhất trong Date**}\\
+
+\noindent\textit{*Precondition:*} Moodle demo (Moodle 5.1, Docker) đang chạy tại http://127.0.0.1:9501; giao diện Moodle và trình duyệt là English, đã đăng nhập bằng admin; đang mở form Add a new event.
+
+\smallskip
+
+{\footnotesize
+
+\begin{*longtable*}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+
+\hline
+\rowcolor{gray!15}\textbf{**\\#**} & \textbf{**Bước**} & \textbf{**Mô tả**} & \textbf{**Kết quả mong đợi**} \\\ \hline
+\endhead
+
+1 & Step 1: Mở form Add a new event & Mở Calendar và chọn New event / Add a new event. & Form Add a new event hiển thị các trường Event title, Date, Type of event và tùy chọn Show more. \\\ \hline
+2 & Step 2: Chọn năm 2050 & Trong Date, chọn năm 2050 và các thành phần ngày giờ hợp lệ. & Danh sách cho phép chọn năm 2050; Date hiển thị đúng năm 2050. \\\ \hline
+3 & Step 3: Lưu event & Điền event title hợp lệ và nhấn Save. & Event được tạo; hiển thị ngày dd tháng mm năm 2050. \\\ \hline
+\end{*longtable*}
+
+}
+
+\bigskip\noindent\textbf{**TC-003-014 -- Kiểm tra giờ nhỏ nhất và lớn nhất trong Date**}\\
+
+\noindent\textit{*Precondition:*} Moodle demo (Moodle 5.1, Docker) đang chạy tại http://127.0.0.1:9501; giao diện Moodle và trình duyệt là English, đã đăng nhập bằng admin; đang mở form Add a new event.
+
+\smallskip
+
+{\footnotesize
+
+\begin{*longtable*}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+
+\hline
+\rowcolor{gray!15}\textbf{**\\#**} & \textbf{**Bước**} & \textbf{**Mô tả**} & \textbf{**Kết quả mong đợi**} \\\ \hline
+\endhead
+
+1 & Step 1: Mở form Add a new event & Mở Calendar và chọn New event / Add a new event. & Form Add a new event hiển thị các trường Event title, Date, Type of event và tùy chọn Show more. \\\ \hline
+2 & Step 2: Chọn giờ 00 & Chọn giờ 00 trong Date. & Date hiển thị giờ 00. \\\ \hline
+3 & Step 3: Lưu event & Điền event title hợp lệ và nhấn Save. & Event được tạo; hiển thị 00 giờ pp phút. \\\ \hline
+\end{*longtable*}
+
+}
+
+\bigskip\noindent\textbf{**TC-003-015 -- Kiểm tra giờ nhỏ nhất và lớn nhất trong Date**}\\
+
+\noindent\textit{*Precondition:*} Moodle demo (Moodle 5.1, Docker) đang chạy tại http://127.0.0.1:9501; giao diện Moodle và trình duyệt là English, đã đăng nhập bằng admin; đang mở form Add a new event.
+
+\smallskip
+
+{\footnotesize
+
+\begin{*longtable*}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+
+\hline
+\rowcolor{gray!15}\textbf{**\\#**} & \textbf{**Bước**} & \textbf{**Mô tả**} & \textbf{**Kết quả mong đợi**} \\\ \hline
+\endhead
+
+1 & Step 1: Mở form Add a new event & Mở Calendar và chọn New event / Add a new event. & Form Add a new event hiển thị các trường Event title, Date, Type of event và tùy chọn Show more. \\\ \hline
+2 & Step 2: Chọn giờ 23 & Đổi giờ thành 23. & Date hiển thị giờ 23. \\\ \hline
+3 & Step 3: Lưu event & Điền event title hợp lệ và nhấn Save. & Event được tạo; hiển thị 23 giờ pp phút. \\\ \hline
+\end{*longtable*}
+
+}
+
+\bigskip\noindent\textbf{**TC-003-016 -- Kiểm tra phút ở biên danh sách**}\\
+
+\noindent\textit{*Precondition:*} Moodle demo (Moodle 5.1, Docker) đang chạy tại http://127.0.0.1:9501; giao diện Moodle và trình duyệt là English, đã đăng nhập bằng admin; đang mở form Add a new event.
+
+\smallskip
+
+{\footnotesize
+
+\begin{*longtable*}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+
+\hline
+\rowcolor{gray!15}\textbf{**\\#**} & \textbf{**Bước**} & \textbf{**Mô tả**} & \textbf{**Kết quả mong đợi**} \\\ \hline
+\endhead
+
+1 & Step 1: Mở form Add a new event & Mở Calendar và chọn New event / Add a new event. & Form Add a new event hiển thị các trường Event title, Date, Type of event và tùy chọn Show more. \\\ \hline
+2 & Step 2: Chọn phút 00 & Chọn phút 00 trong Date. & Date được tạo; hiển thị hh giờ 00 phút. \\\ \hline
+3 & Step 3: Lưu event & Điền event title hợp lệ và nhấn Save. & Event được tạo; hiển thị hh giờ 00 phút. \\\ \hline
+\end{*longtable*}
+
+}
+
+\bigskip\noindent\textbf{**TC-003-017 -- Kiểm tra phút ở biên danh sách**}\\
+
+\noindent\textit{*Precondition:*} Moodle demo (Moodle 5.1, Docker) đang chạy tại http://127.0.0.1:9501; giao diện Moodle và trình duyệt là English, đã đăng nhập bằng admin; đang mở form Add a new event.
+
+\smallskip
+
+{\footnotesize
+
+\begin{*longtable*}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+
+\hline
+\rowcolor{gray!15}\textbf{**\\#**} & \textbf{**Bước**} & \textbf{**Mô tả**} & \textbf{**Kết quả mong đợi**} \\\ \hline
+\endhead
+
+1 & Step 1: Mở form Add a new event & Mở Calendar và chọn New event / Add a new event. & Form Add a new event hiển thị các trường Event title, Date, Type of event và tùy chọn Show more. \\\ \hline
+2 & Step 2: Chọn phút 59 & Chọn phút 59. & Date được tạo; hiển thị hh giờ 59 phút. \\\ \hline
+3 & Step 3: Lưu event & Điền event title hợp lệ và nhấn Save. & Event được tạo; hiển thị hh giờ 59 phút. \\\ \hline
+\end{*longtable*}
+
+}
+
+\bigskip\noindent\textbf{**TC-003-018 -- Chọn Type of event là User**}\\
+
+\noindent\textit{*Precondition:*} Moodle demo (Moodle 5.1, Docker) đang chạy tại http://127.0.0.1:9501; giao diện Moodle và trình duyệt là English, đã đăng nhập bằng admin; đang mở form Add a new event.
+
+\smallskip
+
+{\footnotesize
+
+\begin{*longtable*}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+
+\hline
+\rowcolor{gray!15}\textbf{**\\#**} & \textbf{**Bước**} & \textbf{**Mô tả**} & \textbf{**Kết quả mong đợi**} \\\ \hline
+\endhead
+
+1 & Step 1: Mở form Add a new event & Mở Calendar và chọn New event / Add a new event. & Form Add a new event hiển thị các trường Event title, Date, Type of event và tùy chọn Show more. \\\ \hline
+2 & Step 2: Chọn User & Tại Type of event, chọn User. & Type of event hiển thị User. \\\ \hline
+3 & Step 3: Lưu event & Nhập Event title hợp lệ, chọn Date hợp lệ và nhấn Save. & Event được tạo với phạm vi/loại User; không có lỗi validation. \\\ \hline
+\end{*longtable*}
+
+}
+
+\bigskip\noindent\textbf{**TC-003-019 -- Chọn Type of event là Site**}\\
+
+\noindent\textit{*Precondition:*} Moodle demo (Moodle 5.1, Docker) đang chạy tại http://127.0.0.1:9501; giao diện Moodle và trình duyệt là English, đã đăng nhập bằng admin; đang mở form Add a new event.
+
+\smallskip
+
+{\footnotesize
+
+\begin{*longtable*}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+
+\hline
+\rowcolor{gray!15}\textbf{**\\#**} & \textbf{**Bước**} & \textbf{**Mô tả**} & \textbf{**Kết quả mong đợi**} \\\ \hline
+\endhead
+
+1 & Step 1: Mở form Add a new event & Mở Calendar và chọn New event / Add a new event. & Form Add a new event hiển thị các trường Event title, Date, Type of event và tùy chọn Show more. \\\ \hline
+2 & Step 2: Chọn Site & Tại Type of event, chọn Site. & Type of event hiển thị Site. \\\ \hline
+3 & Step 3: Lưu event & Nhập Event title hợp lệ, chọn Date hợp lệ và nhấn Save. & Event được tạo với phạm vi/loại Site; không có lỗi validation. \\\ \hline
+\end{*longtable*}
+
+}
+
+\bigskip\noindent\textbf{**TC-003-020 -- Chọn Category 1**}\\
+
+\noindent\textit{*Precondition:*} Moodle demo (Moodle 5.1, Docker) đang chạy tại http://127.0.0.1:9501; giao diện Moodle và trình duyệt là English; đã đăng nhập bằng admin (admin/admin). Đã có category "Category 1". Đang mở form Add a new event.
+
+\smallskip
+
+{\footnotesize
+
+\begin{*longtable*}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+
+\hline
+\rowcolor{gray!15}\textbf{**\\#**} & \textbf{**Bước**} & \textbf{**Mô tả**} & \textbf{**Kết quả mong đợi**} \\\ \hline
+\endhead
+
+1 & Step 1: Mở form Add a new event & Mở Calendar và chọn New event / Add a new event. & Form Add a new event hiển thị các trường Event title, Date, Type of event và tùy chọn Show more. Ghi chú: KẾT THÚC ĐƯỢC FORM NHƯNG KHÔNG TẠO RA EVENT TRÊN LỊCH \\\ \hline
+2 & Step 2: Chọn Category & Chọn Type of event = Category, sau đó chọn Category 1. & Category 1 được hiển thị là category đang chọn. \\\ \hline
+3 & Step 3: Lưu event & Nhập Event title hợp lệ, chọn Date hợp lệ và nhấn Save. & Event được tạo theo trạng thái Category 1. \\\ \hline
+\end{*longtable*}
+
+}
+
+\bigskip\noindent\textbf{**TC-003-021 -- Chọn và bỏ chọn Category 1**}\\
+
+\noindent\textit{*Precondition:*} Moodle demo (Moodle 5.1, Docker) đang chạy tại http://127.0.0.1:9501; giao diện Moodle và trình duyệt là English; đã đăng nhập bằng admin (admin/admin). Đã có category "Category 1". Đang mở form Add a new event.
+
+\smallskip
+
+{\footnotesize
+
+\begin{*longtable*}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+
+\hline
+\rowcolor{gray!15}\textbf{**\\#**} & \textbf{**Bước**} & \textbf{**Mô tả**} & \textbf{**Kết quả mong đợi**} \\\ \hline
+\endhead
+
+1 & Step 1: Mở form Add a new event & Mở Calendar và chọn New event / Add a new event. & Form Add a new event hiển thị các trường Event title, Date, Type of event và tùy chọn Show more. \\\ \hline
+2 & Step 2: Bỏ chọn Category & Nhấn nút/biểu tượng hủy chọn Category 1. & Trạng thái category trở về không chọn category; Category 1 không còn được gán cho event. \\\ \hline
+3 & Step 3: Lưu event không có category & Nhập Event title hợp lệ và nhấn Save. & Event được tạo theo trạng thái Category không chọn; không tự động gán lại Category 1. \\\ \hline
+\end{*longtable*}
+
+}
+
+\bigskip\noindent\textbf{**TC-003-022 -- Mở phần Show more và nhập Location**}\\
+
+\noindent\textit{*Precondition:*} Moodle demo (Moodle 5.1, Docker) đang chạy tại http://127.0.0.1:9501; giao diện Moodle và trình duyệt là English, đã đăng nhập bằng admin; đang mở form Add a new event.
+
+\smallskip
+
+{\footnotesize
+
+\begin{*longtable*}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+
+\hline
+\rowcolor{gray!15}\textbf{**\\#**} & \textbf{**Bước**} & \textbf{**Mô tả**} & \textbf{**Kết quả mong đợi**} \\\ \hline
+\endhead
+
+1 & Step 1: Mở form Add a new event & Mở Calendar và chọn New event / Add a new event. & Form Add a new event hiển thị các trường Event title, Date, Type of event và tùy chọn Show more. \\\ \hline
+2 & Step 2: Mở Show more & Nhấn Show more. & Các trường mở rộng, bao gồm Location và Duration, được hiển thị. \\\ \hline
+3 & Step 3: Nhập Location & Nhập \texttt{Room A-12, Building \#3 (Floor 5)} vào Location. & Location chấp nhận và hiển thị đầy đủ chữ thường/hoa, số, dấu cách và ký tự đặc biệt. \\\ \hline
+4 & Step 4: Lưu event có Location & Nhập Event title hợp lệ, chọn Date hợp lệ và nhấn Save. & Event được tạo; Location được lưu và hiển thị đúng khi xem chi tiết event. \\\ \hline
+\end{*longtable*}
+
+}
+
+\bigskip\noindent\textbf{**TC-003-023 -- Tạo event với Duration Without duration**}\\
+
+\noindent\textit{*Precondition:*} Moodle demo (Moodle 5.1, Docker) đang chạy tại http://127.0.0.1:9501; giao diện Moodle và trình duyệt là English, đã đăng nhập bằng admin; đang mở form Add a new event. Đã mở Show more.
+
+\smallskip
+
+{\footnotesize
+
+\begin{*longtable*}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+
+\hline
+\rowcolor{gray!15}\textbf{**\\#**} & \textbf{**Bước**} & \textbf{**Mô tả**} & \textbf{**Kết quả mong đợi**} \\\ \hline
+\endhead
+
+1 & Step 1: Mở form Add a new event & Mở Calendar và chọn New event / Add a new event. & Form Add a new event hiển thị các trường Event title, Date, Type of event và tùy chọn Show more. \\\ \hline
+2 & Step 2: Mở Show more & Nhấn Show more. & Các trường mở rộng, bao gồm Location và Duration, được hiển thị. \\\ \hline
+3 & Step 3: Chọn Without duration & Trong Duration, chọn Without duration. & Tùy chọn Without duration được chọn; các trường Until/Duration in minute không còn là lựa chọn đang áp dụng. \\\ \hline
+4 & Step 4: Lưu event & Nhập Event title và Date hợp lệ, giữ Without duration rồi nhấn Save. & Event được tạo; không có thời lượng/kết thúc được gán ngoài ý muốn. \\\ \hline
+\end{*longtable*}
+
+}
+
+\bigskip\noindent\textbf{**TC-003-024 -- Tạo event với Duration Until hợp lệ**}\\
+
+\noindent\textit{*Precondition:*} Moodle demo (Moodle 5.1, Docker) đang chạy tại http://127.0.0.1:9501; giao diện Moodle và trình duyệt là English, đã đăng nhập bằng admin; đang mở form Add a new event. Đã mở Show more.
+
+\smallskip
+
+{\footnotesize
+
+\begin{*longtable*}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+
+\hline
+\rowcolor{gray!15}\textbf{**\\#**} & \textbf{**Bước**} & \textbf{**Mô tả**} & \textbf{**Kết quả mong đợi**} \\\ \hline
+\endhead
+
+1 & Step 1: Mở form Add a new event & Mở Calendar và chọn New event / Add a new event. & Form Add a new event hiển thị các trường Event title, Date, Type of event và tùy chọn Show more. \\\ \hline
+2 & Step 2: Mở Show more & Nhấn Show more. & Các trường mở rộng, bao gồm Location và Duration, được hiển thị. \\\ \hline
+3 & Step 3: Chọn Until & Trong Duration, chọn Until. & Các bộ chọn ngày/tháng/năm/giờ/phút của Until được hiển thị. \\\ \hline
+4 & Step 4: Nhập thời điểm Until & Đặt Date bắt đầu là 15 November 2026 09:00 và Until là 15 November 2026 10:00. & Các trường hiển thị đúng thời điểm bắt đầu và kết thúc; Until sau Date bắt đầu. \\\ \hline
+5 & Step 5: Lưu event & Nhập Event title và Date hợp lệ, Nhấn Save. & Event được tạo với thời điểm kết thúc đúng là 15 November 2026 10:00. \\\ \hline
+\end{*longtable*}
+
+}
+
+\bigskip\noindent\textbf{**TC-003-025 -- Kiểm tra Until bằng Date bắt đầu**}\\
+
+\noindent\textit{*Precondition:*} Moodle demo (Moodle 5.1, Docker) đang chạy tại http://127.0.0.1:9501; giao diện Moodle và trình duyệt là English, đã đăng nhập bằng admin; đang mở form Add a new event. Đã mở Show more.
+
+\smallskip
+
+{\footnotesize
+
+\begin{*longtable*}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+
+\hline
+\rowcolor{gray!15}\textbf{**\\#**} & \textbf{**Bước**} & \textbf{**Mô tả**} & \textbf{**Kết quả mong đợi**} \\\ \hline
+\endhead
+
+1 & Step 1: Mở form Add a new event & Mở Calendar và chọn New event / Add a new event. & Form Add a new event hiển thị các trường Event title, Date, Type of event và tùy chọn Show more. \\\ \hline
+2 & Step 2: Mở Show more & Nhấn Show more. & Các trường mở rộng, bao gồm Location và Duration, được hiển thị. \\\ \hline
+3 & Step 3: Thiết lập Date bằng Until & Đặt Date và Until cùng là 15 November 2026 09:00. & Hai thời điểm hiển thị giống nhau. \\\ \hline
+4 & Step 4: Lưu event & Nhập Event title và Date hợp lệ, Nhấn Save. & Event được tạo với thời điểm kết thúc đúng là 15 November 2026 9:00. \\\ \hline
+\end{*longtable*}
+
+}
+
+\bigskip\noindent\textbf{**TC-003-026 -- Kiểm tra Until ở quá khứ so với thời điểm hiện tại**}\\
+
+\noindent\textit{*Precondition:*} Moodle demo (Moodle 5.1, Docker) đang chạy tại http://127.0.0.1:9501; giao diện Moodle và trình duyệt là English, đã đăng nhập bằng admin; đang mở form Add a new event. Đã mở Show more.
+
+\smallskip
+
+{\footnotesize
+
+\begin{*longtable*}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+
+\hline
+\rowcolor{gray!15}\textbf{**\\#**} & \textbf{**Bước**} & \textbf{**Mô tả**} & \textbf{**Kết quả mong đợi**} \\\ \hline
+\endhead
+
+1 & Step 1: Mở form Add a new event & Mở Calendar và chọn New event / Add a new event. & Form Add a new event hiển thị các trường Event title, Date, Type of event và tùy chọn Show more. \\\ \hline
+2 & Step 2: Mở Show more & Nhấn Show more. & Các trường mở rộng, bao gồm Location và Duration, được hiển thị. \\\ \hline
+3 & Step 3: Thiết lập Date bắt đầu và Until quá khứ & Đặt Date bắt đầu là ngày hiện tại 09:00; đặt Until lùi về 1–2 ngày trước đó. & Form hiển thị các giá trị đã chọn; Until sớm hơn Date bắt đầu. \\\ \hline
+4 & Step 4: Lưu event & Nhập Event title và Date hợp lệ, Nhấn Save. & Hệ thống tạo 1 event đã kết thúc trong quá khứ. \\\ \hline
+\end{*longtable*}
+
+}
+
+\bigskip\noindent\textbf{**TC-003-027 -- Tạo event với Duration in minute hợp lệ**}\\
+
+\noindent\textit{*Precondition:*} Moodle demo (Moodle 5.1, Docker) đang chạy tại http://127.0.0.1:9501; giao diện Moodle và trình duyệt là English, đã đăng nhập bằng admin; đang mở form Add a new event. Đã mở Show more.
+
+\smallskip
+
+{\footnotesize
+
+\begin{*longtable*}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+
+\hline
+\rowcolor{gray!15}\textbf{**\\#**} & \textbf{**Bước**} & \textbf{**Mô tả**} & \textbf{**Kết quả mong đợi**} \\\ \hline
+\endhead
+
+1 & Step 1: Mở form Add a new event & Mở Calendar và chọn New event / Add a new event. & Form Add a new event hiển thị các trường Event title, Date, Type of event và tùy chọn Show more. \\\ \hline
+2 & Step 2: Mở Show more & Nhấn Show more. & Các trường mở rộng, bao gồm Location và Duration, được hiển thị. \\\ \hline
+3 & Step 3: Chọn Duration in minute & Chọn Duration in minute. & Ô nhập số phút được hiển thị. \\\ \hline
+4 & Step 4: Nhập số phút & Nhập \texttt{60} vào Duration in minute. & Ô nhập chấp nhận giá trị 60. \\\ \hline
+5 & Step 5: Lưu event & Nhập Event title và Date hợp lệ, sau đó nhấn Save. & Event được tạo với duration 60 phút. \\\ \hline
+\end{*longtable*}
+
+}
+
+\bigskip\noindent\textbf{**TC-003-028 -- Kiểm tra Duration in minute bằng 0**}\\
+
+\noindent\textit{*Precondition:*} Moodle demo (Moodle 5.1, Docker) đang chạy tại http://127.0.0.1:9501; giao diện Moodle và trình duyệt là English, đã đăng nhập bằng admin; đang mở form Add a new event. Đã mở Show more.
+
+\smallskip
+
+{\footnotesize
+
+\begin{*longtable*}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+
+\hline
+\rowcolor{gray!15}\textbf{**\\#**} & \textbf{**Bước**} & \textbf{**Mô tả**} & \textbf{**Kết quả mong đợi**} \\\ \hline
+\endhead
+
+1 & Step 1: Mở form Add a new event & Mở Calendar và chọn New event / Add a new event. & Form Add a new event hiển thị các trường Event title, Date, Type of event và tùy chọn Show more. \\\ \hline
+2 & Step 2: Mở Show more & Nhấn Show more. & Các trường mở rộng, bao gồm Location và Duration, được hiển thị. \\\ \hline
+3 & Step 3: Chọn Duration in minute & Chọn Duration in minute. & Ô nhập số phút được hiển thị. \\\ \hline
+4 & Step 4: Nhập duration bằng 0 & Chọn Duration in minute và nhập \texttt{0}. & Ô hiển thị giá trị 0. \\\ \hline
+5 & Step 5: Lưu event & Nhập Event title và Date hợp lệ, sau đó nhấn Save. & Duration bị từ chối; hiển thị thông báo \texttt{The duration in minutes you have entered is invalid. Please enter the duration in minutes greater than 0 or select no duration.}; event không được tạo. \\\ \hline
+\end{*longtable*}
+
+}
+
+\bigskip\noindent\textbf{**TC-003-029 -- Kiểm tra Duration in minute là số âm**}\\
+
+\noindent\textit{*Precondition:*} Moodle demo (Moodle 5.1, Docker) đang chạy tại http://127.0.0.1:9501; giao diện Moodle và trình duyệt là English, đã đăng nhập bằng admin; đang mở form Add a new event. Đã mở Show more.
+
+\smallskip
+
+{\footnotesize
+
+\begin{*longtable*}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+
+\hline
+\rowcolor{gray!15}\textbf{**\\#**} & \textbf{**Bước**} & \textbf{**Mô tả**} & \textbf{**Kết quả mong đợi**} \\\ \hline
+\endhead
+
+1 & Step 1: Mở form Add a new event & Mở Calendar và chọn New event / Add a new event. & Form Add a new event hiển thị các trường Event title, Date, Type of event và tùy chọn Show more. \\\ \hline
+2 & Step 2: Mở Show more & Nhấn Show more. & Các trường mở rộng, bao gồm Location và Duration, được hiển thị. \\\ \hline
+3 & Step 3: Chọn Duration in minute & Chọn Duration in minute. & Ô nhập số phút được hiển thị. \\\ \hline
+4 & Step 4: Nhập duration âm & Nhập \texttt{-5} vào Duration in minute. & Ô hiển thị giá trị -5. \\\ \hline
+5 & Step 5: Lưu event & Nhập Event title và Date hợp lệ, sau đó nhấn Save. & Duration bị từ chối; hiển thị thông báo \texttt{The duration in minutes you have entered is invalid. Please enter the duration in minutes greater than 0 or select no duration.}; event không được tạo. \\\ \hline
+\end{*longtable*}
+
+}
+
+\bigskip\noindent\textbf{**TC-003-030 -- Kiểm tra Duration in minute chứa chữ/ký tự không phải số**}\\
+
+\noindent\textit{*Precondition:*} Moodle demo (Moodle 5.1, Docker) đang chạy tại http://127.0.0.1:9501; giao diện Moodle và trình duyệt là English, đã đăng nhập bằng admin; đang mở form Add a new event. Đã mở Show more.
+
+\smallskip
+
+{\footnotesize
+
+\begin{*longtable*}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+
+\hline
+\rowcolor{gray!15}\textbf{**\\#**} & \textbf{**Bước**} & \textbf{**Mô tả**} & \textbf{**Kết quả mong đợi**} \\\ \hline
+\endhead
+
+1 & Step 1: Mở form Add a new event & Mở Calendar và chọn New event / Add a new event. & Form Add a new event hiển thị các trường Event title, Date, Type of event và tùy chọn Show more. \\\ \hline
+2 & Step 2: Mở Show more & Nhấn Show more. & Các trường mở rộng, bao gồm Location và Duration, được hiển thị. \\\ \hline
+3 & Step 3: Chọn Duration in minute & Chọn Duration in minute. & Ô nhập số phút được hiển thị. \\\ \hline
+4 & Step 4: Nhập ký tự chữ & Thử nhập \texttt{abc} vào Duration in minute. & Ô hiển thị giá trị abc. \\\ \hline
+5 & Step 5: Lưu event & Nhập Event title và Date hợp lệ, sau đó nhấn Save. & Duration bị từ chối; hiển thị thông báo \texttt{The duration in minutes you have entered is invalid. Please enter the duration in minutes greater than 0 or select no duration.}; event không được tạo. \\\ \hline
+\end{*longtable*}
+
+}
+
+\bigskip\noindent\textbf{**TC-003-031 -- Kiểm tra Duration in minute là số thập phân dấu chấm**}\\
+
+\noindent\textit{*Precondition:*} Moodle demo (Moodle 5.1, Docker) đang chạy tại http://127.0.0.1:9501; giao diện Moodle và trình duyệt là English, đã đăng nhập bằng admin; đang mở form Add a new event. Đã mở Show more.
+
+\smallskip
+
+{\footnotesize
+
+\begin{*longtable*}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+
+\hline
+\rowcolor{gray!15}\textbf{**\\#**} & \textbf{**Bước**} & \textbf{**Mô tả**} & \textbf{**Kết quả mong đợi**} \\\ \hline
+\endhead
+
+1 & Step 1: Mở form Add a new event & Mở Calendar và chọn New event / Add a new event. & Form Add a new event hiển thị các trường Event title, Date, Type of event và tùy chọn Show more. \\\ \hline
+2 & Step 2: Mở Show more & Nhấn Show more. & Các trường mở rộng, bao gồm Location và Duration, được hiển thị. \\\ \hline
+3 & Step 3: Chọn Duration in minute & Chọn Duration in minute. & Ô nhập số phút được hiển thị. \\\ \hline
+4 & Step 4: Nhập số thập phân & Nhập \texttt{1.1} vào Duration in minute. & Ô chấp nhận giá trị 1.1 . \\\ \hline
+5 & Step 5: Lưu event & Nhập Event title và Date hợp lệ, sau đó nhấn Save. & Event được tạo ; giá trị lưu/hiển thị là 1 phút. \\\ \hline
+\end{*longtable*}
+
+}
+
+\bigskip\noindent\textbf{**TC-003-032 -- Kiểm tra Duration in minute là số thập phân dấu phẩy**}\\
+
+\noindent\textit{*Precondition:*} Moodle demo (Moodle 5.1, Docker) đang chạy tại http://127.0.0.1:9501; giao diện Moodle và trình duyệt là English, đã đăng nhập bằng admin; đang mở form Add a new event. Đã mở Show more.
+
+\smallskip
+
+{\footnotesize
+
+\begin{*longtable*}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+
+\hline
+\rowcolor{gray!15}\textbf{**\\#**} & \textbf{**Bước**} & \textbf{**Mô tả**} & \textbf{**Kết quả mong đợi**} \\\ \hline
+\endhead
+
+1 & Step 1: Mở form Add a new event & Mở Calendar và chọn New event / Add a new event. & Form Add a new event hiển thị các trường Event title, Date, Type of event và tùy chọn Show more. \\\ \hline
+2 & Step 2: Mở Show more & Nhấn Show more. & Các trường mở rộng, bao gồm Location và Duration, được hiển thị. \\\ \hline
+3 & Step 3: Chọn Duration in minute & Chọn Duration in minute. & Ô nhập số phút được hiển thị. \\\ \hline
+4 & Step 4: Nhập số thập phân dấu phẩy & Nhập \texttt{1,4} vào Duration in minute. & Ô chấp nhận giá trị 1.4. \\\ \hline
+5 & Step 5: Lưu event & Nhập Event title và Date hợp lệ, sau đó nhấn Save. & Event được tạo ; giá trị lưu/hiển thị là 1 phút. \\\ \hline
+\end{*longtable*}
+
+}
+
+\bigskip\noindent\textbf{**TC-003-033 -- Kiểm tra Duration in minute dạng số mũ**}\\
+
+\noindent\textit{*Precondition:*} Moodle demo (Moodle 5.1, Docker) đang chạy tại http://127.0.0.1:9501; giao diện Moodle và trình duyệt là English, đã đăng nhập bằng admin; đang mở form Add a new event. Đã mở Show more.
+
+\smallskip
+
+{\footnotesize
+
+\begin{*longtable*}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+
+\hline
+\rowcolor{gray!15}\textbf{**\\#**} & \textbf{**Bước**} & \textbf{**Mô tả**} & \textbf{**Kết quả mong đợi**} \\\ \hline
+\endhead
+
+1 & Step 1: Mở form Add a new event & Mở Calendar và chọn New event / Add a new event. & Form Add a new event hiển thị các trường Event title, Date, Type of event và tùy chọn Show more. \\\ \hline
+2 & Step 2: Mở Show more & Nhấn Show more. & Các trường mở rộng, bao gồm Location và Duration, được hiển thị. \\\ \hline
+3 & Step 3: Chọn Duration in minute & Chọn Duration in minute. & Ô nhập số phút được hiển thị. \\\ \hline
+4 & Step 4: Nhập số mũ & Nhập \texttt{1,5e2} vào Duration in minute. & Ô chấp nhận và diễn giải theo định dạng số mũ/locale tương ứng (tương đương 150 phút). \\\ \hline
+5 & Step 5: Lưu event & Nhập Event title và Date hợp lệ, sau đó nhấn Save. & Event được tạo ; giá trị lưu/hiển thị là 150 phút. \\\ \hline
+\end{*longtable*}
+
+}
+
+\bigskip\noindent\textbf{**TC-003-034 -- Bật Repeat this event**}\\
+
+\noindent\textit{*Precondition:*} Moodle demo (Moodle 5.1, Docker) đang chạy tại http://127.0.0.1:9501; giao diện Moodle và trình duyệt là English, đã đăng nhập bằng admin; đang mở form Add a new event. Đã mở Show more.
+
+\smallskip
+
+{\footnotesize
+
+\begin{*longtable*}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+
+\hline
+\rowcolor{gray!15}\textbf{**\\#**} & \textbf{**Bước**} & \textbf{**Mô tả**} & \textbf{**Kết quả mong đợi**} \\\ \hline
+\endhead
+
+1 & Step 1: Mở form Add a new event & Mở Calendar và chọn New event / Add a new event. & Form Add a new event hiển thị các trường Event title, Date, Type of event và tùy chọn Show more. \\\ \hline
+2 & Step 2: Mở Show more & Nhấn Show more. & Các trường mở rộng, bao gồm Location và Duration, được hiển thị. \\\ \hline
+3 & Step 3: Bật Repeat this event & Chọn checkbox Repeat this event. & Khung nhập số lần lặp xuất hiện và giá trị mặc định là 1. \\\ \hline
+4 & Step 4: Lưu với số lần mặc định & Nhập Event title và Date hợp lệ; giữ số lần lặp là 1; nhấn Save. & Event được tạo theo cấu hình lặp; số lần lặp mặc định được hiểu là 1. \\\ \hline
+\end{*longtable*}
+
+}
+
+\bigskip\noindent\textbf{**TC-003-035 -- Tắt Repeat this event**}\\
+
+\noindent\textit{*Precondition:*} Moodle demo (Moodle 5.1, Docker) đang chạy tại http://127.0.0.1:9501; giao diện Moodle và trình duyệt là English, đã đăng nhập bằng admin; đang mở form Add a new event. Đã mở Show more.
+
+\smallskip
+
+{\footnotesize
+
+\begin{*longtable*}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+
+\hline
+\rowcolor{gray!15}\textbf{**\\#**} & \textbf{**Bước**} & \textbf{**Mô tả**} & \textbf{**Kết quả mong đợi**} \\\ \hline
+\endhead
+
+1 & Step 1: Mở form Add a new event & Mở Calendar và chọn New event / Add a new event. & Form Add a new event hiển thị các trường Event title, Date, Type of event và tùy chọn Show more. \\\ \hline
+2 & Step 2: Mở Show more & Nhấn Show more. & Các trường mở rộng, bao gồm Location và Duration, được hiển thị. \\\ \hline
+3 & Step 3: Không bật Repeat this event & Để checkbox Repeat this event ở trạng thái không chọn. & Khung nhập số lần lặp không hiển thị hoặc không được áp dụng. \\\ \hline
+4 & Step 4: Lưu event & Nhập Event title và Date hợp lệ rồi nhấn Save. & Chỉ một event được tạo; không phát sinh các event lặp hàng tuần. \\\ \hline
+\end{*longtable*}
+
+}
+
+\bigskip\noindent\textbf{**TC-003-036 -- Kiểm tra số lần lặp là số thập phân nhỏ hơn 2**}\\
+
+\noindent\textit{*Precondition:*} Moodle demo (Moodle 5.1, Docker) đang chạy tại http://127.0.0.1:9501; giao diện Moodle và trình duyệt là English, đã đăng nhập bằng admin; đang mở form Add a new event. Đã mở Show more. Đã bật Repeat this event.
+
+\smallskip
+
+{\footnotesize
+
+\begin{*longtable*}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+
+\hline
+\rowcolor{gray!15}\textbf{**\\#**} & \textbf{**Bước**} & \textbf{**Mô tả**} & \textbf{**Kết quả mong đợi**} \\\ \hline
+\endhead
+
+1 & Step 1: Mở form Add a new event & Mở Calendar và chọn New event / Add a new event. & Form Add a new event hiển thị các trường Event title, Date, Type of event và tùy chọn Show more. \\\ \hline
+2 & Step 2: Mở Show more & Nhấn Show more. & Các trường mở rộng, bao gồm Location và Duration, được hiển thị. \\\ \hline
+3 & Step 3: Bật Repeat this event & Chọn checkbox Repeat this event. & Khung nhập số lần lặp xuất hiện và giá trị mặc định là 1. \\\ \hline
+4 & Step 4: Nhập số lần lặp 1.6 & Nhập \texttt{1.6} vào ô số lần lặp. & Hệ thống xử lý giá trị tương đương 1 sau khi làm tròn xuống. \\\ \hline
+5 & Step 5: Lưu event & Nhập Event title và Date hợp lệ rồi nhấn Save. & Chỉ một event được tạo; không phát sinh các event lặp hàng tuần. \\\ \hline
+\end{*longtable*}
+
+}
+
+\bigskip\noindent\textbf{**TC-003-037 -- Kiểm tra số lần lặp dạng ký pháp khoa học 1e0**}\\
+
+\noindent\textit{*Precondition:*} Moodle demo (Moodle 5.1, Docker) đang chạy tại http://127.0.0.1:9501; giao diện Moodle và trình duyệt là English, đã đăng nhập bằng admin; đang mở form Add a new event. Đã mở Show more. Đã bật Repeat this event.
+
+\smallskip
+
+{\footnotesize
+
+\begin{*longtable*}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+
+\hline
+\rowcolor{gray!15}\textbf{**\\#**} & \textbf{**Bước**} & \textbf{**Mô tả**} & \textbf{**Kết quả mong đợi**} \\\ \hline
+\endhead
+
+1 & Step 1: Mở form Add a new event & Mở Calendar và chọn New event / Add a new event. & Form Add a new event hiển thị các trường Event title, Date, Type of event và tùy chọn Show more. \\\ \hline
+2 & Step 2: Mở Show more & Nhấn Show more. & Các trường mở rộng, bao gồm Location và Duration, được hiển thị. \\\ \hline
+3 & Step 3: Bật Repeat this event & Chọn checkbox Repeat this event. & Khung nhập số lần lặp xuất hiện và giá trị mặc định là 1. \\\ \hline
+4 & Step 4: Nhập 1e0 & Nhập \texttt{1e0} vào ô số lần lặp. & Hệ thống xử lý giá trị tương đương 1 sau khi tính toán. \\\ \hline
+5 & Step 5: Lưu event & Nhập Event title và Date hợp lệ rồi nhấn Save. & Chỉ một event được tạo; không phát sinh các event lặp hàng tuần. \\\ \hline
+\end{*longtable*}
+
+}
+
+\bigskip\noindent\textbf{**TC-003-038 -- Kiểm tra số lần lặp bằng 0**}\\
+
+\noindent\textit{*Precondition:*} Moodle demo (Moodle 5.1, Docker) đang chạy tại http://127.0.0.1:9501; giao diện Moodle và trình duyệt là English, đã đăng nhập bằng admin; đang mở form Add a new event. Đã mở Show more. Đã bật Repeat this event.
+
+\smallskip
+
+{\footnotesize
+
+\begin{*longtable*}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+
+\hline
+\rowcolor{gray!15}\textbf{**\\#**} & \textbf{**Bước**} & \textbf{**Mô tả**} & \textbf{**Kết quả mong đợi**} \\\ \hline
+\endhead
+
+1 & Step 1: Mở form Add a new event & Mở Calendar và chọn New event / Add a new event. & Form Add a new event hiển thị các trường Event title, Date, Type of event và tùy chọn Show more. \\\ \hline
+2 & Step 2: Mở Show more & Nhấn Show more. & Các trường mở rộng, bao gồm Location và Duration, được hiển thị. \\\ \hline
+3 & Step 3: Bật Repeat this event & Chọn checkbox Repeat this event. & Khung nhập số lần lặp xuất hiện và giá trị mặc định là 1. \\\ \hline
+4 & Step 4: Nhập số lần lặp 0 & Nhập \texttt{0} vào ô số lần lặp. & Hệ thống chấp nhận hoặc chuẩn hóa số lần lặp hiệu lực thành 1. \\\ \hline
+5 & Step 5: Lưu event & Nhập Event title và Date hợp lệ rồi nhấn Save. & Event được tạo tương tự trường hợp nhập 1; không tạo 0 event. \\\ \hline
+\end{*longtable*}
+
+}
+
+\bigskip\noindent\textbf{**TC-003-039 -- Kiểm tra số lần lặp là số âm**}\\
+
+\noindent\textit{*Precondition:*} Moodle demo (Moodle 5.1, Docker) đang chạy tại http://127.0.0.1:9501; giao diện Moodle và trình duyệt là English, đã đăng nhập bằng admin; đang mở form Add a new event. Đã mở Show more. Đã bật Repeat this event.
+
+\smallskip
+
+{\footnotesize
+
+\begin{*longtable*}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+
+\hline
+\rowcolor{gray!15}\textbf{**\\#**} & \textbf{**Bước**} & \textbf{**Mô tả**} & \textbf{**Kết quả mong đợi**} \\\ \hline
+\endhead
+
+1 & Step 1: Mở form Add a new event & Mở Calendar và chọn New event / Add a new event. & Form Add a new event hiển thị các trường Event title, Date, Type of event và tùy chọn Show more. \\\ \hline
+2 & Step 2: Mở Show more & Nhấn Show more. & Các trường mở rộng, bao gồm Location và Duration, được hiển thị. \\\ \hline
+3 & Step 3: Bật Repeat this event & Chọn checkbox Repeat this event. & Khung nhập số lần lặp xuất hiện và giá trị mặc định là 1. \\\ \hline
+4 & Step 4: Nhập số lần lặp âm & Nhập \texttt{-2} vào ô số lần lặp. & Hệ thống chấp nhận hoặc chuẩn hóa số lần lặp hiệu lực thành 1 . \\\ \hline
+5 & Step 5: Lưu event & Nhập Event title và Date hợp lệ rồi nhấn Save. & Event được tạo tương tự trường hợp nhập 1; không tạo số lần lặp âm. \\\ \hline
+\end{*longtable*}
+
+}
+
+\bigskip\noindent\textbf{**TC-003-040 -- Kiểm tra giá trị biên 999**}\\
+
+\noindent\textit{*Precondition:*} Moodle demo (Moodle 5.1, Docker) đang chạy tại http://127.0.0.1:9501; giao diện Moodle và trình duyệt là English, đã đăng nhập bằng admin; đang mở form Add a new event. Đã mở Show more. Đã bật Repeat this event.
+
+\smallskip
+
+{\footnotesize
+
+\begin{*longtable*}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+
+\hline
+\rowcolor{gray!15}\textbf{**\\#**} & \textbf{**Bước**} & \textbf{**Mô tả**} & \textbf{**Kết quả mong đợi**} \\\ \hline
+\endhead
+
+1 & Step 1: Mở form Add a new event & Mở Calendar và chọn New event / Add a new event. & Form Add a new event hiển thị các trường Event title, Date, Type of event và tùy chọn Show more. \\\ \hline
+2 & Step 2: Mở Show more & Nhấn Show more. & Các trường mở rộng, bao gồm Location và Duration, được hiển thị. \\\ \hline
+3 & Step 3: Bật Repeat this event & Chọn checkbox Repeat this event. & Khung nhập số lần lặp xuất hiện và giá trị mặc định là 1. \\\ \hline
+4 & Step 4: Nhập số lần lặp 999 & Nhập \texttt{999} vào ô số lần lặp. & Giá trị 999 được chấp nhận. \\\ \hline
+5 & Step 5: Lưu event & Nhấn Save nếu form cho phép. & Tạo ra event tương ứng cho 999 tuần kể từ ngày chọn;. Ghi chú: Vì 999 tuần tương ứng với gần 20 năm nên chỉ kiểm tra event tại tuần đầu và tuần 999. \\\ \hline
+\end{*longtable*}
+
+}
+
+\bigskip\noindent\textbf{**TC-003-041 -- Tạo event lặp hàng tuần với số lần lặp 2**}\\
+
+\noindent\textit{*Precondition:*} Moodle demo (Moodle 5.1, Docker) đang chạy tại http://127.0.0.1:9501; giao diện Moodle và trình duyệt là English, đã đăng nhập bằng admin; đang mở form Add a new event. Có thể xem Calendar ở các tuần tiếp theo.
+
+\smallskip
+
+{\footnotesize
+
+\begin{*longtable*}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+
+\hline
+\rowcolor{gray!15}\textbf{**\\#**} & \textbf{**Bước**} & \textbf{**Mô tả**} & \textbf{**Kết quả mong đợi**} \\\ \hline
+\endhead
+
+1 & Step 1: Mở form Add a new event & Mở Calendar và chọn New event / Add a new event. & Form Add a new event hiển thị các trường Event title, Date, Type of event và tùy chọn Show more. \\\ \hline
+2 & Step 2: Nhập thông tin event & Nhập Event title \texttt{TC003 Weekly Event 041}; chọn Date bắt đầu hợp lệ. & Event title và Date được nhập chính xác. \\\ \hline
+3 & Step 3: Bật lặp hàng tuần & Chọn Repeat this event và nhập số lần lặp \texttt{2}. & Checkbox được bật; số lần lặp hiển thị 2. \\\ \hline
+4 & Step 4: Lưu event & Nhấn Save. & Event được tạo thành công cho 2 tuần kể từ hôm được tạo. \\\ \hline
+5 & Step 5: Kiểm tra các lần lặp & Mở Calendar tại ngày bắt đầu và các tuần tiếp theo. & Các event xuất hiện đúng lịch hàng tuần và số lượng đúng theo định nghĩa của trường “creating altogether” (tổng cộng 3 occurrence hoặc 1 event gốc + 3 lần lặp). \\\ \hline
+\end{*longtable*}
+
+}
+
+\bigskip\noindent\textbf{**TC-003-042 -- Tạo event kết hợp Location, Until và Category**}\\
+
+\noindent\textit{*Precondition:*} Đã đăng nhập bằng admin; Category 1 tồn tại; đang mở form Add a new event.
+
+\smallskip
+
+{\footnotesize
+
+\begin{*longtable*}{|c|L{3.0cm}|L{5.1cm}|L{5.6cm}|}
+
+\hline
+\rowcolor{gray!15}\textbf{**\\#**} & \textbf{**Bước**} & \textbf{**Mô tả**} & \textbf{**Kết quả mong đợi**} \\\ \hline
+\endhead
+
+1 & Step 1: Mở form Add a new event & Mở Calendar và chọn New event / Add a new event. & Form Add a new event hiển thị các trường Event title, Date, Type of event và tùy chọn Show more. \\\ \hline
+2 & Step 2: Nhập thông tin chính & Nhập Event title \texttt{TC003 Combined Event 041}; chọn Date hợp lệ; chọn Type of event = Category và Category 1. & Các trường chính hiển thị đúng dữ liệu đã nhập/chọn. \\\ \hline
+3 & Step 3: Mở Show more và nhập Location & Nhấn Show more; nhập Location \texttt{Lab 2 - Building B}. & Location hiển thị đúng nội dung. \\\ \hline
+4 & Step 4: Thiết lập Until & Chọn Duration = Until; đặt thời điểm kết thúc sau Date bắt đầu. & Until hiển thị thời điểm kết thúc hợp lệ. \\\ \hline
+5 & Step 5: Lưu và kiểm tra event & Nhấn Save; mở event vừa tạo trong Calendar. & Event được tạo; title, Date, Category, Location và Until được lưu/hiển thị đúng. \\\ \hline
+\end{*longtable*}
+
+}
