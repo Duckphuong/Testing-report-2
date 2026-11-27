@@ -1,0 +1,195 @@
+% ================= Feature 002 (Lê Sĩ Nhật Quang) =================
+\section{Feature 002: Add a new course -- kiểm thử hướng dữ liệu}
+Mã nguồn nằm trong \texttt{F002/level1/}, \texttt{F002/level2/} và \texttt{F002/nonfunctional/} (Python 3 + Selenium 4 + unittest).
+
+\subsection{Phân tích gộp 38 test case thành một script}
+\begin{enumerate}[noitemsep]
+  \item Ở bài tập lớn 2, 38 test case TC-002-001 $\dots$ 038 được ghi bằng Katalon Recorder (\texttt{F002-Add\_a\_new\_course.krecorder})
+        cùng script dọn dữ liệu (\texttt{F002-Cleanup.krecorder}). Các test case này có \textbf{cùng một chuỗi thao tác} (mở form
+        $\rightarrow$ nhập 7 trường $\rightarrow$ bấm nút $\rightarrow$ kiểm tra kết quả), chỉ khác nhau ở \emph{dữ liệu} và
+        \emph{kết quả mong đợi}. Vì vậy cả 38 test case được gộp thành \textbf{một} kịch bản tự động.
+  \item Toàn bộ dữ liệu và kết quả mong đợi của 38 test case được trích ra file \texttt{data/tc002\_add\_course.csv} (mỗi dòng là một test case).
+  \item Script \texttt{test\_add\_course\_level1.py} đọc file dữ liệu và sinh một phương thức \texttt{unittest} cho mỗi dòng
+        (\texttt{test\_TC\_002\_001}, \dots), nên mỗi test case vẫn có kết quả PASS/FAIL riêng.
+  \item So với script Katalon, các locator động (\texttt{yui\_3\_18\_\dots}, \texttt{form\_autocomplete\_input-1794\dots},
+        \texttt{course-info-container-7-4}) được thay bằng locator ổn định (\texttt{id=id\_fullname},
+        \texttt{//input[contains(@id,'form\_autocomplete\_input')]}). Kết quả được kiểm tra ngay trên trang khóa học
+        thay vì trang \textit{My courses}, nên script chạy lại được trên máy khác.
+\end{enumerate}
+
+\subsection{Cấu trúc file dữ liệu Level 1}
+\begin{table}[H]
+\centering\footnotesize
+\begin{tabular}{|l|L{11.5cm}|}
+\hline
+\rowcolor{gray!15}\textbf{Cột} & \textbf{Ý nghĩa} \\ \hline
+\texttt{tc\_id, technique, description} & Mã test case (trùng file \texttt{.xlsx} của BTL2), kỹ thuật (ECP, BVA, DT, UC), mô tả \\ \hline
+\texttt{fullname, shortname, category, visibility} & Dữ liệu nhập cho các trường của form \\ \hline
+\texttt{start, end, idnumber} & Ngày dạng \texttt{d/m/yyyy hh:mm}; \texttt{end} rỗng nghĩa là tắt \textit{Enable}; ID number \\ \hline
+\texttt{action} & Nút bấm: \texttt{save\_display}, \texttt{save\_return}, \texttt{cancel} \\ \hline
+\texttt{expected\_type} & \texttt{success} (tạo khóa học), \texttt{error} (báo lỗi tại trường), \texttt{message} (thông báo cấp trang, không tạo khóa học), \texttt{returned}, \texttt{cancelled} \\ \hline
+\texttt{expected\_field} & Trường phải báo lỗi; nhiều trường ngăn cách bởi \texttt{|} (decision table R4, R5) \\ \hline
+\texttt{expected\_result} & \textbf{Kết quả mong đợi}: thông báo lỗi, hoặc văn bản phải xuất hiện trên trang khóa học \\ \hline
+\texttt{fix, fix\_expected\_result} & Cho use-case path ``lỗi $\rightarrow$ sửa $\rightarrow$ gửi lại'': dữ liệu sửa và kết quả mong đợi sau khi sửa \\ \hline
+\texttt{entry} & Điểm vào form: rỗng = Site administration $>$ Add a new course; \texttt{category} = Manage courses and categories $>$ Create new course (chỉ điểm vào này có nút \textit{Save and return}, dùng cho TC-002-034) \\ \hline
+\end{tabular}
+\caption{Các cột của file dữ liệu}
+\end{table}
+\textbf{Macro trong dữ liệu:} \texttt{\{RUN\}} là mã duy nhất của lần chạy (tránh trùng short name khi chạy lại);
+\texttt{\{fill:N:c\}} đệm chuỗi bằng ký tự \texttt{c} đến đúng \texttt{N} ký tự (dùng cho BVA 99, 100, 101, 253, 254, 255 ký tự);
+\texttt{\{=fullname\}} nghĩa là kết quả mong đợi bằng giá trị của cột \texttt{fullname}.
+
+Ví dụ ba dòng (rút gọn):
+\begin{lstlisting}
+tc_id,...,fullname,shortname,category,...,end,idnumber,action,expected_type,expected_field,expected_result
+TC-002-003,...,,TC002-003-{RUN},Category 1,...,1/1/2027 08:00,,save_display,error,fullname,Missing full name
+TC-002-017,...,{fill:254:e},TC002-017-{RUN},Category 1,...,1/1/2027 08:00,,save_display,success,,{=fullname}
+TC-002-031,...,,,,...,1/1/2027 08:00,,save_display,error,fullname|shortname|category,Missing full name|Missing short name|You must supply a value here.
+\end{lstlisting}
+
+\subsection{Thiết kế script Level 1}
+\begin{itemize}[noitemsep]
+  \item \texttt{setUpClass}: mở Chrome, đăng nhập admin, \textbf{chuẩn bị dữ liệu}: tạo course \texttt{EXIST01}/\texttt{ID-EXIST}
+        nếu chưa có (dùng cho TC-002-008, 013, 032, 037).
+  \item \texttt{run\_case(row)}: mở \texttt{/course/edit.php?category=0}, điền 7 trường theo dòng dữ liệu, bấm nút ở cột \texttt{action}, rồi
+        \textbf{verify}:
+    \begin{itemize}[noitemsep]
+      \item \texttt{success}: URL chuyển tới \texttt{/course/view.php} và \texttt{expected\_result} có trên trang.
+      \item \texttt{error}: thẻ \texttt{id\_error\_<field>} chứa đúng thông báo trong \texttt{expected\_result}, form vẫn ở \texttt{edit.php}.
+      \item \texttt{returned} / \texttt{cancelled}: tìm khóa học theo short name, phải có đúng một khóa học (Save and return) hoặc không có khóa học nào (Cancel).
+    \end{itemize}
+    Nếu có cột \texttt{fix}, script sửa dữ liệu, gửi lại và verify thành công.
+  \item Ô nhập được gán giá trị trực tiếp giống lệnh \texttt{type} của Katalon (không bị \texttt{maxlength} cắt), để tái hiện đúng
+        kết quả của TC-002-005, 007, 012 ở BTL2. Course category là ô autocomplete được JavaScript dựng trên thẻ
+        \texttt{<select id="id\_category">}; script chọn trực tiếp trên thẻ select này (giống lệnh \texttt{select id=id\_category} của Katalon),
+        với giá trị rỗng để tái hiện ``No selection'' (TC-002-009, 031) vì mặc định select đã chọn sẵn Category 1.
+  \item Nút được cuộn vào giữa màn hình trước khi bấm vì footer cố định của Moodle che nút \textit{Save and display} khi form dài.
+  \item \texttt{tearDown}: \textbf{dọn dữ liệu}, xóa mọi khóa học test vừa tạo; \texttt{tearDownClass} xóa course chuẩn bị và
+        ghi \texttt{results\_level1.csv}.
+\end{itemize}
+
+\textbf{Đoạn code chính:}
+\begin{lstlisting}[language=Python]
+def run_case(self, row):
+    self.page.open_form()
+    self.page.fill(row)                 # 7 fields from the data row
+    self.page.press(row["action"])      # save_display / save_return / cancel
+    if row["expected_type"] == "success":
+        self.check_success(row["expected_result"])
+    elif row["expected_type"] == "error":
+        self.check_errors(row["expected_field"], row["expected_result"])
+        if row["fix"]:                  # use-case path: fix and resubmit
+            self.page.apply_fix(row["fix"]); self.page.press(row["action"])
+            self.check_success(row["fix_expected_result"])
+    ...
+for row in load_rows():                 # one unittest method per data row
+    setattr(AddCourseDataDriven, "test_" + row["tc_id"].replace("-", "_"), _make_test(row))
+\end{lstlisting}
+
+\subsection{Level 2: đưa test item ra ngoài script}
+Ở Level 2, script \texttt{test\_add\_course\_level2.py} là một \textbf{engine chung}, không chứa URL, id hay thông báo nào của Moodle.
+Mọi \textit{test item} được đọc từ thư mục \texttt{config/}:
+\begin{table}[H]
+\centering\footnotesize
+\begin{tabular}{|l|L{5.4cm}|L{6.2cm}|}
+\hline
+\rowcolor{gray!15}\textbf{File} & \textbf{Nội dung} & \textbf{Ví dụ} \\ \hline
+\texttt{config/site.csv} & URL site, tài khoản, URL form/tìm kiếm/xóa, mẫu locator thông báo lỗi và ô ngày, dữ liệu chuẩn bị &
+  \texttt{form\_url = \{base\_url\}/course/edit.php?category=0}; \texttt{error\_locator = id=id\_error\_\{field\}} \\ \hline
+\texttt{config/locators.csv} & Tên, chiến lược (\texttt{id}, \texttt{xpath}, \texttt{css}, \dots) và giá trị của mọi phần tử &
+  \texttt{save\_display, id, id\_saveanddisplay}; \texttt{category\_select, id, id\_category} \\ \hline
+\texttt{config/fields.csv} & Cột dữ liệu nào điền vào phần tử nào và kiểu điều khiển (\texttt{text}, \texttt{select}, \texttt{hidden\_select}, \texttt{date}, \texttt{optional\_date}) &
+  \texttt{end, optional\_date, enddate} \\ \hline
+\texttt{data/tc002\_add\_course.csv} & 38 test case (giống Level 1), cột \texttt{action} là \emph{tên locator} của nút cần bấm & \texttt{action = save\_return} \\ \hline
+\end{tabular}
+\caption{Các file đầu vào của Level 2}
+\end{table}
+\textbf{Lợi ích:} khi Moodle đổi giao diện (id nút, URL) hoặc chạy trên site khác, chỉ cần sửa file cấu hình. Có thể chạy với
+bộ dữ liệu hoặc cấu hình khác bằng tham số:
+\begin{lstlisting}
+cd F002/level2
+python test_add_course_level2.py --data data/tc002_add_course.csv --config config
+\end{lstlisting}
+Engine có các thao tác chung: \texttt{set\_field(kind, locator, value)}, \texttt{press(locator)}, \texttt{error\_text(field)}
+(dựng locator từ mẫu \texttt{error\_locator}), \texttt{find\_ids} và \texttt{delete} (dùng URL trong \texttt{site.csv}).
+Quy trình verify, chuẩn bị và dọn dữ liệu giống Level 1.
+
+\subsection{Cách chạy}
+\begin{lstlisting}
+pip install selenium
+cd F002/level1
+python test_add_course_level1.py                  # all 38 test cases
+python test_add_course_level1.py -k TC_002_008    # one test case
+\end{lstlisting}
+
+\subsection{Kết quả chạy}
+\begin{table}[H]\centering\small
+\begin{tabular}{|L{4.6cm}|c|c|c|L{4.2cm}|}\hline
+\rowcolor{gray!15}\textbf{Bộ test} & \textbf{Số test} & \textbf{Pass} & \textbf{Fail} & \textbf{Minh chứng} \\ \hline
+Level 1 (data-driven) & 38 & 38 & 0 & \texttt{run\_level1.log}, \texttt{results\_level1.csv} \\ \hline
+Level 2 (data + test items) & 38 & 38 & 0 & \texttt{run\_level2.log}, \texttt{results\_level2.csv} \\ \hline
+NFR-1 Hiệu năng & 2 & 2 & 0 & \texttt{nf\_performance.log}, \texttt{perf\_results.csv} \\ \hline
+NFR-2 Bảo mật & 3 & 3 & 0 & \texttt{nf\_security.log} \\ \hline
+NFR-3 Tương thích & 4 & 4 & 0 & \texttt{nf\_compatibility.log} \\ \hline
+\end{tabular}\caption{Kết quả chạy Feature 002 (Chrome, chế độ headless, Moodle demo 5.1)}\end{table}
+
+{\footnotesize\begin{longtable}{|l|c|L{1.4cm}|L{6.0cm}|c|c|}\hline
+\rowcolor{gray!15}\textbf{ID} & \textbf{KT} & \textbf{Loại} & \textbf{Kết quả mong đợi (từ file dữ liệu)} & \textbf{L1} & \textbf{L2} \\ \hline\endhead
+TC-002-001 & ECP & success & = fullname & PASS & PASS \\ \hline
+TC-002-002 & ECP & success & = fullname & PASS & PASS \\ \hline
+TC-002-003 & ECP & error & Missing full name & PASS & PASS \\ \hline
+TC-002-004 & ECP & success & Course: \textbar{} & PASS & PASS \\ \hline
+TC-002-005 & ECP/\allowbreak{}BVA & success & = fullname & PASS & PASS \\ \hline
+TC-002-006 & ECP & error & Missing short name & PASS & PASS \\ \hline
+TC-002-007 & ECP/\allowbreak{}BVA & success & = fullname & PASS & PASS \\ \hline
+TC-002-008 & ECP & error & Short name is already used for another course & PASS & PASS \\ \hline
+TC-002-009 & ECP & error & You must supply a value here. & PASS & PASS \\ \hline
+TC-002-010 & ECP/\allowbreak{}BVA & success & = fullname & PASS & PASS \\ \hline
+TC-002-011 & ECP & error & The course end date must be after the start date. & PASS & PASS \\ \hline
+TC-002-012 & ECP/\allowbreak{}BVA & message & Error writing to database & PASS & PASS \\ \hline
+TC-002-013 & ECP & error & ID number is already used for another course & PASS & PASS \\ \hline
+TC-002-014 & BVA & success & Course: A \textbar{} & PASS & PASS \\ \hline
+TC-002-015 & BVA & success & Course: BB \textbar{} & PASS & PASS \\ \hline
+TC-002-016 & BVA & success & = fullname & PASS & PASS \\ \hline
+TC-002-017 & BVA & success & = fullname & PASS & PASS \\ \hline
+TC-002-018 & BVA & success & = fullname & PASS & PASS \\ \hline
+TC-002-019 & BVA & success & = fullname & PASS & PASS \\ \hline
+TC-002-020 & BVA & success & = fullname & PASS & PASS \\ \hline
+TC-002-021 & BVA & success & = fullname & PASS & PASS \\ \hline
+TC-002-022 & BVA & success & = fullname & PASS & PASS \\ \hline
+TC-002-023 & BVA & success & = fullname & PASS & PASS \\ \hline
+TC-002-024 & BVA & success & = fullname & PASS & PASS \\ \hline
+TC-002-025 & BVA & success & = fullname & PASS & PASS \\ \hline
+TC-002-026 & BVA & error & The course end date must be after the start date. & PASS & PASS \\ \hline
+TC-002-027 & BVA & success & = fullname & PASS & PASS \\ \hline
+TC-002-028 & DT & success & = fullname & PASS & PASS \\ \hline
+TC-002-029 & DT & success & = fullname & PASS & PASS \\ \hline
+TC-002-030 & DT & error & The course end date must be after the start date. & PASS & PASS \\ \hline
+TC-002-031 & DT & error & Missing full name\textbar{}Missing short name\textbar{}You must supply a value here. & PASS & PASS \\ \hline
+TC-002-032 & DT & error & Short name is already used for another course\textbar{}The course end date must be after \dots{} & PASS & PASS \\ \hline
+TC-002-033 & UC & success & = fullname & PASS & PASS \\ \hline
+TC-002-034 & UC & returned & = fullname & PASS & PASS \\ \hline
+TC-002-035 & UC & cancelled & = fullname & PASS & PASS \\ \hline
+TC-002-036 & UC & error & Missing full name\textbar{}Missing short name $\rightarrow$ sửa $\rightarrow$ TC002 UC Retry & PASS & PASS \\ \hline
+TC-002-037 & UC & error & Short name is already used for another course $\rightarrow$ sửa $\rightarrow$ TC002 UC Dup & PASS & PASS \\ \hline
+TC-002-038 & UC & error & The course end date must be after the start date. $\rightarrow$ sửa $\rightarrow$ TC002 UC Date & PASS & PASS \\ \hline
+\end{longtable}}
+
+\subsection{Phát hiện khi tự động hóa lại}\label{sec:f002-findings}
+Khi chạy lại bằng Python, hai kết quả của BTL2 (ghi từ Katalon) được phát hiện là \textbf{không đúng với hành vi thật} của Moodle
+và đã được sửa trong file dữ liệu; cần cập nhật lại file \texttt{.xlsx} của BTL2 tương ứng:
+\begin{table}[H]
+\centering\footnotesize
+\begin{tabular}{|l|L{3.4cm}|L{4.0cm}|L{5.2cm}|}
+\hline
+\rowcolor{gray!15}\textbf{Test case} & \textbf{Đầu vào} & \textbf{Ghi nhận ở BTL2} & \textbf{Hành vi thật (BTL3)} \\ \hline
+TC-002-010 & End date = start date (1/1/2026 08:00) & Báo lỗi ``The course end date must be after the start date.'' &
+  \textbf{Khóa học được tạo}: Moodle chỉ từ chối khi end $<$ start. Script Katalon cũ chỉ đặt ngày/tháng của end date, giờ vẫn
+  mặc định 00:00 nên thực chất end $<$ start. Biên đúng: $-1$ phút lỗi (TC-002-026); $0$ và $+1$ phút hợp lệ. \\ \hline
+TC-002-012 & ID number 101 ký tự & Form được lưu & \textbf{Lỗi hệ thống} ``Error writing to database -- Data too long for column idnumber'':
+  form không kiểm tra độ dài phía server, cơ sở dữ liệu từ chối. Đây là \textbf{lỗi (defect)} nên báo cáo, mức độ trung bình. \\ \hline
+\end{tabular}
+\caption{Kết quả BTL2 được hiệu chỉnh nhờ tự động hóa lại}
+\end{table}
+Các hành vi khác đặc tả đã ghi nhận ở BTL2 được xác nhận lại: full name chỉ có khoảng trắng (TC-002-004), full name 255 ký tự (005),
+short name 101 ký tự (007) đều được chấp nhận khi gán giá trị trực tiếp (bỏ qua \texttt{maxlength} của trình duyệt).

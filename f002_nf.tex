@@ -1,0 +1,44 @@
+\textbf{Mã nguồn:} \texttt{F002/nonfunctional/} (\texttt{nf\_common.py}, \texttt{nf\_performance.py}, \texttt{nf\_security.py},
+\texttt{nf\_compatibility.py}); kết quả trong \texttt{nf\_*.log} và \texttt{perf\_results.csv}. Ba yêu cầu phi chức năng được kiểm thử
+tự động bằng Python + Selenium WebDriver + unittest:
+
+
+\begin{table}[H]
+\centering\footnotesize
+\begin{tabular}{|L{2.4cm}|L{3.6cm}|L{4.6cm}|L{3.6cm}|}
+\hline
+\rowcolor{gray!15}\textbf{Yêu cầu} & \textbf{Loại kiểm thử} & \textbf{Cách tiếp cận} & \textbf{Tiêu chí đạt} \\ \hline
+NFR-1 Hiệu năng \newline{\scriptsize\texttt{nf\_\allowbreak{}performance.py}} & Performance testing -- đo thời gian phản hồi (response time) &
+  Lặp 10 lần: mở form, tạo khóa học hợp lệ. Thời gian tải trang lấy từ Navigation Timing API (\texttt{loadEventEnd - navigationStart});
+  thời gian lưu đo từ lúc bấm Save đến khi trang khóa học tải xong. Số liệu thô ghi \texttt{perf\_results.csv} &
+  Trung bình $\leq$ 3 s và lớn nhất $\leq$ 5 s cho cả mở form và lưu \\ \hline
+NFR-2 Bảo mật \newline{\scriptsize\texttt{nf\_\allowbreak{}security.py}} & Security testing -- kiểm thử âm (negative) theo kiểu tấn công &
+  S1: người chưa đăng nhập mở URL form. S2: full name chứa \texttt{<script>} (XSS). S3: gửi form với \texttt{sesskey} giả (CSRF) &
+  S1 chuyển về trang đăng nhập; S2 script không thực thi; S3 bị từ chối, không tạo khóa học \\ \hline
+NFR-3 Tương thích \newline{\scriptsize\texttt{nf\_\allowbreak{}compati\-bility.py}} & Compatibility testing (cross-browser) và responsive &
+  C1: chạy cùng kịch bản smoke (form rỗng báo lỗi; tạo khóa học hợp lệ) trên Chrome, Edge, Firefox (trình duyệt không có sẽ được báo \textit{skipped}).
+  C2: giả lập điện thoại 375$\times$812 &
+  C1 pass trên mọi trình duyệt có cài; C2 mọi trường và nút hiển thị, không có cuộn ngang \\ \hline
+\end{tabular}
+\caption{Các yêu cầu phi chức năng của Feature 002}
+\end{table}
+
+\textbf{Kết quả:} cả ba yêu cầu đều \textbf{đạt}: hiệu năng 2/2, bảo mật 3/3 (S1 chuyển về trang đăng nhập; S2 script không thực thi;
+S3 sesskey giả bị từ chối, không tạo khóa học), tương thích 4/4 (Chrome, Edge, Firefox, màn hình 375$\times$812 không cuộn ngang).
+
+\begin{table}[H]\centering\small
+\begin{tabular}{|l|c|c|c|c|c|}\hline
+\rowcolor{gray!15}\textbf{Thao tác (10 lần)} & \textbf{Min (s)} & \textbf{TB (s)} & \textbf{Max (s)} & \textbf{Ngưỡng} & \textbf{Kết quả} \\ \hline
+Mở form Add a new course & 0.488 & 0.613 & 1.088 & TB $\leq$ 3, Max $\leq$ 5 & Đạt \\ \hline
+Lưu khóa học (Save and display) & 1.883 & 1.936 & 1.984 & TB $\leq$ 3, Max $\leq$ 5 & Đạt \\ \hline
+\end{tabular}\caption{Thời gian phản hồi đo được (máy cá nhân, Moodle chạy Docker cục bộ)}\end{table}
+\textit{Lưu ý:} Moodle chạy trên cùng máy nên số liệu chưa tính độ trễ mạng; kết quả dùng để so sánh tương đối và phát hiện
+suy giảm hiệu năng khi chạy lại, không đại diện cho môi trường triển khai thật.
+
+\textbf{Cách chạy:}
+\begin{lstlisting}
+cd F002/nonfunctional
+python nf_performance.py
+python nf_security.py
+python nf_compatibility.py
+\end{lstlisting}

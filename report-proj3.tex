@@ -133,7 +133,13 @@ ASSIGNMENT_3__HEHE2027__L01.zip
   |     |-- nonfunctional/
   |           perf_create_user.py
   |-- F002/                              (Add a new course - Quang)
-  |     |-- level1/   |-- level2/   |-- nonfunctional/
+  |     |-- level1/
+  |     |     test_add_course_level1.py, data/tc002_add_course.csv
+  |     |-- level2/
+  |     |     test_add_course_level2.py, data/tc002_add_course.csv
+  |     |     config/site.csv, config/locators.csv, config/fields.csv
+  |     |-- nonfunctional/
+  |           nf_common.py, nf_performance.py, nf_security.py, nf_compatibility.py
   |-- F003/                              (Tai)
   |     |-- level1/   |-- level2/   |-- nonfunctional/
   |-- F004/                              (Add new category - Son)
@@ -151,7 +157,7 @@ Chỉ nộp mã Python và file dữ liệu, \textbf{không} nộp file Katalon.
 \textbf{STT} & \textbf{Thành viên} & \textbf{Feature (BTL2)} & \textbf{Công việc BTL3} & \textbf{Đóng góp} \\ \hline
 \endhead
 1 & Nguyễn Đức Phương \newline 2312749 & 001 -- Add a new user & Level 1, Level 2 cho feature 001; kiểm thử phi chức năng (mục \ref{sec:nf}) & 100\%  \\ \hline
-2 & Lê Sĩ Nhật Quang \newline 2312791 & 002 -- Add a new course & Level 1, Level 2 cho feature 002; phi chức năng & \todo{\%} \\ \hline
+2 & Lê Sĩ Nhật Quang \newline 2312791 & 002 -- Add a new course & Level 1, Level 2 cho feature 002 (38 test case); kiểm thử phi chức năng: hiệu năng, bảo mật, tương thích (mục \ref{sec:nf}) & 100\% \\ \hline
 3 & Huỳnh Đức Tài \newline 2212971 & 003 - add new event & Level1, Level2 cho feature & 100\% \\ \hline
 4 & Đào Xuân Sơn \newline 2312954 & 004 -- Add new category & Level 1, Level 2 cho feature 004; phi chức năng & 100\% \\ \hline
 5 & Sơn Văn Phát \newline 2212535 & 005 -- Add a Choice & Level 1, Level 2 cho feature 005; phi chức năng & 100\% \\ \hline
@@ -392,7 +398,8 @@ Chạy ngày 21/11/2026 trên Chrome for Testing 158, Moodle 5.1 demo (\texttt{h
 \caption{Kết quả chạy Level 2: 50/50 test case pass, tổng thời gian khoảng 362 giây}
 \end{table}
 
-\section{Feature 002}
+\input{f002_proj3.tex}
+
 \section{Feature 003: Add new event}
 \subsection{Phân tích gộp 34 test case thành các script}
 
@@ -1210,7 +1217,7 @@ bằng chứng được đặt tên \texttt{F005\_Level1\_Chrome} và \texttt{F0
 \hline
 \rowcolor{gray!15}\textbf{Thành viên} & \textbf{Loại kiểm thử} & \textbf{Yêu cầu} & \textbf{Cách tiếp cận} & \textbf{Công cụ} \\ \hline
 Phương & Hiệu năng (performance) & Gửi form Create user phản hồi trong $\le$ 3 giây (trung bình) với 20 lần lặp. & Script đo thời gian từ lúc bấm Create user đến khi trang danh sách hiển thị, 20 lần; tính trung bình, lớn nhất. & Selenium + \texttt{time.perf\_counter}, \texttt{Navigation Timing API} \\ \hline
-Quang & Tương thích (compatibility) & Form Add a new course hoạt động giống nhau trên Chrome và Firefox. & Chạy lại script Level 1 trên hai trình duyệt, so sánh kết quả từng dòng. & Selenium (Chrome, Firefox) \\ \hline
+Quang & Hiệu năng; bảo mật; tương thích & Mở form và lưu khóa học: trung bình $\le$ 3 s, lớn nhất $\le$ 5 s. Chặn truy cập ẩn danh, XSS, CSRF. Hoạt động trên Chrome, Edge, Firefox và màn hình 375 px. & Đo 10 lần bằng Navigation Timing API; test âm (negative) kiểu tấn công; chạy cùng kịch bản smoke trên nhiều trình duyệt và giả lập điện thoại. & Selenium WebDriver, unittest, \texttt{time.perf\_counter} \\ \hline
 Tài & \todo{điền} & \todo{điền} & \todo{điền} & \todo{điền} \\ \hline
 Sơn & Bảo mật cơ bản (security) & Dữ liệu có ký tự đặc biệt (\verb|<script>|, dấu nháy) không làm hỏng trang và không bị thực thi. & Nhập chuỗi XSS/SQL injection vào Name của category, kiểm tra trang kết quả hiển thị thành văn bản, không có hộp thoại. & Selenium, OWASP payload mẫu \\ \hline
 Phát & Khả dụng/truy cập (usability, accessibility) & Các ô nhập của form Add a Choice có nhãn, điểm accessibility đạt mức chấp nhận. & Chạy kiểm tra trên trang form, ghi điểm và danh sách vi phạm. & Lighthouse (Chrome DevTools) \\ \hline
@@ -1273,7 +1280,9 @@ python -m unittest -v perf_create_user
 
 \textbf{Cấu hình máy đo:} Windows, RAM 16 GB DDR4 (khoảng 15,7 GB khả dụng), đồ họa tích hợp Intel Iris Xe, ổ SSD NVMe. Docker Desktop 4.96.2 dùng WSL 2, Docker \textbf{12 CPU (luồng logic)} và \textbf{7,6 GiB RAM}.
 
-\subsection{Chi tiết phần của Quang}
+\subsection{Chi tiết phần của Quang: hiệu năng, bảo mật và tương thích của Add a new course}
+\input{f002_nf.tex}
+
 \subsection{Chi tiết phần của Tài}
 \subsection{Chi tiết phần của Sơn: hiệu năng và bảo mật của Add new category}
 Mã nằm trong \texttt{F004/nonfunctional/} (\texttt{nf\_common.py}, \texttt{nf\_performance\_test.py}, \texttt{nf\_security\_test.py}, \texttt{data/security\_payloads.csv}); kết quả ghi vào \texttt{results/nf\_performance.csv} và \texttt{results/nf\_security.csv}.
@@ -1390,7 +1399,7 @@ Chrome và Edge cùng sử dụng Chromium, nên kết quả chỉ xác nhận b
 \end{itemize}
 
 \subsection{Lê Sĩ Nhật Quang}
-\todo{Điền công cụ AI và prompt, hoặc câu xác nhận không dùng AI.}
+\input{f002_ai.tex}
 \subsection{Huỳnh Đức Tài}
 \textbf{Công cụ:} GPT-6 của OpenAi dùng qua giao diện chat của chatGPT\\
 \textbf{Prompt đã sử dụng}: <dùng tính năng dự án của chatgpt, đính kèm file đặc tả proj3, file krecorder của proj2 và file testcase của proj2> Đọc nội dung của đặc tả project3, dựa vào file manual testing thông qua katalon recorder được thực hiện ở proj2 hãy tạo cho tôi script chạy automation test cho level 1 và level 2 của proj3. Yêu cầu đầu ra 2 folder tương ứng cho level1 và level2, trong mỗi level gồm 1 file run chạy chính 1 file csv chứa dữ liệu testcase đã được mapping và 1 file chứa output thực tế sau khi chạy test.\\

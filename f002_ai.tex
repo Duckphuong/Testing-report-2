@@ -1,0 +1,29 @@
+\textbf{Công cụ:} Gemini Plus dành cho sinh viên.
+
+\noindent\textbf{Prompt đã sử dụng} (nguyên văn):
+\begin{enumerate}[noitemsep]
+  \item ``Từ cơ sở đã làm cho bài campain trước đó, hãy tiếp tục với bài tập lớn số 3 automation testing với file mô tả và các file
+        krecorder trước đó áp dụng cho cùng tính năng. Hãy hoàn thành các yêu cầu bài tập lớn số 3 dành cho tính năng này''
+        (kèm file mô tả Project \#3, \texttt{F002-Add\_a\_new\_course.krecorder}, \texttt{F002-Cleanup.krecorder}).
+  \item ``Đã bật, chạy đi, moodle đã chạy tại 127.0.0.1:9501, admin/admin'' kèm các hint của giảng viên (được dùng Selenium mới nhất;
+        tối thiểu một yêu cầu phi chức năng mỗi sinh viên).
+\end{enumerate}
+
+\noindent\textbf{Nhận xét, review và đề xuất của AI:}
+\begin{itemize}[noitemsep]
+  \item \textbf{Review script Katalon:} nhiều locator sinh động (\texttt{yui\_3\_18\_1\_1\_\dots}, \texttt{form\_autocomplete\_input-<số>},
+        \texttt{course-info-container-7-4}, \texttt{moremenu-<hash>}) sẽ hỏng khi chạy lại hoặc chạy trên máy khác; đề xuất dùng
+        \texttt{id=id\_\dots} và XPath theo \texttt{contains(@id, \dots)}.
+  \item Lệnh verify của Katalon kiểm tra tên khóa học trong \textit{My courses} theo vị trí phần tử; đề xuất kiểm tra ngay trang khóa
+        học sau khi lưu (URL \texttt{/course/view.php}) và thông báo lỗi theo \texttt{id\_error\_<field>}.
+  \item \texttt{F002-Cleanup.krecorder} xóa \emph{cả category} đầu tiên trong trang quản lý (\texttt{action-menu-toggle-1} $>$ Delete), có thể
+        xóa nhầm dữ liệu không do test tạo; đề xuất chỉ xóa đúng các khóa học test đã tạo (theo id) trong \texttt{tearDown}.
+  \item Short name cố định làm lần chạy thứ hai bị trùng; đề xuất thêm mã lần chạy \texttt{\{RUN\}} vào dữ liệu.
+  \item Gộp 38 test case thành một kịch bản data-driven; tách Level 2 thành engine + file cấu hình; đề xuất 3 yêu cầu phi chức năng
+        (hiệu năng, bảo mật, tương thích) và viết code Python, file dữ liệu, báo cáo này.
+  \item Đề gợi ý Python 2; AI đề xuất Python 3 vì Python 2 và Selenium cho Python 2 không còn được hỗ trợ (phù hợp hướng dẫn bổ sung của giảng viên).
+  \item \textbf{Khi chạy thật}, AI phát hiện và sửa: ô autocomplete category không trả gợi ý ở chế độ headless (chuyển sang chọn trên select gốc);
+        footer che nút Save (cuộn trước khi click); nút Save and return chỉ có khi vào từ trang quản lý category; XPath có dấu phẩy trong CSV
+        phải đặt trong ngoặc kép; test CSRF ban đầu sửa nhầm sesskey của form khác trên trang. AI cũng chỉ ra kết quả BTL2 của
+        TC-002-010 và TC-002-012 không khớp hành vi thật (mục~\ref{sec:f002-findings}).
+\end{itemize}
